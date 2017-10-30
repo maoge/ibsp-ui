@@ -7,17 +7,17 @@ var Component = window.Component || {};
 	 *  经过封装的container，方便随时调整大小
 	 */
 	function FlexibleContainer(rows, cols, padding, charaHeight) {
-		this._id = JTopo.util.guid();
+		FlexibleContainer.prototype.initialize.apply(this, null);
+		
 		this.rows = rows;
 		this.cols = cols;
 		this.padding = padding;
 		this.charaHeight = charaHeight;
-		this.childs = [];
 		
 		var layout = JTopo.layout.GridLayout(rows, cols);
 		this.layout = layout;
 	}
-	FlexibleContainer.prototype = new JTopo.Container();
+	FlexibleContainer.prototype = new JTopo.Container;
 	Component.FlexibleContainer = FlexibleContainer;
 	
 	/**
