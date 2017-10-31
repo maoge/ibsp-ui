@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<link lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="contextMenu.css" />
+    <script type="application/javascript" src="jquery.min.js"></script>
+    <script type="application/javascript" src="contextMenu.js"></script>
+</head>
+<body>
+    <div id="mythingy" style="position:absolute;bottom:0;width:200px;height: 200px;border:1px solid black">hello</div>
+    <canvas id="drawCanvas"  class="mapContext" style="width: 200px;height: 200px;border:1px solid #c3c3c3;" />
+</body>
+<script>
+    $('#mythingy').contextMenu({
+        //title: 'My Popup Menu',
+        items: [
+            {label:'添加',     icon:'img/add.png', callback:function(text) { console.log(text) } },
+            {label:'删除',  callback:function() { alert('clicked 2') } },
+            "separator", /* null can be used to add a separator to the menu items */
+            {label:'修改',     icon:'img/edit.png',  callback:function() { alert('clicked 3') } },
+            /*{label:'menu items add edit', icon:'icons/book-open-list.png',  action:function() { alert('clicked 3') } }*/
+        ]});
+    var menu = $.contextMenu({
+        //title: 'My Popup Menu',
+        items: [
+            {label:'添加',     icon:'img/add.png', callback:function(text) { console.log(text) } },
+            {label:'删除',  callback:function() { alert('clicked 2') } },
+            "separator", /* null can be used to add a separator to the menu items */
+            {label:'修改',     icon:'img/edit.png',  callback:function() { alert('clicked 3') } },
+            /*{label:'menu items add edit', icon:'icons/book-open-list.png',  action:function() { alert('clicked 3') } }*/
+        ]});
+</script>
+</html>
