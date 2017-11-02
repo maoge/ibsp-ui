@@ -334,8 +334,8 @@
             },
             this.contextmenuHandler = function(event){
                 var b = this.toSceneEvent(event);
-                this.currentElement && (b.target = this.currentElement, this.currentElement.contextmenuHandler(b)),
-                    this.dispatchEvent("contextmenu", b)
+                this.currentElement && (b.target = this.currentElement, this.currentElement.contextmenuHandler(b));
+                this.currentElement  ||  this.dispatchEvent("contextmenu", b);
             },
             this.dataEventHandler = function(data){
                 var element = this.find(function(ele){
