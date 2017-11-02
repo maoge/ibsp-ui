@@ -8,6 +8,9 @@
         this.menu = createMenu(this.options);
         this.html = $('html');
         this.show = function(e){
+        	$.each($('.contextMenu'),function(){
+        		$(this).hide();
+        	});
             var that = this,
                 left = e.pageX + 5,
                 top = e.pageY;
