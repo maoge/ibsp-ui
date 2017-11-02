@@ -196,6 +196,12 @@
                 this.setLocation(x, y),
                     this.dispatchEvent("mousedrag", event)
             },
+            this.contextmenuHandler = function(event){
+                this.dispatchEvent("contextmenu", event);
+            },
+            this.dataEventHandler = function(data){
+                this.dispatchEvent("dataEvent", data);
+            },
             this.addEventListener = function(topic, handler) {
                 var moduler = this,
                     action = function(event) {
@@ -214,7 +220,7 @@
             this.removeAllEventListener = function() {
                 this.messageBus = new JTopo.util.MessageBus
             };
-        var topics = "click,dbclick,mousedown,mouseup,mouseover,mouseout,mousemove,mousedrag,touchstart,touchmove,touchend".split(","),
+        var topics = "click,dbclick,mousedown,mouseup,mouseover,mouseout,mousemove,mousedrag,touchstart,touchmove,touchend,dataEvent".split(","),
             moduler = this;
         topics.forEach(function(topic) {
             moduler[topic] = function(event) {
@@ -360,4 +366,4 @@
         JTopo.DisplayElement = DisplayElement,
         JTopo.InteractiveElement = InteractiveElement,
         JTopo.EditableElement = EditableElement
-} (JTopo);
+} (JTopo)

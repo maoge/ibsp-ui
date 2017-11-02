@@ -182,8 +182,13 @@
                 n.dispatchEvent("mousewheel", translate),
             null != n.wheelZoom && (event.preventDefault ? event.preventDefault() : (a = a || window.event, event.returnValue = !1), 1 == n.eagleEye.visible && n.eagleEye.update())
         }
+        function contextmenu(event){
+            var translate = screenToClient(event);
+            n.dispatchEventToScenes("contextmenu", translate),
+                n.dispatchEvent("contextmenu", translate)
+        }
         function init(canvas) {
-            JTopo.util.isIE || !window.addEventListener ? (canvas.onmouseout = mouseout, canvas.onmouseover = mouseover, canvas.onmousedown = mousedown, canvas.onmouseup = mouseup, canvas.onmousemove = mousedrag, canvas.onclick = click, canvas.ondblclick = dbclick, canvas.onmousewheel = mousewheel, canvas.touchstart = mousedown, canvas.touchmove = mousedrag, canvas.touchend = mouseup) : (canvas.addEventListener("mouseout", mouseout), canvas.addEventListener("mouseover", mouseover), canvas.addEventListener("mousedown", mousedown), canvas.addEventListener("mouseup", mouseup), canvas.addEventListener("mousemove", mousedrag), canvas.addEventListener("click", click), canvas.addEventListener("dblclick", dbclick), JTopo.util.isFirefox ? canvas.addEventListener("DOMMouseScroll", mousewheel) : canvas.addEventListener("mousewheel", mousewheel)),
+            JTopo.util.isIE || !window.addEventListener ? (canvas.onmouseout = mouseout, canvas.onmouseover = mouseover, canvas.onmousedown = mousedown, canvas.onmouseup = mouseup, canvas.onmousemove = mousedrag, canvas.onclick = click, canvas.ondblclick = dbclick, canvas.onmousewheel = mousewheel, canvas.touchstart = mousedown, canvas.touchmove = mousedrag, canvas.touchend = mouseup, canvas.contextMenu = contextmenu) : (canvas.addEventListener("mouseout", mouseout), canvas.addEventListener("mouseover", mouseover), canvas.addEventListener("mousedown", mousedown), canvas.addEventListener("mouseup", mouseup), canvas.addEventListener("mousemove", mousedrag), canvas.addEventListener("click", click), canvas.addEventListener("dblclick", dbclick), JTopo.util.isFirefox ? canvas.addEventListener("DOMMouseScroll", mousewheel) : canvas.addEventListener("mousewheel", mousewheel),canvas.addEventListener("contextmenu",contextmenu)),
             window.addEventListener && (window.addEventListener("keydown",
                 function(event) {
                     n.dispatchEventToScenes("keydown", JTopo.util.cloneEvent(event));
@@ -267,13 +272,17 @@
                 return this.messageBus.publish(topic, data),
                     this
             };
-        var topics = "click,dbclick,mousedown,mouseup,mouseover,mouseout,mousemove,mousedrag,mousewheel,touchstart,touchmove,touchend,keydown,keyup".split(","),
+        var topics = "click,dbclick,mousedown,mouseup,mouseover,mouseout,mousemove,mousedrag,mousewheel,touchstart,touchmove,touchend,keydown,keyup,contextmenu".split(","),
             module = this;
         topics.forEach(function(topic) {
             module[topic] = function(handle) {
                 null != handle ? this.addEventListener(topic, handle) : this.dispatchEvent(topic)
             }
         }),
+            this.dataEvent = function(data){
+                this.dispatchEventToScenes("dataEvent", data),
+                    this.dispatchEvent("dataEvent", data);
+            },
             this.saveImageInfo = function(width, height) {
                 var image = this.eagleEye.getImage(width, height),
                     win = window.open("about:blank");

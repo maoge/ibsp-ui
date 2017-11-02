@@ -332,6 +332,18 @@
             this.keyupHandler = function(a) {
                 this.dispatchEvent("keyup", a)
             },
+            this.contextmenuHandler = function(event){
+                var b = this.toSceneEvent(event);
+                this.currentElement && (b.target = this.currentElement, this.currentElement.contextmenuHandler(b)),
+                    this.dispatchEvent("contextmenu", b)
+            },
+            this.dataEventHandler = function(data){
+                var element = this.find(function(ele){
+                    return ele._id == data.id;
+                });
+                element.dataEventHandler(data);
+                this.dispatchEvent("dataEvent", data)
+            }
             this.addEventListener = function(a, b) {
                 var c = this,
                     d = function(a) {
@@ -350,7 +362,7 @@
                 return this.messageBus.publish(a, b),
                     this
             };
-        var f = "click,dbclick,mousedown,mouseup,mouseover,mouseout,mousemove,mousedrag,mousewheel,touchstart,touchmove,touchend,keydown,keyup".split(","),
+        var f = "click,dbclick,mousedown,mouseup,mouseover,mouseout,mousemove,mousedrag,mousewheel,touchstart,touchmove,touchend,keydown,keyup,dataEvent".split(","),
             g = this;
         return f.forEach(function(a) {
             g[a] = function(b) {

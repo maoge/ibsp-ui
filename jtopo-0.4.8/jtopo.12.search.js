@@ -54,7 +54,7 @@
                 "function" == typeof f && !
                     function (b) {
                         arrayElements[c] = function () {
-                            for (var c = [], d = 0; d < a.length; d++) c.push(b.apply(arrayElements[d], arguments));
+                            for (var c = [], d = 0; d < arrayElements.length; d++) c.push(b.apply(arrayElements[d], arguments));
                             return c
                         }
                     }(f)
