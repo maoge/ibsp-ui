@@ -8,19 +8,19 @@ var Component = window.Component || {};
 	 */
 	function Plate() {
 		
+		//常量放在这里
 		this.fontColor = '3,13,247';
 		this.font = '10pt 微软雅黑';
 		this.borderColor = '170,170,170';
 		this.fillColor = '225,225,225';
 		this.borderWidth = 2;
 		this.borderRadius = 10;
-		
-		//默认的node尺寸
-		this.defaultWidth = 32;
+		this.defaultWidth = 32; //默认的node尺寸
 		this.defaultHeight = 32;
 		this.padding = 20;
-		
-		this.iconDir = "./icon/";
+//		this.url = "http://192.168.37.175:9991/tidbsvr/saveTiDBTopo"; //后台地址（暂定）
+		this.url = "http://192.168.37.175:9991/tidbsvr/ahahahaha";
+		this.iconDir = "./icon/"; //图标路径（暂定）
 	}
 	Component.Plate = Plate;
 	
@@ -45,6 +45,8 @@ var Component = window.Component || {};
 		
 		this.width = $(canvas).attr("width");
 		this.height = $(canvas).attr("height");
+
+		this.collectd = null;
 	}
 	
 	/**
@@ -81,29 +83,61 @@ var Component = window.Component || {};
 	}
 	
 	/**
+	 * 创建一个node
+	 */
+	Plate.prototype.makeNode = function(x, y, img, text, type, menu) {
+		var node = new JTopo.Node();
+		node.font = this.font;
+		node.fontColor= this.fontColor;
+		node.setImage(img);
+		node.text = text;
+		node.dragable = true;
+    	node.x = x - this.defaultWidth/2;
+    	node.y = y - this.defaultHeight/2;
+    	node.type = type; //组件类型
+    	
+    	node.addEventListener('contextmenu', function(e) {
+    		menu.show(e);
+    		});
+		return node;
+	}
+	
+	/**
 	 * 新增一个node到container中
 	 */
-	Plate.prototype.addNodeToContainer = function(x, y, img, text, container) {
+	Plate.prototype.addNodeToContainer = function(x, y, img, text, type,menu, container) {
 		
 		x =  this.width/2 - this.scene.translateX - (this.width/2 - x) / this.scene.scaleX;
 		y = this.height/2 - this.scene.translateY - (this.height/2 - y) / this.scene.scaleY;
         
         if (container!=null && container.isInContainer(x, y)) {
-    		var node = new JTopo.Node();
-    		node.font = this.font;
-    		node.fontColor= this.fontColor;
-    		node.setImage(img);
-    		node.text = text;
-    		node.dragable = true;
-        	node.x = x - this.defaultWidth/2;
-        	node.y = y - this.defaultHeight/2;
-        	
+    		var node = this.makeNode(x - this.defaultWidth/2, y - this.defaultHeight/2, img, text, type, menu);
 			this.scene.add(node);
 			container.add(node);
+			//TODO 弹出录信息的面板
 			return node;
 		} else {
-			return null;
+			//TODO 暂时用jAlert
+        	jAlert("请将组件拖放到对应的容器中！", "提示");
+        	return null;
 		}
+	}
+	
+	/**
+	 * 新增collectd
+	 */
+	Plate.prototype.addCollectd = function(x, y, img, text, type, menu) {
+		if (this.collectd!=null) {
+			//TODO 暂时用jAlert
+        	jAlert("集群中只能有一个collectd！", "提示");
+			return false;
+		}
+		x =  this.width/2 - this.scene.translateX - (this.width/2 - x) / this.scene.scaleX;
+		y = this.height/2 - this.scene.translateY - (this.height/2 - y) / this.scene.scaleY;
+		var node = this.makeNode(x - this.defaultWidth/2, y - this.defaultHeight/2, img, text, type, menu);
+		this.scene.add(node);
+		this.collectd = node;
+		return true;
 	}
 	
 	/**
@@ -122,20 +156,11 @@ var Component = window.Component || {};
 			return null;
 		}
 	}
-	
-	
-	/**
-	 * 获取当前选中的组件个数
-	 */
-	Plate.prototype.getSelectedCount = function() {
-		return this.scene.selectedElements.length;
-	}
-	
+
 	/**
 	 * 删除选中的组件
 	 */
-	Plate.prototype.deleteComponent = function() {
-		var element = this.scene.selectedElements[0];
+	Plate.prototype.deleteComponent = function(element) {
 		if (element.elementType == "container") {
 			for (var i=element.childs.length-1; i>=0; i--) {
 				var child = element.childs[i];
@@ -143,10 +168,13 @@ var Component = window.Component || {};
 				this.scene.remove(child);
 			}
 		}
-		element.parentContainer.remove(element);
+		if (element.parentContainer) {
+			element.parentContainer.remove(element);
+		}
 		this.scene.remove(element);
-		element.x = null;
-		element.y = null;
+		if (element.type.indexOf("COLLECTD") != -1) {
+			this.collectd = null;
+		}
 	}
 	
 	/**
@@ -186,4 +214,35 @@ var Component = window.Component || {};
 		return usablePrefixMethod;
 	}
 	
+	/**
+	 * 保存拓扑数据到后台
+	 */
+	Plate.prototype.saveTopoData = function() {
+		console.log(JSON.stringify(plate.toPlateJson()));
+		$.ajax({
+			url: this.url,
+			type: "post",
+			dataType: "json",
+			data: {"TIDB_JSON": JSON.stringify(plate.toPlateJson())},
+			timeout: 3000,
+			error: function(result) {
+				//TODO 暂时用JAlert，可以换成别的
+				jAlert("保存失败！", "提示");
+			},
+			success:function(result) {
+				if (result.RET_CODE==0) {
+					jAlert("保存成功！", "提示");
+				} else {
+					jAlert("保存失败！"+result.RET_INFO, "提示");
+				}
+			}
+		});
+	}
+
+	/**
+	 * 保存组件（单个）数据到后台
+	 */
+	Plate.prototype.saveElementData = function() {
+		//TODO 保存单个组件数据（录完信息之后）
+	}
 })(Component);
