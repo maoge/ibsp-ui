@@ -14,26 +14,20 @@
             this.resize();
         };
         this.formToJson = function () {
-            var data = "{", that = this, len = this.options.data.length, isAppend = true;
+            var data = [], that = this, len = this.options.data.length, isAppend = true;
             $.each(this.options.data, function (index, row) {
                 for (var id in row) {
                     var type = row[id]["type"];
-                    if (index < len - 1 && index != 0 && isAppend) {
-                        data += ",";
-                    }
-                    isAppend = true;
                     if (type === "string") {
-                        data += "\"" + id + "\":" + "\"" + that.$form.find("input[name='" + id + "']").val() + "\"";
+                        data.push("\"" + id + "\":" + "\"" + that.$form.find("input[name='" + id + "']").val() + "\"");
                     } else if (type === "array" || type === "object") {
-                        isAppend = false;
                         continue;
                     } else {
-                        data += "\"" + id + "\":" + that.$form.find("input[name='" + id + "']").val();
+                        data.push("\"" + id + "\":" + that.$form.find("input[name='" + id + "']").val());
                     }
                 }
             });
-            data += "}";
-            return data;
+            return "{"+data.toString()+"}";
         };
         this.putData = function (data) {//{TIKD_ID:3332234444,TIKV_NAME:DSDSDSDSDS ...}
             if (data == null) {
@@ -103,27 +97,6 @@
                 var data = that.formToJson();
                 that.startLoading();
                 that.options.submitCallBack(data);
-                /*that.$popupBody.css("z-index",998);
-                 var disableds = that.$form.find("input[disabled=true]").removeAttr("disabled");
-                 var data = that.$form.serialize();
-                 disableds.attr("disabled",true);
-                 $.ajax({
-                 type:"post",
-                 url:that.options.url,
-                 data:that.$form.serialize(),
-                 success:function(data){
-                 that.$popupBody.css("z-index",1000);
-                 disableds.removeAttr("disabled");
-                 that.$form[0].reset();
-                 disableds.attr("disabled",true);
-                 that.options.successCallback(data);
-                 that.hide();
-                 },
-                 error:function(msg){
-                 that.$popupBody.css("z-index",1000);
-                 that.options.errorCallBack(msg);
-                 }
-                 });*/
             });
             this.resize();
             this.hide();
