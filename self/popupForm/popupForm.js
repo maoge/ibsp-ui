@@ -88,6 +88,7 @@
                 });
             });
             this.resize();
+            this.hide();
         };
         this.createForm = function(options){
             var that = this,data = options['data'];
@@ -130,7 +131,6 @@
             analysis(eleType,schema['properties']);
             getFields(eleTypeJson);
             options.data = fields;
-            console.log(fields);
             function analysis(eleType ,schema){
                 if(eleTypeJson){
                     return;
