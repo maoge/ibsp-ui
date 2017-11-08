@@ -22,7 +22,7 @@
             }
         };
         this.hide = function(){
-            this.$popup.hide();
+            this.$popup && this.$popup.hide();
         };
         this.resize = function(){//会随浏览器大小自动居中和调整popup的大小
             this.$popupBody.css({
@@ -130,6 +130,7 @@
                 res={};
             analysis(eleType,schema['properties']);
             getFields(eleTypeJson);
+            console.log(fields);
             options.data = fields;
             function analysis(eleType ,schema){
                 if(eleTypeJson){
