@@ -27,14 +27,15 @@
     $.get("schema/tidb.new.schema",function(data){
         schema = JSON.parse(data); 
         window.schema = schema;
-        popupWindows || (popupWindows = $.popupForm("DB_TIKV",'http://127.0.0.1:8888/app/hello',window.schema,function(){
-            alert("提交成功");
-        },function(msg){
-            alert("提交失败");
+        popupWindows || (popupWindows = $.popupForm("DB_COLLECTD",window.schema,function(json){
+            alert(json);
+            setTimeout(function(){popupWindows.clearLoading();},2000);
+        },function(){
+            alert("取消按钮");
         }));
     });
     $('#testa').click(function(){
-        // $.popupForm(type,url,schema,successCallBack,errorCallBack)
+        // $.popupForm(type,schema,submitCallBack,cancelCallback)
 
         popupWindows.show()// 不带参数的 默认显示
         //popupWindows.show({"TIKV_ID":"0a161eb3-3434-06a2-45d0-02b1ed7122e8","TIKV_NAME":"TiKV","IP":"192.168.14.206","PORT":3333});
