@@ -94,7 +94,12 @@
                         canvas.font = this.font;
                     var offsetX = canvas.measureText(context).width,
                         offsetY = canvas.measureText("田").width;
-                    this.textWidth = offsetX;
+                    if (!this.textWidth || this.textWidth!=offsetX) {
+                        this.textWidth = offsetX;
+                        if (this.parentContainer) {
+                        	this.parentContainer.changed = true;
+                        }
+                    }
                     canvas.fillStyle = "rgba(" + this.fontColor + ", " + this.alpha + ")";
                     var pos = this.getTextPostion(this.textPosition, offsetX, offsetY);
                     canvas.fillText(context, pos.x, pos.y),

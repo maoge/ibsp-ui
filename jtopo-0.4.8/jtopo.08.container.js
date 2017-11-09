@@ -77,7 +77,14 @@
                         graphics.font = this.font;
                     var width = graphics.measureText(text).width,
                         distance = graphics.measureText("田").width;
-                    this.textWidth = width;
+                    //记录text宽度
+                    if (!this.textWidth || this.textWidth!=width) {
+                        this.textWidth = width;
+                        if (this.parentContainer) {
+                        	this.parentContainer.changed = true;
+                        }
+                    }
+
                     graphics.fillStyle = "rgba(" + this.fontColor + ", " + this.alpha + ")";
                     var position = this.getTextPostion(this.textPosition, width, distance);
                     graphics.fillText(text, position.x, position.y),
