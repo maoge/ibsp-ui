@@ -6,7 +6,7 @@ var Component = window.Component || {};
 	/**
 	 * MQ面板类
 	 */
-	function MQPlate(name, canvas, data) {
+	function MQPlate(data, canvas) {
 		//调用父类方法初始化舞台
 		this.initStage(name, canvas);
 		this.SwitchContainer = null;

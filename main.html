@@ -1,0 +1,137 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8"/>
+    <title>Tidb集群部署</title>
+
+    <link href="css/third-party/bootstrap.css" type="text/css" rel="stylesheet" />
+    <link href="css/third-party/jAlert.css" type="text/css" rel="stylesheet" />
+
+	<link href="css/theme.css" type="text/css" rel="stylesheet"/>
+	<link href="css/self/contextMenu.css" type="text/css" rel="stylesheet"/>
+	<link href="css/self/popupForm.css" type="text/css" rel="stylesheet"/>
+	
+    <STYLE>
+        .tp_table td{
+            padding:10px 0;
+        }
+        .brand .second {
+    		color: #fff;
+    		font-weight: bold;
+		}
+		.nodeStyle {
+			cursor: pointer;
+			width: 30px;
+			height: 30px;
+		}
+    </STYLE>
+</head>
+
+<body id="body">
+
+	<div class="navbar">
+      	<div class="navbar-inner">
+    		<a class="brand"><span class="second">Tidb集群部署</span></a>
+		</div>
+	</div>
+
+	<div class="sidebar-nav">
+        <a href="#tidb-menu" class="nav-header collapsed" data-toggle="collapse">Tidb部署</a>
+        <ul id="tidb-menu" class="nav nav-list collapse in">
+			<li>
+				<div datatype="DB_PD" draggable="true">
+					<img name="backGroundImg" src="img/tpIcon_7.png" class="nodeStyle"/>
+					<br><span>PD</span>
+				</div>
+			</li>
+			<li>
+				<div datatype="DB_TIKV" draggable="true">
+					<img name="backGroundImg" src="img/tpIcon_8.png" class="nodeStyle"/>
+					<br><span>TiKV</span>
+				</div>
+			</li>
+			<li>
+				<div datatype="DB_TIDB" draggable="true">
+					<img name="backGroundImg" src="img/tpIcon_9.png" class="nodeStyle"/>
+					<br><span>TiDB</span>
+				</div>
+			</li>
+			<li>
+				<div datatype="DB_COLLECTD" draggable="true">
+					<img name="backGroundImg" src="img/tpIcon_10.png" class="nodeStyle"/>
+					<br><span>collectd</span>
+				</div>
+			</li>
+		</ul>
+		
+		<a href="#mq-menu" class="nav-header collapsed" data-toggle="collapse">MQ部署</a>
+        <ul id="mq-menu" class="nav nav-list collapse">
+			<li>
+            	<div datatype="Switch" draggable="true">
+					<img name="backGroundImg" src="img/tpIcon_1.png" class="nodeStyle"/>
+					<br><span>Switch</span>
+				</div>
+			</li>
+			<li>
+				<div datatype="VBroker" draggable="true">
+					<img name="backGroundImg" src="img/tpIcon_3.png" class="nodeStyle"/>
+					<br><span>VBroker</span>
+				</div>
+			</li>
+			<li>
+				<div datatype="Broker" draggable="true">
+					<img name="backGroundImg" src="img/tpIcon_2.png" class="nodeStyle"/>
+					<br><span>Broker</span>
+				</div>
+			</li>
+		</ul>
+		
+		<a href="#cache-menu" class="nav-header collapsed" data-toggle="collapse">Cache部署</a>
+        <ul id="cache-menu" class="nav nav-list collapse">
+			<li>
+            	<div datatype="Proxy" draggable="true">
+            		<img name="backGroundImg" src="img/tpIcon_4.png" class="nodeStyle"/>
+            		<br><span>cache proxy</span>
+            	</div>
+			</li>
+			<li>
+				<div datatype="CacheGroup" draggable="true">
+					<img name="backGroundImg" src="img/tpIcon_5.png" class="nodeStyle"/>
+					<br><span>cache集群</span>
+				</div>
+			</li>
+			<li>
+				<div datatype="Cache" draggable="true">
+					<img name="backGroundImg" src="img/tpIcon_6.png" class="nodeStyle"/>
+					<br><span>cache实例</span>
+				</div>
+			</li>
+		</ul>
+
+    </div>
+
+<div id="contextBody" class="content">
+	<canvas id="canvas" style="background: white"></canvas>
+</div>
+
+</body>
+
+<script src="js/third-party/jquery-1.9.1.min.js" type="text/javascript"></script>
+<script src="js/third-party/jAlert.js" type="text/javascript"></script>
+<script src="js/third-party/jAlert-functions.js" type="text/javascript"></script>
+<script src="js/third-party/bootstrap.min.js" type="text/javascript"></script>
+
+<!-- 改造过的jtopo -->
+<script src="js/jtopo-0.4.8/boot.js" type="text/javascript" ></script>
+
+<!-- 自己封装的面板 -->
+<script src="js/self/component.flexibleContainer.js" type="text/javascript" ></script>
+<script src="js/self/component.abstractPlate.js" type="text/javascript" ></script>
+<script src="js/self/component.TidbPlate.js" type="text/javascript" ></script>
+<script src="js/self/component.MQPlate.js" type="text/javascript" ></script>
+<script src="js/self/component.CachePlate.js" type="text/javascript" ></script>
+<script src="js/self/contextMenu.js" type="text/javascript" ></script>
+<script src="js/self/popupForm.js" type="text/javascript" ></script>
+
+<script src="js/main.js" type="text/javascript" ></script>
+</html>

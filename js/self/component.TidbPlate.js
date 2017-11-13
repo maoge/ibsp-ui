@@ -71,7 +71,7 @@ var Component = window.Component || {};
 			    	   self.saveTopoData();
 			       }},
 			       {label:'部署面板', callback: function(e){
-			    	   //TODO 部署面板
+			    	   self.deployElement(e.target);
 			       }}]
 		});
 		this.scene.addEventListener('contextmenu', function(e) {
@@ -273,6 +273,18 @@ var Component = window.Component || {};
 			case this.COLLECTD_CONST:
 				this.CollectdForm.show(this.getMetaData(element));
 				break;
+			}
+		}
+		
+		//组件部署成功时的处理
+		this.getElementDeployed = function(element) {
+			if (element.elementType=="node") {
+				element.isDeployed = true;
+				var self = this;
+				element.removeEventListener('contextmenu');
+				element.addEventListener('contextmenu', function(e) {
+					self.deployedMenu.show(e);
+				});
 			}
 		}
 		

@@ -289,7 +289,7 @@
             return img.src = changeColor(graphics, a, b),
                 alarmImageCache[a.src] = img,
                 img;
-        } catch(exception) {}
+        } catch(exception) {console.log(exception);}
         return null;
     }
 

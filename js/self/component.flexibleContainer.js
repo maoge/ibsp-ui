@@ -50,7 +50,6 @@ var Component = window.Component || {};
 		this.paint = function(graphics) {
 			if (this.changed) {
 				this.changed = false;
-				console.log("changed!");
 				this.adjustSize();
 			}
 			FlexibleContainer.prototype.paint.call(this, graphics);
@@ -87,16 +86,16 @@ var Component = window.Component || {};
 				this.parentContainer.adjustSize();
 			}
 		}
-	}
-	
-	//返回一个位置信息的JSON
-	this.getPosJson = function() {
-		var pos = {};
-		pos.x = Math.round(this.x);
-		pos.y = Math.round(this.y);
-		pos.row = this.rows;
-		pos.col = this.cols;
-		return pos;
+		
+		//返回一个位置信息的JSON
+		this.getPosJson = function() {
+			var pos = {};
+			pos.x = Math.round(this.x);
+			pos.y = Math.round(this.y);
+			pos.row = this.rows;
+			pos.col = this.cols;
+			return pos;
+		}
 	}
 	
 	FlexibleContainer.prototype = new JTopo.Container;
