@@ -73,7 +73,7 @@ var Component = window.Component || {};
 		this.plateMenu = $.contextMenu({
 			items:[
 			       {label:'保存面板结构', callback: function(e){
-			    	   self.saveTopoData();
+			    	   self.saveTopoData(true);
 			       }},
 			       {label:'部署面板', callback: function(e){
 			    	   self.deployElement(e.target);
@@ -101,77 +101,80 @@ var Component = window.Component || {};
 			self.saveElementData(self.popElement, json, self.CollectdForm);
         }, cancelFunction);
 		
-		//初始化3个container：PD, Tikv, Tidb
-		if (data!=null) {
-			this.needInitTopo = false;
-			var DB_TIDB_CONTAINER = data.DB_TIDB_CONTAINER;
-			var DB_TIKV_CONTAINER = data.DB_TIKV_CONTAINER;
-			var DB_PD_CONTAINER = data.DB_PD_CONTAINER;
-			var collectd = data.DB_COLLECTD;
-				
-			this.PDContainer = this.makeContainer(DB_PD_CONTAINER.POS.x, DB_PD_CONTAINER.POS.y, 
-					DB_PD_CONTAINER.PD_CONTAINER_NAME, DB_PD_CONTAINER.POS.row, DB_PD_CONTAINER.POS.col, "node");
-			this.PDContainer._id = DB_PD_CONTAINER.PD_CONTAINER_ID;
-			this.TikvContainer = this.makeContainer(DB_TIKV_CONTAINER.POS.x, DB_TIKV_CONTAINER.POS.y, 
-					DB_TIKV_CONTAINER.TIKV_CONTAINER_NAME, DB_TIKV_CONTAINER.POS.row, DB_TIKV_CONTAINER.POS.col, "node");
-			this.TikvContainer._id = DB_TIKV_CONTAINER.TIKV_CONTAINER_ID;
-			this.TidbContainer = this.makeContainer(DB_TIDB_CONTAINER.POS.x, DB_TIDB_CONTAINER.POS.y, 
-					DB_TIDB_CONTAINER.TIDB_CONTAINER_NAME, DB_TIDB_CONTAINER.POS.row, DB_TIDB_CONTAINER.POS.col, "node");
-			this.TidbContainer._id = DB_TIDB_CONTAINER.TIDB_CONTAINER_ID;
-				
-			for (var i=0; i<DB_PD_CONTAINER.DB_PD.length; i++) {
-				var pd = DB_PD_CONTAINER.DB_PD[i];
-				var node = this.addNodeToContainer(this.PDContainer.x+1, this.PDContainer.y+1, 
-						this.iconDir+this.PDIcon, pd.PD_NAME, this.PD_CONST, this.nodeMenu, this.PDContainer, true);
-				this.setMetaData(node, pd);
-			}
-				
-			for (var i=0; i<DB_TIKV_CONTAINER.DB_TIKV.length; i++) {
-				var tikv = DB_TIKV_CONTAINER.DB_TIKV[i];
-				var node = this.addNodeToContainer(this.TikvContainer.x+1, this.TikvContainer.y+1, 
-						this.iconDir+this.TikvIcon, tikv.TIKV_NAME, this.TIKV_CONST, this.nodeMenu, this.TikvContainer, true);
-				this.setMetaData(node, tikv);
-			}
-				
-			for (var i=0; i<DB_TIDB_CONTAINER.DB_TIDB.length; i++) {
-				var tidb = DB_TIDB_CONTAINER.DB_TIDB[i];
-				var node = this.addNodeToContainer(this.TidbContainer.x+1, this.TidbContainer.y+1, 
-						this.iconDir+this.TidbIcon, tidb.TIDB_NAME, this.TIDB_CONST, this.nodeMenu, this.TidbContainer, true);
-				this.setMetaData(node, tidb);
-			}
-				
-			if (collectd) {
-				this.addCollectd(collectd.POS.x, collectd.POS.y, this.iconDir+this.collectdIcon, 
-						collectd.COLLECTD_NAME, this.COLLECTD_CONST, this.nodeMenu, true),
-				this.setMetaData(this.collectd, collectd);
-			}
-				
-			this.PDForm.hide();
-			this.TikvForm.hide();
-			this.TidbForm.hide();
-			this.CollectdForm.hide();
-				
-		} else {
-			this.needInitTopo = true;
-			this.PDContainer = this.makeContainer(this.width*0.12, this.height*0.4, "PD集群", 1, 3, "node");
-			this.TikvContainer = this.makeContainer(this.width*0.5, this.height*0.6, "TiKV集群", 1, 3, "node");
-			this.TidbContainer = this.makeContainer(this.width*0.5, this.height*0.2, "TiDB集群", 1, 3, "node");
-		}
-			
-		//添加container连接
-		var link = new JTopo.FlexionalLink(this.PDContainer, this.TikvContainer);
-		link.direction = 'horizontal';
-		this.scene.add(link);
-		link = new JTopo.FlexionalLink(this.PDContainer, this.TidbContainer);
-		link.direction = 'horizontal';
-		this.scene.add(link);
-		link = new JTopo.Link(this.TidbContainer, this.TikvContainer);
-		link.direction = 'vertical';
-		this.scene.add(link);
-		
-		this.loadingDiv.hide();
 		
 		//-------------------------------- 以下是函数定义----------------------------------
+		
+		//初始化3个container：PD, Tikv, Tidb
+		this.initContainer = function() {
+			if (data!=null) {
+				this.needInitTopo = false;
+				var DB_TIDB_CONTAINER = data.DB_TIDB_CONTAINER;
+				var DB_TIKV_CONTAINER = data.DB_TIKV_CONTAINER;
+				var DB_PD_CONTAINER = data.DB_PD_CONTAINER;
+				var collectd = data.DB_COLLECTD;
+					
+				this.PDContainer = this.makeContainer(DB_PD_CONTAINER.POS.x, DB_PD_CONTAINER.POS.y, 
+						DB_PD_CONTAINER.PD_CONTAINER_NAME, DB_PD_CONTAINER.POS.row, DB_PD_CONTAINER.POS.col, "node");
+				this.PDContainer._id = DB_PD_CONTAINER.PD_CONTAINER_ID;
+				this.TikvContainer = this.makeContainer(DB_TIKV_CONTAINER.POS.x, DB_TIKV_CONTAINER.POS.y, 
+						DB_TIKV_CONTAINER.TIKV_CONTAINER_NAME, DB_TIKV_CONTAINER.POS.row, DB_TIKV_CONTAINER.POS.col, "node");
+				this.TikvContainer._id = DB_TIKV_CONTAINER.TIKV_CONTAINER_ID;
+				this.TidbContainer = this.makeContainer(DB_TIDB_CONTAINER.POS.x, DB_TIDB_CONTAINER.POS.y, 
+						DB_TIDB_CONTAINER.TIDB_CONTAINER_NAME, DB_TIDB_CONTAINER.POS.row, DB_TIDB_CONTAINER.POS.col, "node");
+				this.TidbContainer._id = DB_TIDB_CONTAINER.TIDB_CONTAINER_ID;
+					
+				for (var i=0; i<DB_PD_CONTAINER.DB_PD.length; i++) {
+					var pd = DB_PD_CONTAINER.DB_PD[i];
+					var node = this.addNodeToContainer(this.PDContainer.x+1, this.PDContainer.y+1, 
+							this.iconDir+this.PDIcon, pd.PD_NAME, this.PD_CONST, this.nodeMenu, this.PDContainer, true);
+					this.setMetaData(node, pd);
+				}
+					
+				for (var i=0; i<DB_TIKV_CONTAINER.DB_TIKV.length; i++) {
+					var tikv = DB_TIKV_CONTAINER.DB_TIKV[i];
+					var node = this.addNodeToContainer(this.TikvContainer.x+1, this.TikvContainer.y+1, 
+							this.iconDir+this.TikvIcon, tikv.TIKV_NAME, this.TIKV_CONST, this.nodeMenu, this.TikvContainer, true);
+					this.setMetaData(node, tikv);
+				}
+					
+				for (var i=0; i<DB_TIDB_CONTAINER.DB_TIDB.length; i++) {
+					var tidb = DB_TIDB_CONTAINER.DB_TIDB[i];
+					var node = this.addNodeToContainer(this.TidbContainer.x+1, this.TidbContainer.y+1, 
+							this.iconDir+this.TidbIcon, tidb.TIDB_NAME, this.TIDB_CONST, this.nodeMenu, this.TidbContainer, true);
+					this.setMetaData(node, tidb);
+				}
+					
+				if (collectd) {
+					this.addCollectd(collectd.POS.x, collectd.POS.y, this.iconDir+this.collectdIcon, 
+							collectd.COLLECTD_NAME, this.COLLECTD_CONST, this.nodeMenu, true),
+					this.setMetaData(this.collectd, collectd);
+				}
+					
+				this.PDForm.hide();
+				this.TikvForm.hide();
+				this.TidbForm.hide();
+				this.CollectdForm.hide();
+					
+			} else {
+				this.needInitTopo = true;
+				this.PDContainer = this.makeContainer(this.width*0.15, this.height*0.4, "PD集群", 1, 3, "node");
+				this.TikvContainer = this.makeContainer(this.width*0.55, this.height*0.6, "TiKV集群", 1, 3, "node");
+				this.TidbContainer = this.makeContainer(this.width*0.55, this.height*0.2, "TiDB集群", 1, 3, "node");
+			}
+				
+			//添加container连接
+			var link = new JTopo.FlexionalLink(this.PDContainer, this.TikvContainer);
+			link.direction = 'horizontal';
+			this.scene.add(link);
+			link = new JTopo.FlexionalLink(this.PDContainer, this.TidbContainer);
+			link.direction = 'horizontal';
+			this.scene.add(link);
+			link = new JTopo.Link(this.TidbContainer, this.TikvContainer);
+			link.direction = 'vertical';
+			this.scene.add(link);
+			
+			this.loadingDiv.hide();
+		}
 		
 		//Tidb面板新增组件
 		this.newComponent = function(x, y, datatype) {
@@ -352,6 +355,9 @@ var Component = window.Component || {};
 			
 			return {"DB_SERV_CONTAINER": DB_SERV_CONTAINER};
 		}
+		
+		//初始化
+		this.initContainer();
 	}
 	
 	TidbPlate.prototype = new Component.Plate();

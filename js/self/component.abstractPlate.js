@@ -22,15 +22,15 @@ var Component = window.Component || {};
 		//一些与html及外部有关的参数
 		this.iconDir = "./img/"; //图标路径
 		this.loadingDiv = $("#loading"); //正在后台操作的提示框
-		this.url = "http://192.168.37.175:9991/configsvr/"; //后台地址
+		this.url = "http://192.168.37.175:9991/"; //后台地址
 		
 		//服务
-		this.saveTopoServ = "saveServiceTopoSkeleton"; //保存拓扑结构的服务
-		this.getTopoServ = "loadServiceTopoByInstID"; //获取拓扑结构的服务（包括里面的组件）
-		this.saveElementServ = "saveServiceNode"; //保存组件信息的服务
-		this.delElementServ = "delServiceNode"; //删除组件信息的服务
-		this.deployServ = "cureuprapapa"; //部署组件
-		this.undeployServ = "cureuprapapa"; //卸载组件
+		this.saveTopoServ = "configsvr/saveServiceTopoSkeleton"; //保存拓扑结构的服务
+		this.getTopoServ = "configsvr/loadServiceTopoByInstID"; //获取拓扑结构的服务（包括里面的组件）
+		this.saveElementServ = "configsvr/saveServiceNode"; //保存组件信息的服务
+		this.delElementServ = "configsvr/delServiceNode"; //删除组件信息的服务
+		this.deployServ = "deploy/deployService"; //部署组件
+		this.undeployServ = "undeployService"; //卸载组件
 		this.ajaxTimeout = 5000; //超时时间5秒
 		
 		//初始化舞台
@@ -59,6 +59,15 @@ var Component = window.Component || {};
 			if (window.schema == undefined) {
 				window.schema = '{"$schema":"http://json-schema.org/draft-03/schema#","type":"object","properties":{"DB_SERV_CONTAINER":{"type":"object","required":true,"properties":{"DB_SVC_CONTAINER_ID":{"type":"string","required":true,"minLength":36,"description":"DB服务容器ID"},"DB_SVC_CONTAINER_NAME":{"type":"string","required":true,"description":"DB服务容器名字"},"DB_TIDB_CONTAINER":{"type":"object","required":true,"properties":{"TIDB_CONTAINER_ID":{"type":"string","required":true,"minLength":36,"description":"TIDB容器ID"},"TIDB_CONTAINER_NAME":{"type":"string","required":true,"description":"TIDB容器名字"},"POS":{"type":"object","required":true,"properties":{"x":{"type":"integer","required":true},"y":{"type":"integer","required":true},"width":{"type":"integer"},"height":{"type":"integer"},"row":{"type":"integer"},"col":{"type":"integer"}}},"DB_TIDB":{"type":"array","required":true,"items":{"type":"object","properties":{"TIDB_ID":{"type":"string","required":true,"minLength":36,"description":"TIDBID","inputDisabled":true},"TIDB_NAME":{"type":"string","required":true,"description":"TIDBName"},"IP":{"type":"string","required":true,"description":"IP"},"PORT":{"type":"string","required":true,"description":"服务端口"},"STAT_PORT":{"type":"string","required":true,"description":"统计数据端口"},"OS_USER":{"type":"string","required":true,"description":"系统账户"},"OS_PWD":{"type":"string","required":true,"description":"系统密码"}},"minItems":2}}}},"DB_TIKV_CONTAINER":{"type":"object","required":true,"properties":{"TIKV_CONTAINER_ID":{"type":"string","required":true,"minLength":36,"description":"TIKV容器ID"},"TIKV_CONTAINER_NAME":{"type":"string","required":true,"description":"TIKV容器名字"},"POS":{"type":"object","required":true,"properties":{"x":{"type":"integer","required":true},"y":{"type":"integer","required":true},"width":{"type":"integer"},"height":{"type":"integer"},"row":{"type":"integer"},"col":{"type":"integer"}}},"DB_TIKV":{"type":"array","required":true,"items":{"type":"object","properties":{"TIKV_ID":{"type":"string","required":true,"minLength":36,"description":"TIKVID","inputDisabled":true},"TIKV_NAME":{"type":"string","required":true,"description":"TIKVName"},"IP":{"type":"string","required":true,"description":"IP"},"PORT":{"type":"string","required":true,"description":"服务端口"},"OS_USER":{"type":"string","required":true,"description":"系统账户"},"OS_PWD":{"type":"string","required":true,"description":"系统密码"}},"minItems":3}}}},"DB_PD_CONTAINER":{"type":"object","required":true,"properties":{"PD_CONTAINER_ID":{"type":"string","required":true,"minLength":36,"description":"PD容器ID"},"PD_CONTAINER_NAME":{"type":"string","required":true,"description":"PD容器名字"},"POS":{"type":"object","required":true,"properties":{"x":{"type":"integer","required":true},"y":{"type":"integer","required":true},"width":{"type":"integer"},"height":{"type":"integer"},"row":{"type":"integer"},"col":{"type":"integer"}}},"DB_PD":{"type":"array","required":true,"items":{"type":"object","properties":{"PD_ID":{"type":"string","required":true,"minLength":36,"description":"PDID","inputDisabled":true},"PD_NAME":{"type":"string","required":true,"description":"PDName"},"IP":{"type":"string","required":true,"description":"IP"},"PORT":{"type":"string","required":true,"description":"服务端口"},"CLUSTER_PORT":{"type":"string","required":true,"description":"集群端口"},"OS_USER":{"type":"string","required":true,"description":"系统账户"},"OS_PWD":{"type":"string","required":true,"description":"系统密码"}},"minItems":3}}}},"DB_COLLECTD":{"type":"object","required":true,"properties":{"COLLECTD_ID":{"type":"string","required":true,"minLength":36,"description":"COLLECTDID","inputDisabled":true},"COLLECTD_NAME":{"type":"string","required":true,"description":"COLLECTDNAME"},"IP":{"type":"string","required":true,"description":"IP"},"PORT":{"type":"string","required":true,"description":"服务端口"},"OS_USER":{"type":"string","required":true,"description":"系统账户"},"OS_PWD":{"type":"string","required":true,"description":"系统密码"},"POS":{"type":"object","required":true,"properties":{"x":{"type":"integer","required":true},"y":{"type":"integer","required":true},"width":{"type":"integer"},"height":{"type":"integer"},"row":{"type":"integer"},"col":{"type":"integer"}}}}}}}}}';
 				window.schema = JSON.parse(window.schema);
+				$.ajax({
+						url: "./schema/tidb.new.schema",
+						type: "get",
+						async: false,
+						success: function(data){
+							schema = JSON.parse(data); 
+							window.schema = schema;
+						}
+				});
 			}
 		}
 		
@@ -193,10 +202,10 @@ var Component = window.Component || {};
 				data: {"PARENT_ID":parentID, "INST_ID": element._id},
 				timeout: this.ajaxTimeout,
 				beforeSend: function() {
-					this.loadingDiv.show();
+					self.loadingDiv.show();
 				},
 				complete: function() {
-					this.loadingDiv.hide();
+					self.loadingDiv.hide();
 				},
 				error: function(xhr) {
 					errorAlert("提示", "删除组件信息失败！"+xhr.status+":"+xhr.statusText);
@@ -224,30 +233,31 @@ var Component = window.Component || {};
 		}
 		
 		//保存拓扑数据到后台
-		this.saveTopoData = function(callback) {
-			console.log(JSON.stringify(this.toPlateJson()));
+		this.saveTopoData = function(async) {
+			var self = this;
+			
 			$.ajax({
-				url: this.url+this.savetTopoServ,
+				url: this.url+this.saveTopoServ,
 				type: "post",
 				dataType: "json",
 				data: {"TOPO_JSON": JSON.stringify(plate.toPlateJson()), "SERV_TYPE":"DB"},
 				timeout: this.ajaxTimeout,
+				async: async,
 				beforeSend: function() {
-					this.loadingDiv.show();
+					self.loadingDiv.show();
 				},
 				complete: function() {
-					this.loadingDiv.hide();
+					self.loadingDiv.hide();
 				},
 				error: function(xhr) {
 					errorAlert("提示", "保存面板信息失败！"+xhr.status+":"+xhr.statusText);
 				},
 				success:function(result) {
 					if (result.RET_CODE==0) {
-						successAlert("提示", "保存面板信息成功！");
-						if (this.needInitTopo) {
-							this.needInitTopo = false;
-							callback();
+						if (async) {
+							successAlert("提示", "保存面板信息成功！");
 						}
+						self.needInitTopo = false;
 					} else {
 						errorAlert("提示", "保存面板信息失败！"+result.RET_INFO);
 					}
@@ -258,12 +268,14 @@ var Component = window.Component || {};
 		//获取集群拓扑数据
 		this.getTopoData = function(id) {
 			//测试数据
-//			return  {"DB_SERV_CONTAINER":{"DB_SVC_CONTAINER_ID":"0a161eb3-3434-06a2-45d0-02b1ed7122e8","DB_SVC_CONTAINER_NAME":"集群","DB_TIDB_CONTAINER":{"TIDB_CONTAINER_ID":"e0a56059-780b-ba2d-5df0-d33a51809732","TIDB_CONTAINER_NAME":"TiDB集群","POS":{"x":600,"y":103,"row":1,"col":3},"DB_TIDB":[{"TIDB_ID":"6a607072-0d26-ceac-bd4f-04120e6446f2","TIDB_NAME":"TiDB","IP":"","PORT":"","STAT_PORT":""},{"TIDB_ID":"0e8cfcbd-aaa3-b5b0-8066-f27c53b7b806","TIDB_NAME":"TiDB","IP":"","PORT":"","STAT_PORT":""}]},"DB_TIKV_CONTAINER":{"TIKV_CONTAINER_ID":"a395f9de-9074-a3d1-258a-fa12d5c07a41","TIKV_CONTAINER_NAME":"TiKV集群","POS":{"x":600,"y":309,"row":1,"col":3},"DB_TIKV":[{"TIKV_ID":"51d152a8-8f7b-a296-b233-446d9ee6ac77","TIKV_NAME":"TiKV","IP":"","PORT":""},{"TIKV_ID":"93ec410c-f94f-c3ff-9156-170ed2a939e1","TIKV_NAME":"TiKV","IP":"","PORT":""},{"TIKV_ID":"5091bb19-e8e6-2aa9-f189-f5519ed9a4aa","TIKV_NAME":"TiKV","IP":"","PORT":""}]},"DB_PD_CONTAINER":{"PD_CONTAINER_ID":"7cea12fb-b1fe-7046-1842-9853780ca329","PD_CONTAINER_NAME":"PD集群","POS":{"x":144,"y":200,"row":1,"col":3},"DB_PD":[{"PD_ID":"a4b10cd4-f7d4-da32-48ae-1ea68ea89e56","PD_NAME":"PD","IP":"","PORT":"","CLUSTER_PORT":""},{"PD_ID":"9c59c674-668c-4d79-5007-c2e43e7f14cb","PD_NAME":"PD","IP":"","PORT":"","CLUSTER_PORT":""},{"PD_ID":"c3403a0a-e1ac-3b7a-56f2-e94a214f8f74","PD_NAME":"PD","IP":"","PORT":"","CLUSTER_PORT":""}]},"DB_COLLECTD":{"COLLECTD_ID":"d3a9c6dd-d945-fa9b-8515-c6aef37b7c58","COLLECTD_NAME":"collectd","IP":"","PORT":"","POS":{"x":393,"y":84}}}};
+//			return {"DB_SERV_CONTAINER":{"DB_SVC_CONTAINER_ID":"0a161eb3-3434-06a2-45d0-02b1ed7122e8","DB_SVC_CONTAINER_NAME":"集群","DB_TIDB_CONTAINER":{"TIDB_CONTAINER_ID":"e0a56059-780b-ba2d-5df0-d33a51809732","TIDB_CONTAINER_NAME":"TiDB集群","POS":{"x":600,"y":103,"row":1,"col":3},"DB_TIDB":[{"TIDB_ID":"6a607072-0d26-ceac-bd4f-04120e6446f2","TIDB_NAME":"TiDB","IP":"","PORT":"","STAT_PORT":""},{"TIDB_ID":"0e8cfcbd-aaa3-b5b0-8066-f27c53b7b806","TIDB_NAME":"TiDB","IP":"","PORT":"","STAT_PORT":""}]},"DB_TIKV_CONTAINER":{"TIKV_CONTAINER_ID":"a395f9de-9074-a3d1-258a-fa12d5c07a41","TIKV_CONTAINER_NAME":"TiKV集群","POS":{"x":600,"y":309,"row":1,"col":3},"DB_TIKV":[{"TIKV_ID":"51d152a8-8f7b-a296-b233-446d9ee6ac77","TIKV_NAME":"TiKV","IP":"","PORT":""},{"TIKV_ID":"93ec410c-f94f-c3ff-9156-170ed2a939e1","TIKV_NAME":"TiKV","IP":"","PORT":""},{"TIKV_ID":"5091bb19-e8e6-2aa9-f189-f5519ed9a4aa","TIKV_NAME":"TiKV","IP":"","PORT":""}]},"DB_PD_CONTAINER":{"PD_CONTAINER_ID":"7cea12fb-b1fe-7046-1842-9853780ca329","PD_CONTAINER_NAME":"PD集群","POS":{"x":144,"y":200,"row":1,"col":3},"DB_PD":[{"PD_ID":"a4b10cd4-f7d4-da32-48ae-1ea68ea89e56","PD_NAME":"PD","IP":"","PORT":"","CLUSTER_PORT":""},{"PD_ID":"9c59c674-668c-4d79-5007-c2e43e7f14cb","PD_NAME":"PD","IP":"","PORT":"","CLUSTER_PORT":""},{"PD_ID":"c3403a0a-e1ac-3b7a-56f2-e94a214f8f74","PD_NAME":"PD","IP":"","PORT":"","CLUSTER_PORT":""}]},"DB_COLLECTD":{"COLLECTD_ID":"d3a9c6dd-d945-fa9b-8515-c6aef37b7c58","COLLECTD_NAME":"collectd","IP":"","PORT":"","POS":{"x":393,"y":84}}}};
+//			return {"DB_SERV_CONTAINER":{"DB_SVC_CONTAINER_ID":"5d0fd509-c352-335a-9dbf-d317c16cdb85","DB_SVC_CONTAINER_NAME":"cureuprapapa","DB_TIDB_CONTAINER":{"TIDB_CONTAINER_ID":"00f60e5e-8bb7-0075-c5d4-e4ee8481cfb5","TIDB_CONTAINER_NAME":"TiDB集群","POS":{"x":660,"y":115,"row":1,"col":3},"DB_TIDB":[]},"DB_TIKV_CONTAINER":{"TIKV_CONTAINER_ID":"05db871d-c8d1-2c7a-aa54-ef4d5a678758","TIKV_CONTAINER_NAME":"TiKV集群","POS":{"x":660,"y":345,"row":1,"col":3},"DB_TIKV":[]},"DB_PD_CONTAINER":{"PD_CONTAINER_ID":"22dd363b-86fc-deb5-aee4-fff469d6cac2","PD_CONTAINER_NAME":"PD集群","POS":{"x":180,"y":230,"row":1,"col":3},"DB_PD":[]}}};
 			var value = null;
 			$.ajax({
 				url: this.url+this.getTopoServ,
 				type: "post",
 				dataType: "json",
+				timeout: 30000,
 				async: false,
 				data: {"INST_ID": id},
 				error: function(xhr) {
@@ -272,6 +284,7 @@ var Component = window.Component || {};
 				success:function(result) {
 					if (result.RET_CODE==0) {
 						value = result.RET_INFO;
+						console.log(value);
 					} else {
 						errorAlert("提示", "获取组件信息失败！"+result.RET_INFO);
 					}
@@ -282,11 +295,10 @@ var Component = window.Component || {};
 		
 		//保存组件（单个）数据到后台
 		this.saveElementData = function(element, jsonString, popupForm) {
+			
+			//如果还没有保存拓扑结构，需要先保存拓扑结构
 			if (this.needInitTopo) {
-				this.saveTopoData(function() {
-					this.saveElementData(element, jsonString, popupForm);
-				});
-				return;
+				this.saveTopoData(false);
 			}
 			var parentID = (element.parentContainer!=undefined && element.parentContainer!=null) ? element.parentContainer._id : this.id;
 			var data = {};
@@ -304,10 +316,10 @@ var Component = window.Component || {};
 				data: {"NODE_JSON": JSON.stringify(data), "PARENT_ID":parentID, "OP_TYPE": type},
 				timeout: this.ajaxTimeout,
 				beforeSend: function() {
-					this.loadingDiv.show();
+					self.loadingDiv.show();
 				},
 				complete: function() {
-					this.loadingDiv.hide();
+					self.loadingDiv.hide();
 				},
 				error: function(xhr) {
 					errorAlert("提示", "保存组件信息失败！"+xhr.status+":"+xhr.statusText);
@@ -335,16 +347,38 @@ var Component = window.Component || {};
 			var id = element ? element._id : this.id;
 			var self = this;
 
-			successAlert("提示", "组件部署成功！");
-			if (element) {
-				this.getElementDeployed(element);
-			} else {
-				this.scene.childs.forEach(function(e) {
-					if (e.elementType != "link") {
-						self.getElementDeployed(e);
+			$.ajax({
+				url: this.url+this.deployServ,
+				type: "post",
+				dataType: "json",
+				data: {"SERV_ID": id, "SESSION_KEY": this.randomStr(20, 'k')},
+				timeout: 30000,
+				beforeSend: function() {
+					self.loadingDiv.show();
+				},
+				complete: function() {
+					self.loadingDiv.hide();
+				},
+				error: function(xhr) {
+					errorAlert("提示", "组件部署失败！"+xhr.status+":"+xhr.statusText);
+				},
+				success:function(result) {
+					if (result.RET_CODE==0) {
+						successAlert("提示", "组件部署成功！");
+						if (element) {
+							this.getElementDeployed(element);
+						} else {
+							this.scene.childs.forEach(function(e) {
+								if (e.elementType != "link") {
+									self.getElementDeployed(e);
+								}
+							});
+						}
+					} else {
+						errorAlert("提示", "组件部署失败！"+result.RET_INFO);
 					}
-				});
-			}
+				}
+			});
 		}
 		
 		//卸载组件（只能一个组件）
@@ -357,6 +391,14 @@ var Component = window.Component || {};
 	 	   element.addEventListener('contextmenu', function(e) {
 	 		   self.nodeMenu.show(e);
 	 		   });
+		}
+		
+		//随机串
+		this.randomStr = function(len,radix) {
+		    radix = radix ? 10 : 36;
+		    var rdmString = "";
+		    for (; rdmString.length < len; rdmString += Math.random().toString(radix).substr(2));
+		    return rdmString.substr(0, len);
 		}
 	}
 	
