@@ -127,7 +127,7 @@ var Component = window.Component || {};
 	        	return null;
 			}
 		}
-		
+
 		//新增collectd
 		this.addCollectd = function(x, y, img, text, type, menu, isSaved) {
 			if (this.collectd!=null) {
