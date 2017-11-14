@@ -95,7 +95,7 @@
             });
             this.$submitBtn.click(function () {
                 var data = that.formToJson();
-                that.startLoading();
+                //that.startLoading();
                 that.options.submitCallBack(data);
             });
             this.resize();
