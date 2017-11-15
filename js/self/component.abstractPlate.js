@@ -367,9 +367,9 @@ var Component = window.Component || {};
 					if (result.RET_CODE==0) {
 						successAlert("提示", "组件部署成功！");
 						if (element) {
-							this.getElementDeployed(element);
+							self.getElementDeployed(element);
 						} else {
-							this.scene.childs.forEach(function(e) {
+							self.scene.childs.forEach(function(e) {
 								if (e.elementType != "link") {
 									self.getElementDeployed(e);
 								}

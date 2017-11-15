@@ -8,7 +8,6 @@ var id = "af23fb55-bda1-9bcd-6dc3-c5afefc942d7";
 $(function() {
 	$("#canvas").attr("height",canvasH);
 	$("#canvas").attr("width",canvasW);	
-	console.log(canvasH);
 
 	//初始化面板
 	plate = new Component.TidbPlate("exist", id, $("#canvas")[0]);
