@@ -73,7 +73,7 @@ var Component = window.Component || {};
 		this.plateMenu = $.contextMenu({
 			items:[
 			       {label:'保存面板结构', callback: function(e){
-			    	   self.saveTopoData(true);
+			    	   self.saveTopoData();
 			       }},
 			       {label:'部署面板', callback: function(e){
 			    	   self.deployElement(e.target);

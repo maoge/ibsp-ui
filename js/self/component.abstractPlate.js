@@ -22,7 +22,7 @@ var Component = window.Component || {};
 		//一些与html及外部有关的参数
 		this.iconDir = "./img/"; //图标路径
 		this.loadingDiv = $("#loading"); //正在后台操作的提示框
-		this.url = "http://192.168.37.175:9991/"; //后台地址
+		this.url = "http://127.0.0.1:9991/"; //后台地址
 		
 		//服务
 		this.saveTopoServ = "configsvr/saveServiceTopoSkeleton"; //保存拓扑结构的服务
@@ -230,43 +230,10 @@ var Component = window.Component || {};
 			});
 		}
 		
-		//保存拓扑数据到后台
-		this.saveTopoData = function(async) {
-			var self = this;
-			
-			$.ajax({
-				url: this.url+this.saveTopoServ,
-				type: "post",
-				dataType: "json",
-				data: {"TOPO_JSON": JSON.stringify(plate.toPlateJson()), "SERV_TYPE":"DB"},
-				timeout: this.ajaxTimeout,
-				async: async,
-				beforeSend: function() {
-					self.loadingDiv.show();
-				},
-				complete: function() {
-					self.loadingDiv.hide();
-				},
-				error: function(xhr) {
-					errorAlert("提示", "保存面板信息失败！"+xhr.status+":"+xhr.statusText);
-				},
-				success:function(result) {
-					if (result.RET_CODE==0) {
-						if (async) {
-							successAlert("提示", "保存面板信息成功！");
-						}
-						self.needInitTopo = false;
-					} else {
-						errorAlert("提示", "保存面板信息失败！"+result.RET_INFO);
-					}
-				}
-			});
-		}
-
 		//获取集群拓扑数据
 		this.getTopoData = function(id) {
 			//测试数据
-			return {"DB_SERV_CONTAINER":{"DB_SVC_CONTAINER_ID":"0a161eb3-3434-06a2-45d0-02b1ed7122e8","DB_SVC_CONTAINER_NAME":"集群","DB_TIDB_CONTAINER":{"TIDB_CONTAINER_ID":"e0a56059-780b-ba2d-5df0-d33a51809732","TIDB_CONTAINER_NAME":"TiDB集群","POS":{"x":600,"y":103,"row":1,"col":3},"DB_TIDB":[{"TIDB_ID":"6a607072-0d26-ceac-bd4f-04120e6446f2","TIDB_NAME":"TiDB","IP":"","PORT":"","STAT_PORT":""},{"TIDB_ID":"0e8cfcbd-aaa3-b5b0-8066-f27c53b7b806","TIDB_NAME":"TiDB","IP":"","PORT":"","STAT_PORT":""}]},"DB_TIKV_CONTAINER":{"TIKV_CONTAINER_ID":"a395f9de-9074-a3d1-258a-fa12d5c07a41","TIKV_CONTAINER_NAME":"TiKV集群","POS":{"x":600,"y":309,"row":1,"col":3},"DB_TIKV":[{"TIKV_ID":"51d152a8-8f7b-a296-b233-446d9ee6ac77","TIKV_NAME":"TiKV","IP":"","PORT":""},{"TIKV_ID":"93ec410c-f94f-c3ff-9156-170ed2a939e1","TIKV_NAME":"TiKV","IP":"","PORT":""},{"TIKV_ID":"5091bb19-e8e6-2aa9-f189-f5519ed9a4aa","TIKV_NAME":"TiKV","IP":"","PORT":""}]},"DB_PD_CONTAINER":{"PD_CONTAINER_ID":"7cea12fb-b1fe-7046-1842-9853780ca329","PD_CONTAINER_NAME":"PD集群","POS":{"x":144,"y":200,"row":1,"col":3},"DB_PD":[{"PD_ID":"a4b10cd4-f7d4-da32-48ae-1ea68ea89e56","PD_NAME":"PD","IP":"","PORT":"","CLUSTER_PORT":""},{"PD_ID":"9c59c674-668c-4d79-5007-c2e43e7f14cb","PD_NAME":"PD","IP":"","PORT":"","CLUSTER_PORT":""},{"PD_ID":"c3403a0a-e1ac-3b7a-56f2-e94a214f8f74","PD_NAME":"PD","IP":"","PORT":"","CLUSTER_PORT":""}]},"DB_COLLECTD":{"COLLECTD_ID":"d3a9c6dd-d945-fa9b-8515-c6aef37b7c58","COLLECTD_NAME":"collectd","IP":"","PORT":"","POS":{"x":393,"y":84}}}};
+//			return {"DB_SERV_CONTAINER":{"DB_SVC_CONTAINER_ID":"0a161eb3-3434-06a2-45d0-02b1ed7122e8","DB_SVC_CONTAINER_NAME":"集群","DB_TIDB_CONTAINER":{"TIDB_CONTAINER_ID":"e0a56059-780b-ba2d-5df0-d33a51809732","TIDB_CONTAINER_NAME":"TiDB集群","POS":{"x":600,"y":103,"row":1,"col":3},"DB_TIDB":[{"TIDB_ID":"6a607072-0d26-ceac-bd4f-04120e6446f2","TIDB_NAME":"TiDB","IP":"","PORT":"","STAT_PORT":""},{"TIDB_ID":"0e8cfcbd-aaa3-b5b0-8066-f27c53b7b806","TIDB_NAME":"TiDB","IP":"","PORT":"","STAT_PORT":""}]},"DB_TIKV_CONTAINER":{"TIKV_CONTAINER_ID":"a395f9de-9074-a3d1-258a-fa12d5c07a41","TIKV_CONTAINER_NAME":"TiKV集群","POS":{"x":600,"y":309,"row":1,"col":3},"DB_TIKV":[{"TIKV_ID":"51d152a8-8f7b-a296-b233-446d9ee6ac77","TIKV_NAME":"TiKV","IP":"","PORT":""},{"TIKV_ID":"93ec410c-f94f-c3ff-9156-170ed2a939e1","TIKV_NAME":"TiKV","IP":"","PORT":""},{"TIKV_ID":"5091bb19-e8e6-2aa9-f189-f5519ed9a4aa","TIKV_NAME":"TiKV","IP":"","PORT":""}]},"DB_PD_CONTAINER":{"PD_CONTAINER_ID":"7cea12fb-b1fe-7046-1842-9853780ca329","PD_CONTAINER_NAME":"PD集群","POS":{"x":144,"y":200,"row":1,"col":3},"DB_PD":[{"PD_ID":"a4b10cd4-f7d4-da32-48ae-1ea68ea89e56","PD_NAME":"PD","IP":"","PORT":"","CLUSTER_PORT":""},{"PD_ID":"9c59c674-668c-4d79-5007-c2e43e7f14cb","PD_NAME":"PD","IP":"","PORT":"","CLUSTER_PORT":""},{"PD_ID":"c3403a0a-e1ac-3b7a-56f2-e94a214f8f74","PD_NAME":"PD","IP":"","PORT":"","CLUSTER_PORT":""}]},"DB_COLLECTD":{"COLLECTD_ID":"d3a9c6dd-d945-fa9b-8515-c6aef37b7c58","COLLECTD_NAME":"collectd","IP":"","PORT":"","POS":{"x":393,"y":84}}}};
 //			return {"DB_SERV_CONTAINER":{"DB_SVC_CONTAINER_ID":"5d0fd509-c352-335a-9dbf-d317c16cdb85","DB_SVC_CONTAINER_NAME":"cureuprapapa","DB_TIDB_CONTAINER":{"TIDB_CONTAINER_ID":"00f60e5e-8bb7-0075-c5d4-e4ee8481cfb5","TIDB_CONTAINER_NAME":"TiDB集群","POS":{"x":660,"y":115,"row":1,"col":3},"DB_TIDB":[]},"DB_TIKV_CONTAINER":{"TIKV_CONTAINER_ID":"05db871d-c8d1-2c7a-aa54-ef4d5a678758","TIKV_CONTAINER_NAME":"TiKV集群","POS":{"x":660,"y":345,"row":1,"col":3},"DB_TIKV":[]},"DB_PD_CONTAINER":{"PD_CONTAINER_ID":"22dd363b-86fc-deb5-aee4-fff469d6cac2","PD_CONTAINER_NAME":"PD集群","POS":{"x":180,"y":230,"row":1,"col":3},"DB_PD":[]}}};
 			var value = null;
 			$.ajax({
@@ -291,12 +258,48 @@ var Component = window.Component || {};
 			return value;
 		}
 		
+		//保存拓扑数据到后台
+		this.saveTopoData = function(params) {
+			var self = this;
+			
+			$.ajax({
+				url: this.url+this.saveTopoServ,
+				type: "post",
+				dataType: "json",
+				data: {"TOPO_JSON": JSON.stringify(plate.toPlateJson()), "SERV_TYPE":"DB"},
+				timeout: this.ajaxTimeout,
+				beforeSend: function() {
+					self.loadingDiv.show();
+				},
+				complete: function() {
+					self.loadingDiv.hide();
+				},
+				error: function(xhr) {
+					errorAlert("提示", "保存面板信息失败！"+xhr.status+":"+xhr.statusText);
+				},
+				success:function(result) {
+					if (result.RET_CODE==0) {
+						self.needInitTopo = false;
+						//如果有传入参数，代表是从saveElement过来的，需要调用saveElement保存组件信息
+						if (params) {
+							self.saveElementData(params[0], params[1], params[2]);
+						} else {
+							successAlert("提示", "保存面板信息成功！");
+						}
+					} else {
+						errorAlert("提示", "保存面板信息失败！"+result.RET_INFO);
+					}
+				}
+			});
+		}
+		
 		//保存组件（单个）数据到后台
 		this.saveElementData = function(element, jsonString, popupForm) {
 			
 			//如果还没有保存拓扑结构，需要先保存拓扑结构
 			if (this.needInitTopo) {
-				this.saveTopoData(false);
+				this.saveTopoData([element, jsonString, popupForm]);
+				return; //不需要再往下走了，由saveTopoData成功时调用
 			}
 			var parentID = (element.parentContainer!=undefined && element.parentContainer!=null) ? element.parentContainer._id : this.id;
 			var data = {};
