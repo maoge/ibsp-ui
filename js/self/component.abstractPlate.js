@@ -15,8 +15,8 @@ var Component = window.Component || {};
 		this.fillColor = '225,225,225';
 		this.borderWidth = 2;
 		this.borderRadius = 10;
-		this.defaultWidth = 32; //默认的node尺寸
-		this.defaultHeight = 32;
+		this.defaultWidth = 36; //默认的node尺寸
+		this.defaultHeight = 36;
 		this.padding = 15;
 		
 		//一些与html及外部有关的参数
@@ -32,6 +32,12 @@ var Component = window.Component || {};
 		this.deployServ = "deploy/deployService"; //部署组件
 		this.undeployServ = "undeployService"; //卸载组件
 		this.ajaxTimeout = 5000; //超时时间5秒
+		
+		//状态图标
+		this.deployedIcon = new Image();
+		this.deployedIcon.src = this.iconDir+"status_deployed.png";
+		this.savedIcon = new Image();
+		this.savedIcon.src = this.iconDir+"status_saved.png";
 		
 		//初始化舞台
 		this.initStage = function(name, canvas) {
@@ -101,7 +107,7 @@ var Component = window.Component || {};
 		
 		//创建一个node
 		this.makeNode = function(x, y, img, text, type, menu, isSaved) {
-			var node = new JTopo.Node();
+			var node = new Component.StatusNode();
 			node.font = this.font;
 			node.fontColor= this.fontColor;
 			node.setImage(img);
@@ -109,9 +115,11 @@ var Component = window.Component || {};
 			node.dragable = true;
 	    	node.x = x - this.defaultWidth/2;
 	    	node.y = y - this.defaultHeight/2;
+	    	node.width = this.defaultWidth;
+	    	node.height = this.defaultHeight;
 	    	node.type = type; //组件类型
-	    	node.isDeployed = false; //是否已部署
-	    	node.isSaved = isSaved; //信息是否已保存(从后台得到的节点数据为true，而新拖的节点为false)
+	    	node.status = isSaved ? "saved" : "new";
+	    	node.statusIcons = {"deployed": this.deployedIcon, "saved": this.savedIcon}; //状态图标
 	    	
 	    	node.addEventListener('contextmenu', function(e) {
 	    		menu.show(e);
@@ -247,7 +255,6 @@ var Component = window.Component || {};
 				success:function(result) {
 					if (result.RET_CODE==0) {
 						value = result.RET_INFO;
-						console.log(value);
 					} else {
 						errorAlert("提示", "获取组件信息失败！"+result.RET_INFO);
 					}
@@ -352,7 +359,7 @@ var Component = window.Component || {};
 					if (result.RET_CODE==0) {
 						successAlert("提示", "保存组件信息成功！");
 						self.setMetaData(element, json);
-						element.isSaved = true;
+						element.status = "saved";
 						popupForm.clearLoading();
 						popupForm.hide();
 						self.popElement = null;
@@ -366,15 +373,13 @@ var Component = window.Component || {};
 		
 		//部署组件（一个组件或一个面板）
 		this.deployElement = function(element) {
-			//TODO 部署组件
-			var id = element ? element._id : this.id;
+			var id = element ? element._id : undefined;
 			var self = this;
-
 			$.ajax({
 				url: this.url+this.deployServ,
 				type: "post",
 				dataType: "json",
-				data: {"SERV_ID": id, "SESSION_KEY": this.randomStr(20, 'k')},
+				data: {"INST_ID": id, "SERV_ID": this.id, "SESSION_KEY": this.randomStr(20, 'k')},
 				timeout: 30000,
 				beforeSend: function() {
 					self.loadingDiv.show();

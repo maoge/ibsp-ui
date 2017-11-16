@@ -94,7 +94,7 @@ var Component = window.Component || {};
 		
 		//初始化弹出表单
         var cancelFunction = function(){
-        	if (!self.popElement.isSaved)	self.deleteComponent(self.popElement);
+        	if (self.popElement.status=="new") self.deleteComponent(self.popElement);
         	self.popElement = null;
         };
 		this.PDForm = $.popupForm(this.PD_CONST, window.schema, function(json){
@@ -300,7 +300,7 @@ var Component = window.Component || {};
 		//组件部署成功时的处理
 		this.getElementDeployed = function(element) {
 			if (element.elementType=="node") {
-				element.isDeployed = true;
+				element.status = "deployed";
 				var self = this;
 				element.removeEventListener('contextmenu');
 				element.addEventListener('contextmenu', function(e) {

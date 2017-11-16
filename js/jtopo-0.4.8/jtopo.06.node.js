@@ -25,26 +25,7 @@
             this.initialize(context),
             this.paint = function(canvas) {
                 if (this.image) {
-                    var alpha = canvas.globalAlpha;
-                    canvas.globalAlpha = this.alpha;
-                    if (null != this.alarm && null != this.image.alarm) {
-                    	if (this.alarmStyle == "flash") {
-                    		this.alarmState++;
-                        	if (this.alarmState >= 20) {
-                        		canvas.drawImage(this.image, -this.width / 2, -this.height / 2, this.width, this.height);
-                        		this.alarmState = -this.alarmState;
-                        	} else if (this.alarmState >= 0) {
-                        		canvas.drawImage(this.image.alarm, -this.width / 2, -this.height / 2, this.width, this.height);
-                        	} else {
-                        		canvas.drawImage(this.image, -this.width / 2, -this.height / 2, this.width, this.height);
-                        	}
-                    	} else {
-                    		canvas.drawImage(this.image.alarm, -this.width / 2, -this.height / 2, this.width, this.height);
-                    	}
-                    } else {
-                    	canvas.drawImage(this.image, -this.width / 2, -this.height / 2, this.width, this.height);
-                    }
-                    canvas.globalAlpha = alpha;
+                    this.paintImage(canvas);
                 } else canvas.beginPath(),
                     canvas.fillStyle = "rgba(" + this.fillColor + "," + this.alpha + ")",
                     null == this.borderRadius || 0 == this.borderRadius ? canvas.rect( - this.width / 2, -this.height / 2, this.width, this.height) : canvas.JTopoRoundRect( - this.width / 2, -this.height / 2, this.width, this.height, this.borderRadius),
@@ -54,6 +35,28 @@
                     this.paintBorder(canvas),
                     this.paintCtrl(canvas),
                     this.paintAlarmText(canvas)
+            },
+            this.paintImage = function(canvas) {
+            	var alpha = canvas.globalAlpha;
+                canvas.globalAlpha = this.alpha;
+                if (null != this.alarm && null != this.image.alarm) {
+                	if (this.alarmStyle == "flash") {
+                		this.alarmState++;
+                    	if (this.alarmState >= 20) {
+                    		canvas.drawImage(this.image, -this.width / 2, -this.height / 2, this.width, this.height);
+                    		this.alarmState = -this.alarmState;
+                    	} else if (this.alarmState >= 0) {
+                    		canvas.drawImage(this.image.alarm, -this.width / 2, -this.height / 2, this.width, this.height);
+                    	} else {
+                    		canvas.drawImage(this.image, -this.width / 2, -this.height / 2, this.width, this.height);
+                    	}
+                	} else {
+                		canvas.drawImage(this.image.alarm, -this.width / 2, -this.height / 2, this.width, this.height);
+                	}
+                } else {
+                	canvas.drawImage(this.image, -this.width / 2, -this.height / 2, this.width, this.height);
+                }
+                canvas.globalAlpha = alpha;
             },
             this.paintAlarmText = function(canvas) {
                 if (null != this.alarm && "" != this.alarm) {
