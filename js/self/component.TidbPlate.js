@@ -18,16 +18,15 @@ var Component = window.Component || {};
 				this.loadingDiv.hide();
 				return;
 			}
-			data = data.DB_SERV_CONTAINER;
-			this.initStage(data.DB_SVC_CONTAINER_NAME, canvas);
-			this.id = data.DB_SVC_CONTAINER_ID;
+			this.initStage(data.DB_SERV_CONTAINER.DB_SVC_CONTAINER_NAME, canvas);
+			this.id = data.DB_SERV_CONTAINER.DB_SVC_CONTAINER_ID;
 		}
 		
 		//图标(暂定)
-		this.PDIcon = "tpIcon_7.png";
-		this.TikvIcon = "tpIcon_8.png";
-		this.TidbIcon = "tpIcon_9.png";
-		this.collectdIcon = "tpIcon_10.png";
+		this.PDIcon = "db_pd_icon.png";
+		this.TikvIcon = "db_tikv_icon.png";
+		this.TidbIcon = "db_tidb_icon.png";
+		this.collectdIcon = "db_collectd_icon.png";
 		
 		//常量
 		this.PD_CONST = "DB_PD";
@@ -76,7 +75,17 @@ var Component = window.Component || {};
 			    	   self.saveTopoData();
 			       }},
 			       {label:'部署面板', callback: function(e){
-			    	   self.deployElement(e.target);
+			    	   $.jAlert({
+			    		   'title': '确认',
+			    		   'content': '确认要部署集群“'+self.name+'”吗？',
+			    		   'confirmBtnText':'是',
+			    		   'denyBtnText':'否',
+			    		   'type': 'confirm',
+			    		   'onConfirm': function(e,btn){
+			    			   e.preventDefault();
+					    	   self.deployElement(e.target);
+			    		   }
+			    	   });
 			       }}]
 		});
 		this.scene.addEventListener('contextmenu', function(e) {
@@ -107,6 +116,8 @@ var Component = window.Component || {};
 		//初始化3个container：PD, Tikv, Tidb
 		this.initContainer = function() {
 			if (data!=null) {
+				var deployFlag = data.DEPLOY_FLAG;
+				data = data.DB_SERV_CONTAINER;
 				this.needInitTopo = false;
 				var DB_TIDB_CONTAINER = data.DB_TIDB_CONTAINER;
 				var DB_TIKV_CONTAINER = data.DB_TIKV_CONTAINER;
@@ -154,7 +165,8 @@ var Component = window.Component || {};
 				this.TikvForm.hide();
 				this.TidbForm.hide();
 				this.CollectdForm.hide();
-					
+				
+				this.getDeployFlag(deployFlag);
 			} else {
 				this.needInitTopo = true;
 				this.PDContainer = this.makeContainer(this.width*0.15, this.height*0.4, "PD集群", 1, 3, "node");
