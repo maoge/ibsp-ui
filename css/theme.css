@@ -80,9 +80,9 @@ hr {
 .content {
   min-width: 400px;
   position: relative;
-  min-height: 575px;
+  min-height: 800px;
   background: #fff;
-  margin-left: 165px;
+  margin-left: 240px;
   margin-top: 6px;
   border-left: 1px solid #000000;
   border-left: 1px solid #111;
@@ -260,7 +260,7 @@ a.block-heading:hover,
 }
 /*Navigation*/
 .sidebar-nav {
-  width: 150px;
+  width: 228px;
   position: absolute;
   float: left;
   border-top: none;
@@ -338,16 +338,15 @@ a.block-heading:hover,
   margin: 0px;
   background: #2e2e2e;
   border: 0px;
-  text-align: center;
 }
 .sidebar-nav .nav-list  > li > a:hover {
   background: #262626;
 }
-.sidebar-nav .nav-list  > .active > div,
-.sidebar-nav .nav-list  > .active > div:hover {
+.sidebar-nav .nav-list  > .active > a,
+.sidebar-nav .nav-list  > .active > a:hover {
   background: #262626;
 }
-.sidebar-nav .nav-list  > li > div {
+.sidebar-nav .nav-list  > li > a {
   color: #ddd;
   text-shadow: none;
   padding: .5em 1em;
