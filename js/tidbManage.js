@@ -1,11 +1,13 @@
-var canvasW = $("#contextBody").width()-$("#leftContent").width();
-var canvasH = $("#contextBody").height();
-
-var plate;
-var count = 0;
 var id = "af23fb55-bda1-9bcd-6dc3-c5afefc942d7";
+var plate;
+
+var margin = parseInt($("#contextBody").css("margin-top").substring(0, $("#contextBody").css("margin-top").length-2));
+var canvasW = $("#contextBody").width() - margin*2;
+var canvasH = $("#contextBody").height() - margin*2;
 
 $(function() {
+	$('#toolbox').css("top", $('#navbar').height()+margin);
+	
 	$("#canvas").attr("height",canvasH);
 	$("#canvas").attr("width",canvasW);	
 
@@ -27,7 +29,7 @@ function drag() {
 		this.ondragstart = function (e) {
 			e = e || window.event;
 			var dragSrc = this;
-			var datatype = $(this).attr("datatype");
+			var datatype = $(this).attr("id");
 
 			try {
 				//IE只允许KEY为text和URL

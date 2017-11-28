@@ -26,3 +26,24 @@
 .search-toolbar form{
 	margin:0;
 }
+
+.sidebar-nav.right{
+  width: 125px;
+  position: fixed;
+  top:0px;
+  right:20px;
+  border-top: none;
+  border-left: none;
+  -webkit-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.9);
+  -moz-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.9);
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.9);
+  margin: 0em 6px;
+}
+.sidebar-nav.right .nav-list {
+  text-align: center;
+}
+.sidebar-nav.right .nav-list  > li > div {
+  color: #ddd;
+  text-shadow: none;
+  padding: .5em 1em;
+}
