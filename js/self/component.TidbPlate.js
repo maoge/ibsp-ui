@@ -50,16 +50,12 @@ var Component = window.Component || {};
 			       }},
 			       {label:'删除组件', callback: function(e){
 			    	   var element = e.target;
-			    	   $.jAlert({
-			    		   'title': '确认',
-			    		   'content': '确认删除组件吗？',
-			    		   'confirmBtnText':'是',
-			    		   'denyBtnText':'否',
-			    		   'type': 'confirm',
-			    		   'onConfirm': function(e,btn){
-			    			   e.preventDefault();
-			    			   self.deleteComponentBackground(element);
-			    		   }
+			    	   layer.confirm("确认删除组件吗？", {
+			    		   btn: ['是','否'], //按钮
+			    		   title: "确认"
+			    	   }, function(){
+				    	   layer.close(layer.index);
+		    			   self.deleteComponentBackground(element);
 			    	   });
 			       }}]
 		});
@@ -75,17 +71,17 @@ var Component = window.Component || {};
 			    	   self.saveTopoData();
 			       }},
 			       {label:'部署面板', callback: function(e){
-			    	   $.jAlert({
-			    		   'title': '确认',
-			    		   'content': '确认要部署集群“'+self.name+'”吗？',
-			    		   'confirmBtnText':'是',
-			    		   'denyBtnText':'否',
-			    		   'type': 'confirm',
-			    		   'onConfirm': function(e2,btn){
-			    			   e2.preventDefault();
+			    	   if (self.isDeployed) {
+			    		   Component.Alert("warn", "该集群服务已经部署过");
+			    	   } else {
+				    	   layer.confirm('确认要部署集群“'+self.name+'”吗？', {
+				    		   btn: ['是','否'], //按钮
+				    		   title: "确认"
+				    	   }, function(){
+					    	   layer.close(layer.index);
 					    	   self.deployElement(e.target);
-			    		   }
-			    	   });
+				    	   });
+			    	   }
 			       }}]
 		});
 		this.scene.addEventListener('contextmenu', function(e) {

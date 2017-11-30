@@ -46,7 +46,7 @@ function sqlExplain() {
 			loading.hide();
 		},
 		error: function(xhr) {
-			errorAlert("提示", "获取SQL执行计划失败！"+xhr.status+":"+xhr.statusText);
+			Component.Alert("error", "获取SQL执行计划失败！"+xhr.status+":"+xhr.statusText);
 		},
 		success: function(result) {
 			if (result.RET_CODE == 0) {
@@ -89,7 +89,7 @@ function sqlExplain() {
 			    	}]
 			    });
 			} else {
-				errorAlert("提示", "获取SQL执行计划失败！"+result.RET_INFO);
+				Component.Alert("error", "获取SQL执行计划失败！"+result.RET_INFO);
 			}
 		}
 	});
