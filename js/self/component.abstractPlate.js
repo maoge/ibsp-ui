@@ -30,8 +30,10 @@ var Component = window.Component || {};
 		this.saveElementServ = "configsvr/saveServiceNode"; //保存组件信息的服务
 		this.delElementServ = "configsvr/delServiceNode"; //删除组件信息的服务
 		this.deployServ = "deploy/deployService"; //部署组件
+		this.deployLogServ = "deploy/getDeployLog"; //部署日志
 		this.undeployServ = "undeployService"; //卸载组件
-		this.ajaxTimeout = 5000; //超时时间5秒
+		this.shortTimeout = 5000; //超时时间(短)
+		this.longTimeout = 60000; //超时时间(长，如安装部署等)
 		
 		//状态图标
 		this.deployedIcon = new Image();
@@ -206,7 +208,7 @@ var Component = window.Component || {};
 				type: "post",
 				dataType: "json",
 				data: {"PARENT_ID":parentID, "INST_ID": element._id},
-				timeout: this.ajaxTimeout,
+				timeout: this.shortTimeout,
 				beforeSend: function() {
 					self.loadingDiv.show();
 				},
@@ -240,13 +242,11 @@ var Component = window.Component || {};
 		
 		//获取集群拓扑数据
 		this.getTopoData = function(id) {
-			//测试数据
 			var value = null;
 			$.ajax({
 				url: this.url+this.getTopoServ,
 				type: "post",
 				dataType: "json",
-				timeout: 30000,
 				async: false,
 				data: {"INST_ID": id},
 				error: function(xhr) {
@@ -296,7 +296,7 @@ var Component = window.Component || {};
 				type: "post",
 				dataType: "json",
 				data: {"TOPO_JSON": JSON.stringify(plate.toPlateJson()), "SERV_TYPE":"DB"},
-				timeout: this.ajaxTimeout,
+				timeout: this.shortTimeout,
 				beforeSend: function() {
 					self.loadingDiv.show();
 				},
@@ -344,7 +344,7 @@ var Component = window.Component || {};
 				type: "post",
 				dataType: "json",
 				data: {"NODE_JSON": JSON.stringify(data), "PARENT_ID":parentID, "OP_TYPE": type},
-				timeout: this.ajaxTimeout,
+				timeout: this.shortTimeout,
 				beforeSend: function() {
 					self.loadingDiv.show();
 				},
@@ -373,24 +373,59 @@ var Component = window.Component || {};
 		
 		//部署组件（一个组件或一个面板）
 		this.deployElement = function(element) {
+			var myCurrInt;
+			var height = $(window).height()*0.7;
+			var width = $(window).width()*0.7;
+			var key = this.randomStr(20, 'k');
 			var id = element ? element._id : undefined;
 			var self = this;
+			$("#log").html("deploy start ...<br/>");
+			
+			layer.open({
+				type: 1,
+				title:["控制台信息"],
+				skin: 'layui-layer-self', //加上边框
+				area: [width+'px', height+'px'], //宽高
+				content: $("#log"),
+				btn: ['停止刷新日志', '恢复刷新日志'],
+			  	yes: function(index, layero){
+			  		clearInterval(myCurrInt);
+			  	},
+			  	btn2: function(index, layero){
+			  		clearInterval(myCurrInt);
+			  		myCurrInt = setInterval(function(){
+			  			var logs = self.getDeployLog(key);
+			  			if (self.isNotNull(logs)) {
+			  				$("#log").append(logs);
+			  				$("#log").parent().scrollTop($("#log").height()+20);
+			  			}
+			  		},500);
+			  		return false;
+			  	},
+			  	cancel: function(){ 
+			  		clearInterval(myCurrInt);
+			  	}
+			});
+			
 			$.ajax({
 				url: this.url+this.deployServ,
 				type: "post",
 				dataType: "json",
-				data: {"INST_ID": id, "SERV_ID": this.id, "SESSION_KEY": this.randomStr(20, 'k')},
-				timeout: 30000,
-				beforeSend: function() {
-					self.loadingDiv.show();
-				},
-				complete: function() {
-					self.loadingDiv.hide();
-				},
+				data: {"INST_ID": id, "SERV_ID": this.id, "SESSION_KEY": key},
+				timeout: this.longTimeout,
 				error: function(xhr) {
+					clearInterval(myCurrInt);
 					errorAlert("提示", "组件部署失败！"+xhr.status+":"+xhr.statusText);
 				},
 				success:function(result) {
+					clearInterval(myCurrInt);
+					if (self.isNotNull(myCurrInt)) {
+						var logs = self.getDeployLog(key);
+						if(self.isNotNull(logs)){
+							$("#log").append(logs);
+							$("#log").parent().scrollTop($("#log").height()+20);
+						}
+					}
 					if (result.RET_CODE==0) {
 						successAlert("提示", "组件部署成功！");
 						if (element) {
@@ -407,6 +442,33 @@ var Component = window.Component || {};
 					}
 				}
 			});
+			myCurrInt = setInterval(function(){
+				var logs = self.getDeployLog(key);
+				if(self.isNotNull(logs)){
+					$("#log").append(logs);
+					$("#log").parent().scrollTop($("#log").height()+20);
+				}
+			},500);
+		}
+		
+		this.getDeployLog = function(key) {
+			var res;
+			var self = this;
+			
+			if (this.isNotNull(key)) {
+				$.ajax({
+					url: this.url+this.deployLogServ,
+				    type: "get",
+				    dataType: "json",
+				    data: {key:key},
+				 	async: false,
+				    success: function(result) {
+						if (self.isNotNull(result))			
+							res = result.RET_INFO;
+					}
+				});
+			}
+			return res;
 		}
 		
 		//卸载组件（只能一个组件）
@@ -427,6 +489,15 @@ var Component = window.Component || {};
 		    var rdmString = "";
 		    for (; rdmString.length < len; rdmString += Math.random().toString(radix).substr(2));
 		    return rdmString.substr(0, len);
+		}
+		
+		//是否为空
+		this.isNotNull = function(s) {
+			if (s!=null && s!="" && s!=undefined && s!="undefined" && s!="null") {
+				return true;
+			} else {
+				return false;
+			}
 		}
 	}
 	

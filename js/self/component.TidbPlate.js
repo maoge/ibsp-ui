@@ -81,8 +81,8 @@ var Component = window.Component || {};
 			    		   'confirmBtnText':'是',
 			    		   'denyBtnText':'否',
 			    		   'type': 'confirm',
-			    		   'onConfirm': function(e,btn){
-			    			   e.preventDefault();
+			    		   'onConfirm': function(e2,btn){
+			    			   e2.preventDefault();
 					    	   self.deployElement(e.target);
 			    		   }
 			    	   });

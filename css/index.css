@@ -26,6 +26,21 @@
 .search-toolbar form{
 	margin:0;
 }
+body .layui-layer-self .layui-layer-content{
+	background-color:#000000;
+}
+body .layui-layer-self .layui-layer-btn{
+	background-color:#000000;
+}
+body .layui-layer-self .layui-layer-btn .layui-layer-btn0{
+	background:#3a5c7e;
+	border:none;
+}
+body .layui-layer-self .layui-layer-btn .layui-layer-btn1{
+	background:#805e5e;
+	color:#ffffff;
+	border:none;
+}
 
 .sidebar-nav.right{
   width: 125px;
