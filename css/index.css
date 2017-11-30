@@ -1,6 +1,5 @@
-.tp_table td{
-	padding:10px 0;
-}
+/*stylesheets from mq, with a little adjustment*/
+
 .brand .second {
 	color: #fff;
 	font-weight: bold;
@@ -10,6 +9,7 @@
 	width: 30px;
 	height: 30px;
 }
+
 .search-toolbar ul{
 	list-style-type:none;
 	margin-top:10px;  
@@ -23,9 +23,7 @@
 	width:150px;
 	height:16px;
 }
-.search-toolbar form{
-	margin:0;
-}
+
 body .layui-layer-self .layui-layer-content{
 	background-color:#000000;
 }

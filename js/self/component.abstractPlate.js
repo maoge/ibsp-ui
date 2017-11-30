@@ -144,7 +144,7 @@ var Component = window.Component || {};
 				this.popupForm(node); //弹出信息窗
 				return node;
 			} else {
-	        	warningAlert("提示", "请将组件拖放到对应的容器中！");
+				Component.Alert("warn", "请将组件拖放到对应的容器中！");
 	        	return null;
 			}
 		}
@@ -152,7 +152,7 @@ var Component = window.Component || {};
 		//新增collectd
 		this.addCollectd = function(x, y, img, text, type, menu, isSaved) {
 			if (this.collectd!=null) {
-	        	warningAlert( "提示", "集群中只能有一个collectd！");
+				Component.Alert("warn", "集群中只能有一个collectd！");
 				return false;
 			}
 			x =  this.width/2 - this.scene.translateX - (this.width/2 - x) / this.scene.scaleX;
@@ -216,14 +216,14 @@ var Component = window.Component || {};
 					self.loadingDiv.hide();
 				},
 				error: function(xhr) {
-					errorAlert("提示", "删除组件信息失败！"+xhr.status+":"+xhr.statusText);
+					Component.Alert("error", "删除组件信息失败！"+xhr.status+":"+xhr.statusText);
 				},
 				success:function(result) {
 					if (result.RET_CODE==0) {
-						successAlert("提示", "删除组件信息成功！");
+						Component.Alert("success", "删除组件信息成功！");
 						self.deleteComponent(element); //从jtopo图上删除组件
 					} else {
-						errorAlert("提示", "删除组件信息失败！"+result.RET_INFO);
+						Component.Alert("error", "删除组件信息失败！"+result.RET_INFO);
 					}
 				}
 			});
@@ -250,13 +250,13 @@ var Component = window.Component || {};
 				async: false,
 				data: {"INST_ID": id},
 				error: function(xhr) {
-					errorAlert("提示", "获取组件信息失败！"+xhr.status+":"+xhr.statusText);
+					Component.Alert("error", "获取组件信息失败！"+xhr.status+":"+xhr.statusText);
 				},
 				success:function(result) {
 					if (result.RET_CODE==0) {
 						value = result.RET_INFO;
 					} else {
-						errorAlert("提示", "获取组件信息失败！"+result.RET_INFO);
+						Component.Alert("error", "获取组件信息失败！"+result.RET_INFO);
 					}
 				}
 			});
@@ -304,7 +304,7 @@ var Component = window.Component || {};
 					self.loadingDiv.hide();
 				},
 				error: function(xhr) {
-					errorAlert("提示", "保存面板信息失败！"+xhr.status+":"+xhr.statusText);
+					Component.Alert("error", "保存面板信息失败！"+xhr.status+":"+xhr.statusText);
 				},
 				success:function(result) {
 					if (result.RET_CODE==0) {
@@ -313,10 +313,10 @@ var Component = window.Component || {};
 						if (params) {
 							self.saveElementData(params[0], params[1], params[2]);
 						} else {
-							successAlert("提示", "保存面板信息成功！");
+							Component.Alert("success", "保存面板信息成功！");
 						}
 					} else {
-						errorAlert("提示", "保存面板信息失败！"+result.RET_INFO);
+						Component.Alert("error", "保存面板信息失败！"+result.RET_INFO);
 					}
 				}
 			});
@@ -352,19 +352,19 @@ var Component = window.Component || {};
 					self.loadingDiv.hide();
 				},
 				error: function(xhr) {
-					errorAlert("提示", "保存组件信息失败！"+xhr.status+":"+xhr.statusText);
+					Component.Alert("error", "保存组件信息失败！"+xhr.status+":"+xhr.statusText);
 					popupForm.clearLoading();
 				},
 				success:function(result) {
 					if (result.RET_CODE==0) {
-						successAlert("提示", "保存组件信息成功！");
+						Component.Alert("success", "保存组件信息成功！");
 						self.setMetaData(element, json);
 						element.status = "saved";
 						popupForm.clearLoading();
 						popupForm.hide();
 						self.popElement = null;
 					} else {
-						errorAlert("提示", "保存组件信息失败！"+result.RET_INFO);
+						Component.Alert("error", "保存组件信息失败！"+result.RET_INFO);
 						popupForm.clearLoading();
 					}
 				}
@@ -415,7 +415,7 @@ var Component = window.Component || {};
 				timeout: this.longTimeout,
 				error: function(xhr) {
 					clearInterval(myCurrInt);
-					errorAlert("提示", "组件部署失败！"+xhr.status+":"+xhr.statusText);
+					Component.Alert("error", "组件部署失败！"+xhr.status+":"+xhr.statusText);
 				},
 				success:function(result) {
 					clearInterval(myCurrInt);
@@ -427,7 +427,7 @@ var Component = window.Component || {};
 						}
 					}
 					if (result.RET_CODE==0) {
-						successAlert("提示", "组件部署成功！");
+						Component.Alert("success", "组件部署成功！");
 						if (element) {
 							self.getElementDeployed(element);
 						} else {
@@ -436,9 +436,10 @@ var Component = window.Component || {};
 									self.getElementDeployed(e);
 								}
 							});
+							self.isDeployed = true;
 						}
 					} else {
-						errorAlert("提示", "组件部署失败！"+result.RET_INFO);
+						Component.Alert("error", "组件部署失败！"+result.RET_INFO);
 					}
 				}
 			});
@@ -474,7 +475,7 @@ var Component = window.Component || {};
 		//卸载组件（只能一个组件）
 		this.undeployElement = function(element) {
 	 	   //TODO 卸载组件
-	 	   successAlert("提示", "组件卸载成功！");
+	 	   Component.Alert("success", "组件卸载成功！");
 	 	   element.isDeployed = false;
 	 	   var self = this;
 	 	   element.removeEventListener('contextmenu');

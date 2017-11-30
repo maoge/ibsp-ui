@@ -5,7 +5,6 @@
     <title>TiDB管理</title>
 
     <link href="css/third-party/bootstrap.css" type="text/css" rel="stylesheet" />
-    <link href="css/third-party/jAlert.css" type="text/css" rel="stylesheet" />
 
 	<!-- 暂用的MQ管理平台样式 -->
 	<link href="css/theme.css" type="text/css" rel="stylesheet"/>
@@ -21,7 +20,7 @@
 	</div>
 
 	<div class="sidebar-nav">
-        <a href="#tidb-menu" class="nav-header collapsed" data-toggle="collapse">TiDB管理</a>
+        <a href="#tidb-menu" class="nav-header collapsed" data-toggle="collapse" draggable="false">TiDB管理</a>
         <ul id="tidb-menu" class="nav nav-list collapse in">
 			<li value="TiDB_manage"><a href="javascript:void(0);">TiDB集群管理</a></li>
 			<li value="SQL_explain"><a href="javascript:void(0);">SQL执行计划</a></li>
@@ -41,9 +40,8 @@
 
 <script src="js/third-party/jquery-1.9.1.min.js" type="text/javascript"></script>
 <script src="js/third-party/bootstrap.min.js" type="text/javascript"></script>
-<script src="js/third-party/jAlert.js" type="text/javascript"></script>
-<script src="js/third-party/jAlert-functions.js" type="text/javascript"></script>
 <script src="js/third-party/layer.js" type="text/javascript" ></script>
 
+<script src="js/self/component.alert.js" type="text/javascript" ></script>
 <script src="js/index.js" type="text/javascript" ></script>
 </html>
