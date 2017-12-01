@@ -1,3 +1,5 @@
+rootUrl = "http://127.0.0.1:9991/";
+
 $(function() {
 	$(".content").css("min-height", document.documentElement.clientHeight-$(".navbar").height()-10);
 	$(".content").css("height", document.documentElement.clientHeight-$(".navbar").height()-10);

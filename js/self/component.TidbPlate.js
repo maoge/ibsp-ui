@@ -6,8 +6,10 @@ var Component = window.Component || {};
 	/**
 	 * Tidb面板类
 	 */
-	function TidbPlate(type, param, canvas) {
+	function TidbPlate(url, type, param, canvas) {
 		this.loadingDiv.show();
+		this.setRootUrl(url);
+		
 		//调用父类方法初始化舞台
 		var data = null;
 		if (type == "new") {
@@ -301,6 +303,18 @@ var Component = window.Component || {};
 				element.removeEventListener('contextmenu');
 				element.addEventListener('contextmenu', function(e) {
 					self.deployedMenu.show(e);
+				});
+			}
+		}
+		
+		//组件卸载成功时的处理
+		this.getElementUndeployed = function(element) {
+			if (element.elementType=="node") {
+				element.status = "saved";
+				var self = this;
+				element.removeEventListener('contextmenu');
+				element.addEventListener('contextmenu', function(e) {
+					self.nodeMenu.show(e);
 				});
 			}
 		}

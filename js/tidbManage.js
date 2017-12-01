@@ -12,10 +12,7 @@ $(function() {
 	$("#canvas").attr("width",canvasW);	
 
 	//初始化面板
-	plate = new Component.TidbPlate("exist", id, $("#canvas")[0]);
-//	plate = new Component.TidbPlate("new", "cureuprapapa", $("#canvas")[0]);
-//	plate = new Component.MQPlate("MQ集群", $("#canvas")[0]);
-//	plate = new Component.CachePlate("Cache集群", $("#canvas")[0]);
+	plate = new Component.TidbPlate(rootUrl, "exist", id, $("#canvas")[0]);
 	drag();
 });
 

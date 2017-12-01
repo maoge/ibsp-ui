@@ -18,28 +18,32 @@ var Component = window.Component || {};
 		this.defaultWidth = 36; //默认的node尺寸
 		this.defaultHeight = 36;
 		this.padding = 15;
+		this.shortTimeout = 5000; //超时时间(短)
+		this.longTimeout = 60000; //超时时间(长，如安装部署等)
 		
 		//一些与html及外部有关的参数
 		this.iconDir = "./img/"; //图标路径
 		this.loadingDiv = $("#loading"); //正在后台操作的提示框
-		this.url = "http://127.0.0.1:9991/"; //后台地址
 		
 		//服务
 		this.saveTopoServ = "configsvr/saveServiceTopoSkeleton"; //保存拓扑结构的服务
 		this.getTopoServ = "configsvr/loadServiceTopoByInstID"; //获取拓扑结构的服务（包括里面的组件）
 		this.saveElementServ = "configsvr/saveServiceNode"; //保存组件信息的服务
 		this.delElementServ = "configsvr/delServiceNode"; //删除组件信息的服务
-		this.deployServ = "deploy/deployService"; //部署组件
+		this.deployServ = "deploy/deployService"; //部署服务
 		this.deployLogServ = "deploy/getDeployLog"; //部署日志
-		this.undeployServ = "undeployService"; //卸载组件
-		this.shortTimeout = 5000; //超时时间(短)
-		this.longTimeout = 60000; //超时时间(长，如安装部署等)
+		this.deployInstanceServ = "deploy/deployInstance"; //部署实例
+		this.undeployServ = "deploy/undeployInstance"; //卸载组件
 		
 		//状态图标
 		this.deployedIcon = new Image();
 		this.deployedIcon.src = this.iconDir+"status_deployed.png";
 		this.savedIcon = new Image();
 		this.savedIcon.src = this.iconDir+"status_saved.png";
+		
+		this.setRootUrl = function(url) {
+			this.url = url;
+		}
 		
 		//初始化舞台
 		this.initStage = function(name, canvas) {
@@ -374,41 +378,15 @@ var Component = window.Component || {};
 		//部署组件（一个组件或一个面板）
 		this.deployElement = function(element) {
 			var myCurrInt;
-			var height = $(window).height()*0.7;
-			var width = $(window).width()*0.7;
 			var key = this.randomStr(20, 'k');
 			var id = element ? element._id : undefined;
 			var self = this;
+			var url = element ? this.url+this.deployInstanceServ : this.url+this.deployServ;
 			$("#log").html("deploy start ...<br/>");
-			
-			layer.open({
-				type: 1,
-				title:["控制台信息"],
-				skin: 'layui-layer-self', //加上边框
-				area: [width+'px', height+'px'], //宽高
-				content: $("#log"),
-				btn: ['停止刷新日志', '恢复刷新日志'],
-			  	yes: function(index, layero){
-			  		clearInterval(myCurrInt);
-			  	},
-			  	btn2: function(index, layero){
-			  		clearInterval(myCurrInt);
-			  		myCurrInt = setInterval(function(){
-			  			var logs = self.getDeployLog(key);
-			  			if (self.isNotNull(logs)) {
-			  				$("#log").append(logs);
-			  				$("#log").parent().scrollTop($("#log").height()+20);
-			  			}
-			  		},500);
-			  		return false;
-			  	},
-			  	cancel: function(){ 
-			  		clearInterval(myCurrInt);
-			  	}
-			});
+			this.openLayer(key, myCurrInt);
 			
 			$.ajax({
-				url: this.url+this.deployServ,
+				url: url,
 				type: "post",
 				dataType: "json",
 				data: {"INST_ID": id, "SERV_ID": this.id, "SESSION_KEY": key},
@@ -452,6 +430,84 @@ var Component = window.Component || {};
 			},500);
 		}
 		
+		//卸载组件（只能一个组件）
+		this.undeployElement = function(element) {
+			var myCurrInt;
+			var key = this.randomStr(20, 'k');
+			var self = this;
+			var url = this.url+this.undeployServ;
+			$("#log").html("undeploy start ...<br/>");
+			this.openLayer(key, myCurrInt);
+			
+			$.ajax({
+				url: url,
+				type: "post",
+				dataType: "json",
+				data: {"INST_ID": element._id, "SERV_ID": this.id, "SESSION_KEY": key},
+				timeout: this.longTimeout,
+				error: function(xhr) {
+					clearInterval(myCurrInt);
+					Component.Alert("error", "组件卸载失败！"+xhr.status+":"+xhr.statusText);
+				},
+				success:function(result) {
+					clearInterval(myCurrInt);
+					if (self.isNotNull(myCurrInt)) {
+						var logs = self.getDeployLog(key);
+						if(self.isNotNull(logs)){
+							$("#log").append(logs);
+							$("#log").parent().scrollTop($("#log").height()+20);
+						}
+					}
+					if (result.RET_CODE==0) {
+						Component.Alert("success", "组件卸载成功！");
+						self.getElementUndeployed(element);
+					} else {
+						Component.Alert("error", "组件卸载失败！"+result.RET_INFO);
+					}
+				}
+			});
+			myCurrInt = setInterval(function(){
+				var logs = self.getDeployLog(key);
+				if(self.isNotNull(logs)){
+					$("#log").append(logs);
+					$("#log").parent().scrollTop($("#log").height()+20);
+				}
+			},500);
+		}
+		
+		this.openLayer = function(key, myCurrInt) {
+			var height = $(window).height()*0.7;
+			var width = $(window).width()*0.7;
+			var self = this;
+			
+			var index = layer.open({
+				type: 1,
+				title:["控制台信息"],
+				skin: 'layui-layer-self', //加上边框
+				area: [width+'px', height+'px'], //宽高
+				content: $("#log"),
+				btn: ['停止刷新日志', '恢复刷新日志'],
+			  	yes: function(index, layero){
+			  		clearInterval(myCurrInt);
+			  	},
+			  	btn2: function(index, layero){
+			  		clearInterval(myCurrInt);
+			  		myCurrInt = setInterval(function(){
+			  			var logs = self.getDeployLog(key);
+			  			if (self.isNotNull(logs)) {
+			  				$("#log").append(logs);
+			  				$("#log").parent().scrollTop($("#log").height()+20);
+			  			}
+			  		},500);
+			  		return false;
+			  	},
+			  	cancel: function(){ 
+			  		clearInterval(myCurrInt);
+			  	}
+			});
+			return index;
+		}
+		
 		this.getDeployLog = function(key) {
 			var res;
 			var self = this;
@@ -470,18 +526,6 @@ var Component = window.Component || {};
 				});
 			}
 			return res;
-		}
-		
-		//卸载组件（只能一个组件）
-		this.undeployElement = function(element) {
-	 	   //TODO 卸载组件
-	 	   Component.Alert("success", "组件卸载成功！");
-	 	   element.isDeployed = false;
-	 	   var self = this;
-	 	   element.removeEventListener('contextmenu');
-	 	   element.addEventListener('contextmenu', function(e) {
-	 		   self.nodeMenu.show(e);
-	 		   });
 		}
 		
 		//随机串
