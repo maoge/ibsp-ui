@@ -119,8 +119,8 @@ var Component = window.Component || {};
 			node.setImage(img);
 			node.text = text;
 			node.dragable = true;
-	    	node.x = x - this.defaultWidth/2;
-	    	node.y = y - this.defaultHeight/2;
+	    	node.x = x;
+	    	node.y = y;
 	    	node.width = this.defaultWidth;
 	    	node.height = this.defaultHeight;
 	    	node.type = type; //组件类型
@@ -143,9 +143,12 @@ var Component = window.Component || {};
 	        
 	        if (container!=null && container.isInContainer(x, y)) {
 	    		var node = this.makeNode(x - this.defaultWidth/2, y - this.defaultHeight/2, img, text, type, menu, isSaved);
-				this.scene.add(node);
+				console.log(x+" "+node.x+" "+y+" "+node.y);
+	    		this.scene.add(node);
 				container.add(node);
-				this.popupForm(node); //弹出信息窗
+				if (!isSaved) {
+					this.popupForm(node); //弹出信息窗
+				}
 				return node;
 			} else {
 				Component.Alert("warn", "请将组件拖放到对应的容器中！");
@@ -164,7 +167,9 @@ var Component = window.Component || {};
 			var node = this.makeNode(x - this.defaultWidth/2, y - this.defaultHeight/2, img, text, type, menu, isSaved);
 			this.scene.add(node);
 			this.collectd = node;
-			this.popupForm(node);
+			if (!isSaved) {
+				this.popupForm(node); //弹出信息窗
+			}
 			return true;
 		}
 		

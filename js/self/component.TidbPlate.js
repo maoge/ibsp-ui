@@ -158,11 +158,6 @@ var Component = window.Component || {};
 							collectd.COLLECTD_NAME, this.COLLECTD_CONST, this.nodeMenu, true),
 					this.setMetaData(this.collectd, collectd);
 				}
-					
-				this.PDForm.hide();
-				this.TikvForm.hide();
-				this.TidbForm.hide();
-				this.CollectdForm.hide();
 				
 				this.getDeployFlag(deployFlag);
 			} else {
