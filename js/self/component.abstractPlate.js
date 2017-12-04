@@ -66,7 +66,6 @@ var Component = window.Component || {};
 			this.height = $(canvas).attr("height");
 
 			this.collectd = null;
-			this.isDeployed = false; //是否已部署（集群）
 			
 			if (window.schema == undefined) {
 				$.ajax({
@@ -278,11 +277,7 @@ var Component = window.Component || {};
 			flag.forEach(function(obj) {
 				for(var id in obj) {
 					if (obj[id] == "1") {
-						if (id == self.id) {
-							self.isDeployed = true;
-						} else {
-							deployed.push(id);
-						}
+						deployed.push(id);
 					}
 				}
 			});
@@ -381,13 +376,12 @@ var Component = window.Component || {};
 		
 		//部署组件（一个组件或一个面板）
 		this.deployElement = function(element) {
-			var myCurrInt;
 			var key = this.randomStr(20, 'k');
 			var id = element ? element._id : undefined;
 			var self = this;
 			var url = element ? this.url+this.deployInstanceServ : this.url+this.deployServ;
 			$("#log").html("deploy start ...<br/>");
-			this.openLayer(key, myCurrInt);
+			var myCurrInt = this.openLayer(key, myCurrInt);
 			
 			$.ajax({
 				url: url,
@@ -418,30 +412,21 @@ var Component = window.Component || {};
 									self.getElementDeployed(e);
 								}
 							});
-							self.isDeployed = true;
 						}
 					} else {
 						Component.Alert("error", "组件部署失败！"+result.RET_INFO);
 					}
 				}
 			});
-			myCurrInt = setInterval(function(){
-				var logs = self.getDeployLog(key);
-				if(self.isNotNull(logs)){
-					$("#log").append(logs);
-					$("#log").parent().scrollTop($("#log").height()+20);
-				}
-			},500);
 		}
 		
 		//卸载组件（只能一个组件）
 		this.undeployElement = function(element) {
-			var myCurrInt;
 			var key = this.randomStr(20, 'k');
 			var self = this;
 			var url = this.url+this.undeployServ;
 			$("#log").html("undeploy start ...<br/>");
-			this.openLayer(key, myCurrInt);
+			var myCurrInt = this.openLayer(key, myCurrInt);
 			
 			$.ajax({
 				url: url,
@@ -470,19 +455,19 @@ var Component = window.Component || {};
 					}
 				}
 			});
-			myCurrInt = setInterval(function(){
-				var logs = self.getDeployLog(key);
-				if(self.isNotNull(logs)){
-					$("#log").append(logs);
-					$("#log").parent().scrollTop($("#log").height()+20);
-				}
-			},500);
 		}
 		
 		this.openLayer = function(key, myCurrInt) {
 			var height = $(window).height()*0.7;
 			var width = $(window).width()*0.7;
 			var self = this;
+			var myCurrInt = setInterval(function(){
+				var logs = self.getDeployLog(key);
+				if(self.isNotNull(logs)){
+					$("#log").append(logs);
+					$("#log").parent().scrollTop($("#log").height()+20);
+				}
+			},500);
 			
 			var index = layer.open({
 				type: 1,
@@ -492,6 +477,7 @@ var Component = window.Component || {};
 				content: $("#log"),
 				btn: ['停止刷新日志', '恢复刷新日志'],
 			  	yes: function(index, layero){
+			  		console.log(myCurrInt);
 			  		clearInterval(myCurrInt);
 			  	},
 			  	btn2: function(index, layero){
@@ -509,7 +495,7 @@ var Component = window.Component || {};
 			  		clearInterval(myCurrInt);
 			  	}
 			});
-			return index;
+			return myCurrInt;
 		}
 		
 		this.getDeployLog = function(key) {

@@ -73,17 +73,13 @@ var Component = window.Component || {};
 			    	   self.saveTopoData();
 			       }},
 			       {label:'部署面板', callback: function(e){
-			    	   if (self.isDeployed) {
-			    		   Component.Alert("warn", "该集群服务已经部署过");
-			    	   } else {
-				    	   layer.confirm('确认要部署集群“'+self.name+'”吗？', {
-				    		   btn: ['是','否'], //按钮
-				    		   title: "确认"
-				    	   }, function(){
-					    	   layer.close(layer.index);
-					    	   self.deployElement(e.target);
-				    	   });
-			    	   }
+			    	   layer.confirm('确认要部署集群“'+self.name+'”吗？', {
+			    		   btn: ['是','否'], //按钮
+			    		   title: "确认"
+			    	   }, function(){
+			    		   layer.close(layer.index);
+			    		   self.deployElement(e.target);
+			    	   });
 			       }}]
 		});
 		this.scene.addEventListener('contextmenu', function(e) {
