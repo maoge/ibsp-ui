@@ -101,8 +101,8 @@ var Component = window.Component || {};
 			container.borderWidth = this.borderWidth;
 			container.borderRadius = this.borderRadius;
 
-			container.x = x;
-			container.y = y;
+			container.x = x - container.width/2;
+			container.y = y - container.height/2;
 			container.dragable = true;
 			container.text = text;
 			container.textPosition='Top_Left';
@@ -143,7 +143,6 @@ var Component = window.Component || {};
 	        
 	        if (container!=null && container.isInContainer(x, y)) {
 	    		var node = this.makeNode(x - this.defaultWidth/2, y - this.defaultHeight/2, img, text, type, menu, isSaved);
-				console.log(x+" "+node.x+" "+y+" "+node.y);
 	    		this.scene.add(node);
 				container.add(node);
 				if (!isSaved) {
@@ -341,7 +340,7 @@ var Component = window.Component || {};
 			}
 			var parentID = (element.parentContainer!=undefined && element.parentContainer!=null) ? element.parentContainer._id : this.id;
 			var data = {};
-			var type = element.isSaved ? 2 : 1;
+			var type = element.status!="new" ? 2 : 1;
 			
 			var json = JSON.parse(jsonString);
 			data[element.type] = [];

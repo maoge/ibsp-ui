@@ -364,8 +364,8 @@ var Component = window.Component || {};
 				collectd.COLLECTD_ID = this.collectd._id;
 				collectd.COLLECTD_NAME = this.collectd.text;
 				var pos = {};
-				pos.x = this.collectd.x;
-				pos.y = this.collectd.y;
+				pos.x = this.collectd.x+this.collectd.width/2;
+				pos.y = this.collectd.y+this.collectd.height/2;
 				collectd.POS = pos;
 			}
 			DB_SERV_CONTAINER.DB_COLLECTD = collectd;

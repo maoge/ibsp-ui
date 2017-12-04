@@ -90,8 +90,8 @@ var Component = window.Component || {};
 		//返回一个位置信息的JSON
 		this.getPosJson = function() {
 			var pos = {};
-			pos.x = Math.round(this.x);
-			pos.y = Math.round(this.y);
+			pos.x = Math.round(this.x+this.width/2);
+			pos.y = Math.round(this.y+this.height/2);
 			pos.row = this.rows;
 			pos.col = this.cols;
 			return pos;
