@@ -34,7 +34,7 @@ function sqlExplain() {
 	data.USER_PWD = $('#S_USER_PWD').val();
 	
 	$.ajax({
-		url: rootUrl+"explain/sqlExplainService",
+		url: rootUrl+"tidbsvr/sqlExplainService",
 		data: data,
 		async: true,
 		type: "post",
