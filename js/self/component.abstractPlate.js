@@ -69,7 +69,7 @@ var Component = window.Component || {};
 			
 			if (window.schema == undefined) {
 				$.ajax({
-						url: "/schema/tidb.schema",
+						url: "./schema/tidb.schema",
 						type: "get",
 						async: false,
 						success: function(data){
