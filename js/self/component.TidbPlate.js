@@ -23,7 +23,9 @@ var Component = window.Component || {};
 			this.initStage(data.DB_SERV_CONTAINER.DB_SVC_CONTAINER_NAME, canvas);
 			this.id = data.DB_SERV_CONTAINER.DB_SVC_CONTAINER_ID;
 		}
-		
+
+		this.tikvStatusInterval = "";
+
 		//图标(暂定)
 		this.PDIcon = "db_pd_icon.png";
 		this.TikvIcon = "db_tikv_icon.png";
@@ -266,6 +268,33 @@ var Component = window.Component || {};
 			}
 			return data;
 		}
+		//tidb卸载元素
+		this.undeployElement = function(element){
+			var res = true;
+			switch (element.type) {
+				case 'DB_TIDB' :
+					if(element.parentContainer.childs.length <= 1 ){
+						Component.Alert("error", "TIDB的数量不能小于1！");
+						res = false;
+					}
+					break;
+				case 'DB_TIKV' :
+					if(element.parentContainer.childs.length <= 3 ){
+						Component.Alert("error", "TIKV的数量不能小于3！");
+						res = false;
+					}
+					break;
+				case 'DB_PD' :
+					if(element.parentContainer.childs.length <= 3 ){
+						Component.Alert("error", "PD的数量不能小于3！");
+						res = false;
+					}
+					break;
+			}
+			if(res) {
+				TidbPlate.prototype.undeployElement.call(this, element);
+			}
+		}
 		
 		//弹出窗口
 		this.popupForm = function(element) {
@@ -301,6 +330,15 @@ var Component = window.Component || {};
 		//组件卸载成功时的处理
 		this.getElementUndeployed = function(element) {
 			if (element.elementType=="node") {
+				//如果是tikv的卸载，特殊处理
+				if(element.type == "DB_TIKV"){
+					element.status = "waitFlash";
+					var self = this;
+					element.removeEventListener('contextmenu');
+					//console.log(element);
+					this.tikvStatusInterval = setInterval(this.tikvStatusCheck(id, element.meta.IP+":"+element.meta.PORT, element),1000);
+					return;
+				}
 				element.status = "saved";
 				var self = this;
 				element.removeEventListener('contextmenu');
@@ -308,6 +346,25 @@ var Component = window.Component || {};
 					self.nodeMenu.show(e);
 				});
 			}
+		}
+
+		this.tikvStatusCheck = function(servId, instAdd, element, interval){
+			var that = this;
+			return function(){
+				$.get(url + 'tidbsvr/tikvStatusService',{"SERV_ID":servId,"INST_ADD":instAdd},function(data){
+					var store = data.RET_INFO;
+					if(store == null || store == ""){
+						debugger;
+						//清除闪烁状态
+						clearInterval(that.tikvStatusInterval);
+						element.status = "saved";
+						element.removeEventListener('contextmenu');
+						element.addEventListener('contextmenu', function(e) {
+							self.nodeMenu.show(e);
+						});
+					}
+				});
+			};
 		}
 		
 		//保存面板拓扑信息(位置信息等)
