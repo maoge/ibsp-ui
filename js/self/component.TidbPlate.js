@@ -152,7 +152,9 @@ var Component = window.Component || {};
 				}
 					
 				if (collectd) {
-					this.addCollectd(collectd.POS.x, collectd.POS.y, this.iconDir+this.collectdIcon, 
+					var x = collectd.POS ? collectd.POS.x : 0;
+					var y = collectd.POS ? collectd.POS.y : 0;
+					this.addCollectd(x, y, this.iconDir+this.collectdIcon, 
 							collectd.COLLECTD_NAME, this.COLLECTD_CONST, this.nodeMenu, true),
 					this.setMetaData(this.collectd, collectd);
 				}
