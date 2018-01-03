@@ -293,12 +293,13 @@ var Component = window.Component || {};
 		//保存拓扑数据到后台
 		this.saveTopoData = function(params) {
 			var self = this;
+			var json = params ? plate.toPlateJson(false) : plate.toPlateJson(true);
 			
 			$.ajax({
 				url: this.url+this.saveTopoServ,
 				type: "post",
 				dataType: "json",
-				data: {"TOPO_JSON": JSON.stringify(plate.toPlateJson()), "SERV_TYPE":"DB"},
+				data: {"TOPO_JSON": JSON.stringify(json), "SERV_TYPE":"DB"},
 				timeout: this.shortTimeout,
 				beforeSend: function() {
 					self.loadingDiv.show();
@@ -338,6 +339,13 @@ var Component = window.Component || {};
 			var type = element.status!="new" ? 2 : 1;
 			
 			var json = JSON.parse(jsonString);
+			//collectd需要保存位置信息
+			if (element.type==this.COLLECTD_CONST) {
+				var pos = {};
+				pos['x'] = element.x;
+				pos['y'] = element.y;
+				json['POS'] = pos;
+			}
 			data[element.type] = [];
 			data[element.type].push(json); //单个组件，如果有需要也可以多个
 			var self = this;

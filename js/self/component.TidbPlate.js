@@ -370,7 +370,7 @@ var Component = window.Component || {};
 		}
 		
 		//保存面板拓扑信息(位置信息等)
-		this.toPlateJson = function(type) {
+		this.toPlateJson = function(needCollectd) {
 			
 			var DB_SERV_CONTAINER = {};
 			DB_SERV_CONTAINER.DB_SVC_CONTAINER_ID = this.id;
@@ -415,7 +415,7 @@ var Component = window.Component || {};
 			
 			//collectd
 			var collectd = {};
-			if (this.collectd != null) {
+			if (needCollectd && this.collectd != null) {
 				collectd.COLLECTD_ID = this.collectd._id;
 				collectd.COLLECTD_NAME = this.collectd.text;
 				var pos = {};
