@@ -17,14 +17,14 @@ var Component = window.Component || {};
 
 			canvas.drawImage(this.image, -this.width / 2, -this.height / 2, this.width, this.height);
 
-			canvas.globalAlpha = 0.9;
+//			canvas.globalAlpha = 0.9;
 			if (this.status == "deployed") {
-				canvas.drawImage(this.statusIcons.deployed, 0, 0, this.width / 2, this.height / 2);
+				canvas.drawImage(this.statusIcons.deployed, this.width/12, this.height/12, this.width/12*5, this.height/12*5);
 			} else if (this.status == "saved") {
-				canvas.drawImage(this.statusIcons.saved, 0, 0, this.width / 2, this.height / 2);
+				canvas.drawImage(this.statusIcons.saved, this.width/12, this.height/12, this.width/12*5, this.height/12*5);
 			} else if (this.status == "waitFlash") {
 				this.flash(canvas);
-				canvas.drawImage(this.statusIcons.deployed, 0, 0, this.width / 2, this.height / 2);
+				canvas.drawImage(this.statusIcons.deployed, this.width/12, this.height/12, this.width/12*5, this.height/12*5);
 			}
 			canvas.globalAlpha = alpha;
 		};

@@ -54,9 +54,10 @@ body .layui-layer-self .layui-layer-btn .layui-layer-btn1{
 }
 .sidebar-nav.right .nav-list {
   text-align: center;
+  background: #f8f8f8;
 }
 .sidebar-nav.right .nav-list  > li > div {
-  color: #ddd;
+  color: #000;
   text-shadow: none;
   padding: .5em 1em;
 }
