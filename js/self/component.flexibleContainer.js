@@ -96,6 +96,14 @@ var Component = window.Component || {};
 			pos.col = this.cols;
 			return pos;
 		}
+		
+		//覆盖原生的paintSelected方法
+        this.paintSelected = function(graphics) {
+            graphics.shadowBlur = 5,
+            graphics.shadowColor = "rgba(128,128,128,1)",
+            graphics.shadowOffsetX = 0,
+            graphics.shadowOffsetY = 0
+        }
 	}
 	
 	FlexibleContainer.prototype = new JTopo.Container;

@@ -46,13 +46,13 @@ var Component = window.Component || {};
 		//初始化右键菜单
 		this.nodeMenu = $.contextMenu({
 			items:[
-			       {label:'部署组件', callback: function(e){
+			       {label:'部署组件', icon:'img/icon_install.png', callback: function(e){
 			    	   self.deployElement(e.target);
 			       }},
-			       {label:'修改信息', callback: function(e){
+			       {label:'修改信息', icon:'img/icon_edit.png', callback: function(e){
 			    	   self.popupForm(e.target);
 			       }},
-			       {label:'删除组件', callback: function(e){
+			       {label:'删除组件', icon:'img/icon_delete.png', callback: function(e){
 			    	   var element = e.target;
 			    	   layer.confirm("确认删除组件吗？", {
 			    		   btn: ['是','否'], //按钮
@@ -65,16 +65,23 @@ var Component = window.Component || {};
 		});
 		this.deployedMenu = $.contextMenu({
 			items:[
-			       {label:'卸载(缩容)', callback: function(e){
+			       {label:'卸载(缩容)', icon:'img/icon_delete.png', callback: function(e){
 			    	   self.undeployElement(e.target);
 			       }}]
 		});
 		this.plateMenu = $.contextMenu({
 			items:[
-			       {label:'保存面板结构', callback: function(e){
+			       {label:'保存面板结构', icon:'img/icon_save.png', callback: function(e){
 			    	   self.saveTopoData();
 			       }},
-			       {label:'部署面板', callback: function(e){
+			       {label:'部署面板', icon:'img/icon_install.png', callback: function(e){
+			    	   if (self.PDContainer.childs.length==0 || 
+			    			   self.TikvContainer.childs.length==0 ||
+			    			   self.TidbContainer.childs.length==0 ||
+			    			   self.collectd==null) {
+			    		   Component.Alert("warn", "该集群组件不完整，无法安装部署");
+			    		   return;
+			    	   }
 			    	   layer.confirm('确认要部署集群“'+self.name+'”吗？', {
 			    		   btn: ['是','否'], //按钮
 			    		   title: "确认"
