@@ -42,7 +42,13 @@
         checkboxHeader: true,// 为否隐藏全选按钮
         singleSelect:false,//是否只能单选
         paginationPreText: '&lsaquo;',//上一页的字 默认为<
-        paginationNextText: '&rsaquo;'//上一页的字 默认为>
+        paginationNextText: '&rsaquo;',//上一页的字 默认为>
+        retCode:"RET_CODE",//用于解析
+        retInfo:"RET_INFO",
+        countCloumnName:"COUNT",
+        countAjaxError:function(){},
+        dataAjaxError:function(){},
+        ajaxError:function(){}
     };
     MTable.COLUMN_DEFAULTS={
         checkbox: false,
@@ -278,7 +284,7 @@
             that.updateSelected();
         });
         //绑定buttongroup事件
-        $.each(this.btnGroup, function (i, button) {
+        this.btnGroup != undefined && this.btnGroup.length > 0 && $.each(this.btnGroup, function (i, button) {
             var fun = button.onClick || function(){};
             $.each(that.$body.find('.btn-group-td').find('.btn:eq('+i+')'),function(j){
                 $(this).off('click').on('click',function(){
@@ -587,14 +593,26 @@
             url: url,
             data: query,
             cache: this.options.ajaxCache,
-            contentType: this.options.contentType,
+            //contentType: this.options.contentType,
             dataType: this.options.dataType,
             success: function (res) {
-                that.options.totalRows = res.count;
-                //that.options.smartDisplay = that.options.totalRows <=
+                if(res[that.options.retCode] == 0 || res[that.options.retCode]){
+                    if(res[that.options.retCode] == 0){
+                        that.options.totalRows = res[that.options.retInfo][that.options.countCloumnName];
+                    }else{ //TODO 失败的情况 调用回调
+                        var fun = that.options.countAjaxError;
+                        fun.call(fun,res);
+                        return;
+                    }
+
+                } else if(res[that.options.countCloumnName]){
+                    that.options.totalRows = res[that.options.countCloumnName]
+                }
                 that.initPagination();
             },
             error: function (res) {
+                var fun = that.options.ajaxError;
+                fun.call(fun,res);
                 throw new Error("请求count失败");
             }
         };
@@ -613,16 +631,31 @@
             data: query,
             //data: query || this.options.queryParams,
             cache: this.options.ajaxCache,
-            contentType: this.options.contentType,
+            //contentType: this.options.contentType,
             dataType: this.options.dataType,
             success: function (res) {
-                that.load(res);
+
+                var data = res;
+                if(res[that.options.retCode] == 0 || res[that.options.retCode]){
+                    if(res[that.options.retCode] == 0){
+                        data = res[that.options.retInfo];
+                    }else{//TODO 做回调
+                        var fun = that.options.dataAjaxError;
+                        fun.call(fun,res);
+                        that.$tableLoading.hide();
+                        return;
+                    }
+                }
+                that.load(data);
                 //that.trigger('load-success', res);
                 that.$tableLoading.hide();
             },
             error: function (res) {
                 //that.trigger('load-error', res.status, res);
+                var fun = that.options.ajaxError;
+                fun.call(fun,res);
                 that.$tableLoading.hide();
+                throw new Error("请求date失败");
             }
         };
 

@@ -22,7 +22,7 @@
 .m-table > tbody > tr > td {
     padding: 0;
     margin: 0;
-    vertical-align: bottom;
+    vertical-align: middle;
     border-bottom: 1px solid #ddd;
 }
 .m-table-container{
