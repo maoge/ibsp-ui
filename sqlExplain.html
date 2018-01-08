@@ -2,10 +2,21 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8"/>
-    <title>执行计划</title>
 </head>
 
 <body>
+
+	<div class="header">
+		<h1 class="page-title">SQL执行计划</h1>
+	</div>
+	
+	<ul class="breadcrumb">
+	    <li class="active">
+    		<a href="javascript:toServiceList();">服务集群管理</a>
+    		<span class="divider">/</span>
+    	</li>
+    	<li class="active" id="service_name"></li>
+	</ul>
 
 	<div class="container-fluid" id="top-div">
 		<div class="row-fluid">

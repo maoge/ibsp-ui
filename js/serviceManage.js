@@ -1,20 +1,23 @@
-var id = "73f9e0f6-8f7a-65b6-a9cb-ed1a3f007639";
 var plate;
+var canvasW = getContextWidth();
+var canvasH = getContextHeight();
 
-var margin = parseInt($("#contextBody").css("margin-top").substring(0, $("#contextBody").css("margin-top").length-2));
-var canvasW = $("#contextBody").width() - margin*2;
-var canvasH = $("#contextBody").height() - margin*2;
-
-$(function() {
-	$('#toolbox').css("top", $('#navbar').height()+margin);
+function init(sname, stype, ptype, param) {
+	$('#service_name').text(sname);
 	
 	$("#canvas").attr("height",canvasH);
 	$("#canvas").attr("width",canvasW);	
 
 	//初始化面板
-	plate = new Component.TidbPlate(rootUrl, "exist", id, $("#canvas")[0]);
+	switch(stype) {
+	case "DB":
+		$('#service_type').text("TiDB集群管理");
+		plate = new Component.TidbPlate(rootUrl, ptype, param, $("#canvas")[0]);
+		break;
+	}
+	
 	drag();
-});
+}
 
 /**
  * 初始化组件拖动事件

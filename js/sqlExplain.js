@@ -1,4 +1,4 @@
-var id = "73f9e0f6-8f7a-65b6-a9cb-ed1a3f007639";
+var id = "";
 var myChart = null;
 
 var tidbStyle = {};
@@ -17,12 +17,14 @@ tikv.borderWidth = 3;
 tikvStyle.normal = tikv;
 tikvStyle.emphasis = tikv;
 
-var largeSize = $('#contextBody').height()-$('#button-group').height()-5;
-var smallSize = $('#contextBody').height()-$('#top-div').height()-$('#button-group').height()-5;
+var largeSize = getContextHeight()-$('#button-group').height();
+var smallSize = largeSize-$('#top-div').height();
 
-$(function() {
+function init(servName, servID) {
+	$('#service_name').text(servName);
 	$('#explainGraph').css('min-height', smallSize);
-});
+	id = servID;
+}
 
 function sqlExplain() {
 	var loading = $('#loadingDiv');

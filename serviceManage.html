@@ -2,13 +2,24 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8"/>
-    <title>TiDB集群部署</title>
 
 	<link href="css/self/contextMenu.css" type="text/css" rel="stylesheet"/>
 	<link href="css/self/popupForm.css" type="text/css" rel="stylesheet"/>
 </head>
 
 <body>
+	<div class="header">
+		<h1 class="page-title" id="service_type">服务集群管理</h1>
+	</div>
+	
+	<ul class="breadcrumb">
+	    <li class="active">
+    		<a href="javascript:toServiceList();">服务集群管理</a>
+    		<span class="divider">/</span>
+    	</li>
+    	<li class="active" id="service_name"></li>
+	</ul>
+
 	<div class="sidebar-nav right" id="toolbox">
         <a href="#tidb-deploy" class="nav-header collapsed" data-toggle="collapse" draggable="false">Tidb部署</a>
         <ul id="tidb-deploy" class="nav nav-list collapse in">
@@ -116,5 +127,5 @@
 <script src="js/self/contextMenu.js" type="text/javascript" ></script>
 <script src="js/self/popupForm.js" type="text/javascript" ></script>
 
-<script src="js/tidbManage.js" type="text/javascript" ></script>
+<script src="js/serviceManage.js" type="text/javascript" ></script>
 </html>

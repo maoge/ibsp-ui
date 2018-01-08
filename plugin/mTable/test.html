@@ -31,7 +31,12 @@
         showRefresh : true,
         paginationHAlign:'right',
         paginationVAlign:'both',
-
+        countAjaxError:function(res){
+            console.log(res);
+        },
+        dataAjaxError:function(res){
+            console.log(res);
+        },
         clickToSelect : true,
         columns : [{
             checkbox:true,
@@ -46,8 +51,8 @@
             field : "user_email",
             title : "邮编",
             //width:'10px',//如果内容比设置的大，会自动补齐到最大那一个td的长度
-            align : "center",
-            valign : "middle",
+            align : "center"
+            //valign : "middle",
         }, {
             field : "user_company",
             title : "公司",
@@ -70,7 +75,7 @@
             format:function(value,row,index){
                 var res = value;
                 if(row.user_company === '1'){
-                    return "<div style='background-color: #00ee00;width: 100%;height: 100%;'>"+value+"</div>"
+                    return "<div style='background-color: #00ee00;width: 100%;height: 100%;padding-top: 10px; '>"+value+"</div>"
                 }
                 return res;
             }
