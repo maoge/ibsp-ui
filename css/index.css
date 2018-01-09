@@ -39,6 +39,7 @@ body .layui-layer-self .layui-layer-btn .layui-layer-btn1{
 	color:#ffffff;
 	border:none;
 }
+.modal-body label{ width:130px;}
 
 .sidebar-nav.right{
   width: 125px;

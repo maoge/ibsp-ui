@@ -639,10 +639,11 @@
                 if(res[that.options.retCode] == 0 || res[that.options.retCode]){
                     if(res[that.options.retCode] == 0){
                         data = res[that.options.retInfo];
-                    }else{//TODO 做回调
+                    }else{
                         var fun = that.options.dataAjaxError;
                         fun.call(fun,res);
                         that.$tableLoading.hide();
+                        that.load([]);
                         return;
                     }
                 }
@@ -701,12 +702,18 @@
     };
     MTable.prototype.proxyButtonClickEvent == function(button,row,index){
 
-    }
-
+    };
+    MTable.prototype.refresh = function(){
+        this.initServer();
+    };
+    MTable.prototype.reload = function(option){
+        this.options = $.extend({},this.options,typeof option === 'object' && option);
+        this.initServer();
+    };
     var allowedMethods = [
         'getOptions',
         'getSelections', 'getAllSelections', 'getData',
-        'load', 'append', 'prepend', 'remove', 'removeAll',
+        'load', 'reload',  'append', 'prepend', 'remove', 'removeAll',
         'insertRow', 'updateRow', 'updateCell', 'updateByUniqueId', 'removeByUniqueId',
         'getRowByUniqueId', 'showRow', 'hideRow', 'getHiddenRows',
         'mergeCells', 'refreshColumnTitle',

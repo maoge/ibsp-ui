@@ -65,3 +65,21 @@ function loadServiceList() {
         }]
     });
 }
+
+function addService() {
+	$('#newService').modal("show");
+}
+
+function saveService() {
+	var data = {};
+	data.SERVICE_NAME = $('#SERVICE_NAME').val();
+	data.SERVICE_TYPE = $('#SERVICE_TYPE').val();
+}
+
+function searchService() {
+	serviceListParams.SERVICE_NAME = $('#S_SERVICE_NAME').val();
+	serviceListParams.SERVICE_TYPE = $('#S_SERVICE_TYPE').val();
+	$('#tidb_list').mTable("reload", {
+		queryParams: serviceListParams
+	});
+}
