@@ -6,22 +6,19 @@ var Component = window.Component || {};
 	/**
 	 * Tidb面板类
 	 */
-	function TidbPlate(url, type, param, canvas) {
+	function TidbPlate(url, id, name, canvas) {
 		this.loadingDiv.show();
 		this.setRootUrl(url);
 		
 		//调用父类方法初始化舞台
 		var data = null;
-		if (type == "new") {
-			this.initStage(param, canvas); //此时param是面板的名字
-		} else {
-			data = this.getTopoData(param); //此时param是面板的id
-			if (data == null) {
-				this.loadingDiv.hide();
-				return;
-			}
-			this.initStage(data.DB_SERV_CONTAINER.DB_SVC_CONTAINER_NAME, canvas);
-			this.id = data.DB_SERV_CONTAINER.DB_SVC_CONTAINER_ID;
+		this.initStage(id, name, canvas);
+		data = this.getTopoData(id);
+		if (data == null) {
+			this.loadingDiv.hide();
+			return;
+		} else if (data == "init") {
+			data = null;
 		}
 
 		this.tikvStatusInterval = "";

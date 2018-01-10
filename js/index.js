@@ -22,11 +22,11 @@ function getContextHeight() {
 	var marginBread = parseInt($('.breadcrumb').css("margin-bottom").substring(0, $(".breadcrumb").css("margin-bottom").length-2));
 	return $('#contextBody').height()-marginBody*2-marginBread-$('.header').height()-$('.breadcrumb').height()-5;
 }
-
 function getContextWidth() {
 	var marginBody = parseInt($("#contextBody").css("margin-top").substring(0, $("#contextBody").css("margin-top").length-2));
 	return $('#contextBody').width()-marginBody*2;
 }
+
 
 function isNotNull(s) {
 	if (s!=undefined && s!=null && s!="") {

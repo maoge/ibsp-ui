@@ -45,7 +45,7 @@ function loadServiceList() {
                 text:"管理",
                 onClick:function(button,row,index){
         			$(".content").load("serviceManage.html",function(){
-        				init(row.SERV_NAME, row.SERV_TYPE, "exist", row.INST_ID);
+        				init(row.INST_ID, row.SERV_NAME, row.SERV_TYPE);
         			})
                 }
             },{
@@ -72,8 +72,34 @@ function addService() {
 
 function saveService() {
 	var data = {};
+	var loading = $('#loadingDiv');
 	data.SERVICE_NAME = $('#SERVICE_NAME').val();
 	data.SERVICE_TYPE = $('#SERVICE_TYPE').val();
+	
+	$.ajax({
+		url: rootUrl+"configsvr/addService",
+		data: data,
+		async: true,
+		type: "post",
+		dataType: "json",
+		beforeSend: function() {
+			loading.show();
+		},
+		complete: function() {
+			loading.hide();
+		},
+		error: function(xhr) {
+			Component.Alert("error", "新增服务集群失败！"+xhr.status+":"+xhr.statusText);
+		},
+		success: function(result) {
+			if (result.RET_CODE == 0) {
+				$('#newService').modal("hide");
+				$('#tidb_list').mTable("refresh");
+			} else {
+				Component.Alert("error", "新增服务集群失败！"+result.RET_INFO);
+			}
+		}
+	});
 }
 
 function searchService() {

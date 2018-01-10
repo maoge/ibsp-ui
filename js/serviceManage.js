@@ -2,17 +2,17 @@ var plate;
 var canvasW = getContextWidth();
 var canvasH = getContextHeight();
 
-function init(sname, stype, ptype, param) {
-	$('#service_name').text(sname);
+function init(id, name, type) {
+	$('#service_name').text(name);
 	
 	$("#canvas").attr("height",canvasH);
 	$("#canvas").attr("width",canvasW);	
 
 	//初始化面板
-	switch(stype) {
+	switch(type) {
 	case "DB":
 		$('#service_type').text("TiDB集群管理");
-		plate = new Component.TidbPlate(rootUrl, ptype, param, $("#canvas")[0]);
+		plate = new Component.TidbPlate(rootUrl, id, name, $("#canvas")[0]);
 		break;
 	}
 	
@@ -51,7 +51,9 @@ function drag() {
         e = e || window.event;
         var datatype = e.dataTransfer.getData("text");
         if (datatype) {
-        	plate.newComponent(e.layerX ? e.layerX : e.offsetX, e.layerY ? e.layerY : e.offsetY, datatype);
+        	var x = e.offsetX;
+        	var y = e.offsetY;
+        	plate.newComponent(x, y, datatype);
         }
         if (e.preventDefault()) {
             e.preventDefault();

@@ -46,8 +46,8 @@ var Component = window.Component || {};
 		}
 		
 		//初始化舞台
-		this.initStage = function(name, canvas) {
-			this.id = JTopo.util.guid();
+		this.initStage = function(id, name, canvas) {
+			this.id = id;
 			this.name = name;
 			
 			this.canvas = canvas.getContext("2d");
@@ -136,7 +136,6 @@ var Component = window.Component || {};
 		 * 新增一个node到container中
 		 */
 		this.addNodeToContainer = function(x, y, img, text, type,menu, container, isSaved) {
-			
 			x =  this.width/2 - this.scene.translateX - (this.width/2 - x) / this.scene.scaleX;
 			y = this.height/2 - this.scene.translateY - (this.height/2 - y) / this.scene.scaleY;
 	        
@@ -262,6 +261,8 @@ var Component = window.Component || {};
 				success:function(result) {
 					if (result.RET_CODE==0) {
 						value = result.RET_INFO;
+					} else if (result.RET_CODE==-5) {
+						value = "init";
 					} else {
 						Component.Alert("error", "获取组件信息失败！"+result.RET_INFO);
 					}
