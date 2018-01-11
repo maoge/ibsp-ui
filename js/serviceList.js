@@ -42,6 +42,16 @@ function loadServiceList() {
             title : "操作",
             isButtonColumn:true,
             buttons:[{
+                text:"修改",
+                onClick:function(button,row,index){
+                	$('#newServiceHeader').text("修改服务集群");
+                	$('#SERVICE_TYPE').attr("disabled", true);
+                	$('#SERVICE_TYPE').val(row.SERV_TYPE);
+                	$('#SERVICE_ID').val(row.INST_ID);
+                	$('#SERVICE_NAME').val(row.SERV_NAME);
+                	$('#newService').modal("show");
+                }
+            },{
                 text:"管理",
                 onClick:function(button,row,index){
         			$(".content").load("serviceManage.html",function(){
@@ -67,17 +77,69 @@ function loadServiceList() {
 }
 
 function addService() {
+	$('#newServiceHeader').text("新增服务集群");
+	$('#SERVICE_TYPE').attr("disabled", false);
+	$('#SERVICE_ID').val("");
+	$('#SERVICE_NAME').val("");
 	$('#newService').modal("show");
+}
+
+function delService() {
+	var services = $('#tidb_list').mTable("getSelections");
+	if (services.length<1) {
+		Component.Alert("warn", "请选择服务");
+		return;
+	} else if (services.length>1) {
+		Component.Alert("warn", "一次只能删除一个服务");
+		return;
+	}
+	
+	layer.confirm("确认删除服务吗？", {
+		btn: ['是','否'],
+		title: "确认"
+	}, function(){
+		layer.close(layer.index);
+		var services = $('#tidb_list').mTable("getSelections");
+		var data = {};
+		data.SERV_ID = services[0].INST_ID;
+		var loading = $('#loadingDiv');
+		
+		$.ajax({
+			url: rootUrl+"deploy/deleteService",
+			data: data,
+			async: true,
+			type: "post",
+			dataType: "json",
+			beforeSend: function() {
+				loading.show();
+			},
+			complete: function() {
+				loading.hide();
+			},
+			error: function(xhr) {
+				Component.Alert("error", "删除服务集群失败！"+xhr.status+":"+xhr.statusText);
+			},
+			success: function(result) {
+				if (result.RET_CODE == 0) {
+					layer.msg("删除成功");
+					$('#tidb_list').mTable("refresh");
+				} else {
+					Component.Alert("error", "删除服务集群失败！"+result.RET_INFO);
+				}
+			}
+		});
+	});
 }
 
 function saveService() {
 	var data = {};
 	var loading = $('#loadingDiv');
+	data.SERVICE_ID = $('#SERVICE_ID').val();
 	data.SERVICE_NAME = $('#SERVICE_NAME').val();
 	data.SERVICE_TYPE = $('#SERVICE_TYPE').val();
-	
+
 	$.ajax({
-		url: rootUrl+"configsvr/addService",
+		url: rootUrl+"deploy/addOrModifyService",
 		data: data,
 		async: true,
 		type: "post",
