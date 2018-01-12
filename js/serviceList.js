@@ -39,6 +39,12 @@ function loadServiceList() {
             	return value=='1' ? '已部署' : '未部署';
             }
         } ,{
+            field : "IS_PRODUCT",
+            title : "是否生产环境",
+            format:function(value,row,index){
+            	return value=='1' ? '是' : '否';
+            }
+        } ,{
             title : "操作",
             isButtonColumn:true,
             buttons:[{
@@ -47,6 +53,7 @@ function loadServiceList() {
                 	$('#newServiceHeader').text("修改服务集群");
                 	$('#SERVICE_TYPE').attr("disabled", true);
                 	$('#SERVICE_TYPE').val(row.SERV_TYPE);
+                	$('#IS_PRODUCT').val(row.IS_PRODUCT);
                 	$('#SERVICE_ID').val(row.INST_ID);
                 	$('#SERVICE_NAME').val(row.SERV_NAME);
                 	$('#newService').modal("show");
@@ -81,6 +88,7 @@ function addService() {
 	$('#SERVICE_TYPE').attr("disabled", false);
 	$('#SERVICE_ID').val("");
 	$('#SERVICE_NAME').val("");
+	$('#IS_PRODUCT').val(0);
 	$('#newService').modal("show");
 }
 
@@ -134,9 +142,10 @@ function delService() {
 function saveService() {
 	var data = {};
 	var loading = $('#loadingDiv');
-	data.SERVICE_ID = $('#SERVICE_ID').val();
+	data.SERVICE_ID   = $('#SERVICE_ID').val();
 	data.SERVICE_NAME = $('#SERVICE_NAME').val();
 	data.SERVICE_TYPE = $('#SERVICE_TYPE').val();
+	data.IS_PRODUCT   = $('#IS_PRODUCT').val();
 
 	$.ajax({
 		url: rootUrl+"deploy/addOrModifyService",
