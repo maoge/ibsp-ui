@@ -12,6 +12,8 @@ $(function() {
 			toServiceList();
 		} else if(_menu=="server_list") {
 			$(".content").load("serverList.html",function(){})
+		}else if(_menu=="monitor") {
+			$(".content").load("monitor.html",function(){})
 		}
 	});
 });
