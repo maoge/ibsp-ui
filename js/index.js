@@ -14,6 +14,8 @@ $(function() {
 			$(".content").load("serverList.html",function(){})
 		}else if(_menu=="monitor") {
 			$(".content").load("monitor.html",function(){})
+		}else if(_menu=="metaData") {
+			$(".content").load("metadata.html",function(){})
 		}
 	});
 });

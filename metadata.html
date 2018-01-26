@@ -1,0 +1,196 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8"/>
+	<link href="css/font/treeView/iconfont.css" rel="stylesheet">
+	<style>
+		.list-group {
+			padding-left: 0;
+			margin-bottom: 20px;
+		}
+		.list-group-item {
+			position: relative;
+			display: block;
+			padding: 10px 15px;
+			margin-bottom: -1px;
+			background-color: #fff;
+			border: 1px solid #ddd;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="header">
+		<h1 class="page-title">MetaData 查询</h1>
+	</div>
+	
+	<ul class="breadcrumb">
+    	<li class="active">MetaData 查询</li>
+	</ul>
+	
+	<div class="container-fluid">
+		<div class="row-fluid">
+			<div class="search-toolbar">
+				<ul>
+					<li>INST_ID：<input type="text" id="instId" value="" style="width: 250px"/></li>
+				</ul>
+			</div>
+		</div>
+
+		<div class="row-fluid">
+			<div class="btn-toolbar">
+    			<button class="btn btn-navbar btn-lg" onclick="searchMetaData();" style="position: absolute; right: 20px;">搜索</button>
+  				<div class="btn-group"></div>
+			</div>
+		</div>
+		<hr>
+		<div class="row-fluid" style="">
+			<div class="span4">
+				<h3>元数据树信息</h3>
+				<div id="treeview" class=""></div>
+			</div>
+			<div class="span8">
+				<h3>元数据信息 <span id="containerName"></span></h3>
+
+				<div class="">
+					<table class="table table-bordered">
+						<thead>
+						<tr class="info">
+							<th>属性名称（中文）</th>
+							<th>属性名称</th>
+							<th>属性内容</th>
+						</tr>
+						</thead>
+						<tbody id="cardMetaInfo">
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+
+<script src="js/third-party/treeView.js" type="text/javascript" ></script>
+
+<script>
+	var $instId = $("#instId"),
+			$cardMetaInfo = $("#cardMetaInfo"),
+			$tree = $('#treeview'),
+			$containerName = $("#containerName"),
+			basicUrl = "http://127.0.0.1:9991/";
+
+	function searchMetaData(){
+		var val = $instId.val();
+		val = trim(val);
+		getMetaTree(val,function(data){
+			var retInfo = data;
+			$tree.html("");
+			$tree.treeview({
+				data:retInfo,
+				expandIcon: 'iconfont icon-jiahao',
+				collapseIcon: 'iconfont icon-jianhaocu',
+				onNodeExpanded: function(event, node) {
+					//动态加载子节点
+					/*if(node.nodes.length == 0 ){
+						 getMetaTree(node['text'],function(data){
+							 $tree.treeview("appendTarget", [data[0]['text'], data[0]['nodes']]);
+						});
+					 }*/
+				},
+				onNodeSelected: function(event, node) {
+					getMetaData(node['text'],function(res){
+						$cardMetaInfo.html("");
+						var data;
+						for(var name in res){
+							debugger;
+							$containerName.html("（"+name+"）");
+							data = res[name];
+						}
+						$.each(data,function(index,row){
+							var html = ""
+							$cardMetaInfo.append('<tr class=""><td>'+row['ATTR_VALUE_CN']+'</td> <td>'+row['ATTR_NAME']+'</td> <td>'+row['ATTR_VALUE']+'</td> </tr>');
+						});
+					});
+				}
+			});
+		});
+	}
+
+	function getMetaTree(inst_id,callback){
+		var res = "";
+		var req = {
+			url:basicUrl + "configsvr/getTreeMetaDataByInstId",
+			type:"post",
+			data:{"INST_ID":inst_id},
+			success: function (res) {
+				if(res["RET_CODE"] == 0){
+					var arr = res["RET_INFO"],
+							data = [];
+					//res =  JSON.parse(arr);
+					if(arr.length == 0){
+						data.push({"text":inst_id});
+					}else{
+						data.push({"text":inst_id,nodes:arr});
+					}
+					callback(data);
+				}else{
+					Alert("error",res["RET_INFO"]);
+				}
+			},
+			error:function(err){
+				Alert("error",err);
+			}
+		};
+		$.ajax(req);
+
+		return res;
+	}
+
+	function getMetaData(inst_id,callback){
+		var req = {
+			url:basicUrl+"configsvr/getMetaDataByInstId",
+			type:"post",
+			data:{"INST_ID":inst_id},
+			success: function (res) {
+				if(res["RET_CODE"] == 0){
+					var arr = res["RET_INFO"];
+					callback(arr);
+				}else{
+					Alert("error",res["RET_INFO"]);
+				}
+			},
+			error:function(err){
+				Alert("error",err);
+			}
+		};
+		$.ajax(req);
+	}
+
+	function Alert(type, content) {
+		var options = {};
+		//这里可以扩展皮肤等
+		switch(type) {
+			case "error":
+				options.icon = 2;
+				options.title = "错误";
+				break;
+			case "warn":
+				options.icon = 0;
+				options.title = "提示";
+				break;
+			case "success":
+				options.icon = 1;
+				options.title = "提示";
+				break;
+		}
+
+		var index = layer.alert(content, options);
+		return index;
+	}
+
+	function trim(x) {
+		return x.replace(/^\s+|\s+$/gm,'');
+	}
+
+</script>
+</html>
