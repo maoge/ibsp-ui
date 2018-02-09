@@ -1,5 +1,6 @@
 rootUrl = "http://127.0.0.1:9991/";
 serviceListParams = {};
+serverListParams = {};
 
 $(function() {
 	$(".content").css("min-height", document.documentElement.clientHeight-$(".navbar").height()-10);
@@ -11,7 +12,7 @@ $(function() {
 		if (_menu=="service_list") {
 			toServiceList();
 		} else if(_menu=="server_list") {
-			$(".content").load("serverList.html",function(){})
+			toServerList();
 		}else if(_menu=="monitor") {
 			$(".content").load("monitor.html",function(){})
 		}else if(_menu=="metaData") {
@@ -44,3 +45,6 @@ function toServiceList() {
 	$(".content").load("serviceList.html",function(){loadServiceList()});
 }
 
+function toServerList() {
+	$(".content").load("serverList.html",function(){loadServerList()});
+}

@@ -1,5 +1,5 @@
 function loadServiceList() {
-	$('#tidb_list').mTable({
+	$('#service_list').mTable({
         url: rootUrl+'configsvr/getServiceList',
         countUrl: rootUrl+'configsvr/getServiceCount',
         queryParams: serviceListParams,
@@ -93,7 +93,7 @@ function addService() {
 }
 
 function delService() {
-	var services = $('#tidb_list').mTable("getSelections");
+	var services = $('#service_list').mTable("getSelections");
 	if (services.length<1) {
 		Component.Alert("warn", "请选择服务");
 		return;
@@ -107,7 +107,7 @@ function delService() {
 		title: "确认"
 	}, function(){
 		layer.close(layer.index);
-		var services = $('#tidb_list').mTable("getSelections");
+		var services = $('#service_list').mTable("getSelections");
 		var data = {};
 		data.SERV_ID = services[0].INST_ID;
 		var loading = $('#loadingDiv');
@@ -130,7 +130,7 @@ function delService() {
 			success: function(result) {
 				if (result.RET_CODE == 0) {
 					layer.msg("删除成功");
-					$('#tidb_list').mTable("refresh");
+					$('#service_list').mTable("refresh");
 				} else {
 					Component.Alert("error", "删除服务集群失败！"+result.RET_INFO);
 				}
@@ -165,7 +165,7 @@ function saveService() {
 		success: function(result) {
 			if (result.RET_CODE == 0) {
 				$('#newService').modal("hide");
-				$('#tidb_list').mTable("refresh");
+				$('#service_list').mTable("refresh");
 			} else {
 				Component.Alert("error", "新增服务集群失败！"+result.RET_INFO);
 			}
@@ -176,7 +176,7 @@ function saveService() {
 function searchService() {
 	serviceListParams.SERVICE_NAME = $('#S_SERVICE_NAME').val();
 	serviceListParams.SERVICE_TYPE = $('#S_SERVICE_TYPE').val();
-	$('#tidb_list').mTable("reload", {
+	$('#service_list').mTable("reload", {
 		queryParams: serviceListParams
 	});
 }
