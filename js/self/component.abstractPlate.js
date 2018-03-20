@@ -68,31 +68,21 @@ var Component = window.Component || {};
 			this.collectd = null;
 
 			function loadSchema(schemaName){
-				var url = "./schema/" + schemaName;
-				$.ajax({
-					url: url,
-					type: "get",
-					async: false,
-					success: function(data){
-						window[schemaName] = JSON.parse(data);
-					}
-				});
-			};
-			loadSchema("tidb.schema");
-			loadSchema("mq.schema");
-			/*loadSchema("cache.schema");*/
-
-			if (window.schema == undefined) {
-				$.ajax({
-						url: "./schema/tidb.schema",
+				if(!window[schemaName]){
+					var url = "./schema/" + schemaName;
+					$.ajax({
+						url: url,
 						type: "get",
 						async: false,
 						success: function(data){
-							schema = JSON.parse(data); 
-							window.schema = schema;
+							window[schemaName] = JSON.parse(data);
 						}
-				});
-			}
+					});
+				}
+			};
+			loadSchema("tidb.schema");
+			loadSchema("mq.schema");
+			loadSchema("cache.schema");
 		}
 		
 		//创建一个container容器
@@ -269,6 +259,7 @@ var Component = window.Component || {};
 		//获取集群拓扑数据
 		this.getTopoData = function(id) {
 			var self = this;
+			var value = null;
 			$.ajax({
 				url: this.url+this.getTopoServ,
 				type: "post",
