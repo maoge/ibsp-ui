@@ -66,7 +66,22 @@ var Component = window.Component || {};
 			this.height = $(canvas).attr("height");
 
 			this.collectd = null;
-			
+
+			function loadSchema(schemaName){
+				var url = "./schema/" + schemaName;
+				$.ajax({
+					url: url,
+					type: "get",
+					async: false,
+					success: function(data){
+						window[schemaName] = JSON.parse(data);
+					}
+				});
+			};
+			loadSchema("tidb.schema");
+			loadSchema("mq.schema");
+			/*loadSchema("cache.schema");*/
+
 			if (window.schema == undefined) {
 				$.ajax({
 						url: "./schema/tidb.schema",
@@ -81,7 +96,7 @@ var Component = window.Component || {};
 		}
 		
 		//创建一个container容器
-		this.makeContainer = function(x, y, text, rows, cols, type) {
+		this.makeContainer = function(x, y, text, rows, cols, type, eleType) {
 			var container = null;
 			if (type == "container") {
 				container = new Component.FlexibleContainer(rows, cols, this.padding, this.canvas.measureText("田").width);
@@ -92,7 +107,9 @@ var Component = window.Component || {};
 				container.height = (rows+1)*this.defaultHeight+rows*this.canvas.measureText("田").width+(rows-1)*this.padding;
 				container.width = (cols+1)*this.defaultWidth+(cols-1)*this.padding;
 			}
-			
+			if(eleType){
+				container.type = eleType;
+			}
 			container.fontColor = this.fontColor;
 			container.font = this.font;
 			container.borderColor = this.borderColor;
@@ -171,7 +188,7 @@ var Component = window.Component || {};
 		}
 		
 		//新增一个container到container中
-		this.addContainerToContainer = function(x, y, text, rows, cols, container) {
+		this.addContainerToContainer = function(x, y, text, rows, cols, container, type) {
 			
 			x = this.width/2 - this.scene.translateX - (this.width/2 - x) / this.scene.scaleX;
 			y = this.width/2 - this.scene.translateY - (this.width/2 - y) / this.scene.scaleY;
@@ -179,6 +196,9 @@ var Component = window.Component || {};
 			if (container!=null && container.isInContainer(x, y)) {
 	    		var newContainer = this.makeContainer(x - this.defaultContainerW/2, y - this.defaultContainerH/2, text, 1, 2, "node");
 	    		container.add(newContainer);
+				if(type){
+					newContainer.type = type;
+				}
 				return newContainer;
 			} else {
 				return null;

@@ -1,0 +1,84 @@
+{
+	"$schema": "http://json-schema.org/draft-03/schema#",
+	"type":"object",
+	"properties": {
+		"MQ_SERV_CONTAINER":{
+			"type":"object",
+			"required":true,
+			"properties": {
+				"MQ_SVC_CONTAINER_ID": {"type":"string","required":true,"minLength":36,"description":"MQ服务容器ID"},
+				"MQ_SVC_CONTAINER_NAME": {"type":"string","required":true,"description":"MQ服务容器名字"},
+			
+				"MQ_SWITCH_CONTAINER":{
+					"type":"object",
+					"required":false,
+					"properties": {
+						"MQ_SWITCH_CONTAINER_ID": {"type":"string","required":true,"minLength":36,"description":"MQSwitch容器ID"},
+						"MQ_SWITCH_CONTAINER_NAME": {"type":"string","required":true,"description":"MQSwitch容器名字"},
+						
+						"MQ_SWITCH":{
+							"type":"object",
+							"required":true,
+							"properties": {
+								"MQ_SWITCH_ID": {"type":"string","required":true,"description":"MQ Switch ID"},
+								"MQ_SWITCH_NAME": {"type":"string","required":true,"description":"MQ Switch Name"},
+								"OS_USER": {"type":"string","required":true,"description":"系统账户"},
+								"OS_PWD": {"type":"string","required":true,"description":"系统密码"},
+								"IP": {"type":"string","required":true,"description":"IP"},
+								"PORT": {"type":"string","required":true,"description":"服务端口"},
+								"MGR_PORT": {"type":"string","required":true,"description":"管理端口"}
+							}
+						}
+					}
+				},
+				
+				"MQ_VBROKER_CONTAINER":{
+					"type":"object",
+					"required":true,
+					"properties": {
+						"VBROKER_CONTAINER_ID": {"type":"string","required":true,"minLength":36,"description":"VBroker容器ID"},
+						"VBROKER_CONTAINER_NAME": {"type":"string","required":true,"description":"VBroker容器名字"},
+						
+						"MQ_VBROKER":{
+							"type":"object",
+							"required":true,
+							"properties": {
+								"VBROKER_ID": {"type":"string","required":true,"minLength":36,"description":"VBROKER ID"},
+								"VBROKER_NAME": {"type":"string","required":true,"description":"VBROKER NAME"},
+								"MASTER_ID": {"type":"string","required":false,"description":"主节点ID"},
+								
+								"MQ_BROKER":{
+									"type":"object",
+									"required":true,
+									"properties": {
+										"BROKER_ID": {"type":"string","required":true,"minLength":36,"description":"BROKER ID"},
+										"BROKER_NAME": {"type":"string","required":true,"description":"BROKER NAME"},
+										"IP": {"type":"string","required":true,"description":"IP"},
+										"PORT": {"type":"string","required":true,"description":"服务端口"},
+										"MGR_PORT": {"type":"string","required":true,"description":"管理端口"},
+										"SYNC_PORT": {"type":"string","required":true,"description":"同步端口"},
+										"OS_USER": {"type":"string","required":true,"description":"系统账户"},
+										"OS_PWD": {"type":"string","required":true,"description":"系统密码"}
+									}
+								}
+							}
+						}
+					}
+				},
+				
+				"MQ_COLLECTD":{
+					"type":"object",
+					"required":false,
+					"properties": {
+						"COLLECTD_ID": {"type":"string","required":true,"minLength":36,"description":"COLLECTD ID"},
+						"COLLECTD_NAME": {"type":"string","required":true,"description":"COLLECTD NAME"},
+						"IP": {"type":"string","required":true,"description":"IP"},
+						"PORT": {"type":"string","required":true,"description":"服务端口"},
+						"OS_USER": {"type":"string","required":true,"description":"系统账户"},
+						"OS_PWD": {"type":"string","required":true,"description":"系统密码"}
+					}
+				}
+			}
+		}
+	}
+}

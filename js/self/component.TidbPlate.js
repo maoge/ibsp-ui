@@ -90,16 +90,16 @@ var Component = window.Component || {};
         	if (self.popElement.status=="new") self.deleteComponent(self.popElement);
         	self.popElement = null;
         };
-		this.PDForm = $.popupForm(this.PD_CONST, window.schema, function(json){
+		this.PDForm = $.popupForm(this.PD_CONST, window['tidb.schema'], function(json){
 			self.saveElementData(self.popElement, json, self.PDForm);
         }, cancelFunction);
-		this.TikvForm = $.popupForm(this.TIKV_CONST, window.schema, function(json){
+		this.TikvForm = $.popupForm(this.TIKV_CONST, window['tidb.schema'], function(json){
 			self.saveElementData(self.popElement, json, self.TikvForm);
         }, cancelFunction);
-		this.TidbForm = $.popupForm(this.TIDB_CONST, window.schema, function(json){
+		this.TidbForm = $.popupForm(this.TIDB_CONST, window['tidb.schema'], function(json){
 			self.saveElementData(self.popElement, json, self.TidbForm);
         }, cancelFunction);
-		this.CollectdForm = $.popupForm(this.COLLECTD_CONST, window.schema, function(json){
+		this.CollectdForm = $.popupForm(this.COLLECTD_CONST, window['tidb.schema'], function(json){
 			self.saveElementData(self.popElement, json, self.CollectdForm);
         }, cancelFunction);
 		this.getIpUser("DB", [this.PDForm, this.TikvForm, this.TidbForm, this.CollectdForm]);

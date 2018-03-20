@@ -15,6 +15,8 @@ function init(id, name, type) {
 		case "MQ" :
 			$('#service_type').text("MQ集群管理");
 			plate = new Component.MQPlate(rootUrl, id, name, $("#canvas")[0]);
+			$("#tidb-deploy").hide();
+			$("#mq-deploy").show();
 			break;
 	}
 	
@@ -31,7 +33,6 @@ function drag() {
 			e = e || window.event;
 			var dragSrc = this;
 			var datatype = $(this).attr("id");
-			console.log(datatype);
 			try {
 				//IE只允许KEY为text和URL
 				e.dataTransfer.setData('text', datatype);
