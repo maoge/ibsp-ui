@@ -49,7 +49,6 @@ function drag() {
     
     //创建节点
     $("#mainContent")[0].ondrop = function (e) {
-		debugger;
         e = e || window.event;
         var datatype = e.dataTransfer.getData("text");
         if (datatype) {

@@ -102,6 +102,7 @@ var Component = window.Component || {};
 		this.CollectdForm = $.popupForm(this.COLLECTD_CONST, window.schema, function(json){
 			self.saveElementData(self.popElement, json, self.CollectdForm);
         }, cancelFunction);
+		this.getIpUser("DB", [this.PDForm, this.TikvForm, this.TidbForm, this.CollectdForm]);
 		
 		
 		//-------------------------------- 以下是函数定义----------------------------------

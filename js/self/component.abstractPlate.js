@@ -33,6 +33,7 @@ var Component = window.Component || {};
 		this.deployLogServ = "deploy/getDeployLog"; //部署日志
 		this.deployInstanceServ = "deploy/deployInstance"; //部署实例
 		this.undeployServ = "deploy/undeployInstance"; //卸载组件
+		this.getUserServ = "resourcesvr/getUserByServiceType" //获取服务器IP及操作系统用户信息
 		
 		//状态图标
 		this.deployedIcon = new Image();
@@ -247,7 +248,7 @@ var Component = window.Component || {};
 		
 		//获取集群拓扑数据
 		this.getTopoData = function(id) {
-			var value = null;
+			var self = this;
 			$.ajax({
 				url: this.url+this.getTopoServ,
 				type: "post",
@@ -468,7 +469,6 @@ var Component = window.Component || {};
 		this.openLayer = function(key, myCurrInt) {
 			var height = $(window).height()*0.7;
 			var width = $(window).width()*0.7;
-			debugger;
 			var self = this;
 			var myCurrInt = setInterval(function(){
 				var logs = self.getDeployLog(key);
@@ -509,8 +509,6 @@ var Component = window.Component || {};
 		
 		this.getDeployLog = function(key) {
 			var res;
-			var self = this;
-			
 			if (this.isNotNull(key)) {
 				$.ajax({
 					url: this.url+this.deployLogServ,
@@ -525,6 +523,24 @@ var Component = window.Component || {};
 				});
 			}
 			return res;
+		}
+		
+		//为表单获取服务器主机信息
+		this.getIpUser = function (type, forms) {
+			var self = this;
+			$.ajax({
+				url: this.url+this.getUserServ,
+				type: "post",
+				dataType: "json",
+				data: {"SERVICE_TYPE": type},
+				success:function(result) {
+					if (result.RET_CODE==0) {
+						forms.forEach(function (form) {
+							form.setUserInfo(result.RET_INFO);
+						});
+					}
+				}
+			});
 		}
 		
 		//随机串

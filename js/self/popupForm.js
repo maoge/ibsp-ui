@@ -18,12 +18,14 @@
             $.each(this.options.data, function (index, row) {
                 for (var id in row) {
                     var type = row[id]["type"];
-                    if (type === "string") {
-                        data.push("\"" + id + "\":" + "\"" + that.$form.find("input[name='" + id + "']").val() + "\"");
+                    if (id === "OS_PWD") {
+                    	data.push("\"OS_PWD\":\""+that.getPwdByUser()+"\"");
+                    } else if (type === "string") {
+                        data.push("\"" + id + "\":" + "\"" + that.$form.find(":input[name='" + id + "']").val() + "\"");
                     } else if (type === "array" || type === "object") {
                         continue;
                     } else {
-                        data.push("\"" + id + "\":" + that.$form.find("input[name='" + id + "']").val());
+                        data.push("\"" + id + "\":" + that.$form.find(":input[name='" + id + "']").val());
                     }
                 }
             });
@@ -34,7 +36,10 @@
                 return;
             }
             for (var key in data) {
-                this.$form.find("input[name='" + key + "']").val(data[key]);
+                this.$form.find(":input[name='" + key + "']").val(data[key]);
+                if (key === "IP") {
+                    this.getUsersByIP();
+                }
             }
         };
         this.hide = function () {
@@ -98,12 +103,28 @@
                 //that.startLoading();
                 that.options.submitCallBack(data);
             });
+            
+            //初始化服务器的IP和用户列表，绑定事件
+            var serverList = "";
+            var ipSelect = this.$form.find("select[name='IP']");
+            for (var i in this.options.userInfo) {
+            	var ip = this.options.userInfo[i].SERVER_IP;
+            	serverList += "<option value='"+ip+"'>"+ip+"</option>";
+            }
+            ipSelect.html(serverList);
+            this.getUsersByIP();
+            ipSelect.change(function () {
+            	that.getUsersByIP();
+            });
+            
             this.resize();
             this.hide();
+            
         };
         this.createForm = function (options) {
             var that = this, data = options['data'];
             this.$form = $("<form class='popupFrom'></form>");
+            
             for (var i in data) {
                 var row = data[i];
                 for (var id in row) {
@@ -114,21 +135,69 @@
                         type = field['type'],
                         pattern = field['pattern'],
                         disabled = field['inputDisabled'];
-                    label && $("<fieldset class='popupFormFiedSet'>" +
-                        "<div class='popupFromGroup'>" +
-                        "<label class='popupFormLabel'>" + label + "</label>" +
-                        "<div class = 'popupFormDivInput'>" +
-                        (disabled === true ? "<input class = 'popupFormInput' name='" + id + "' disabled=true >" :
-                        "<input class = 'popupFormInput' name='" + id + "' />") +
-                        "</div>" +
-                        "</div>" +
-                        "</fieldset>").appendTo(that.$form);
-
+                    if (id=="IP" || id=="OS_USER") {
+                        label && $("<fieldset class='popupFormFiedSet'>" +
+                                "<div class='popupFromGroup'>" +
+                                "<label class='popupFormLabel'>" + label + "</label>" +
+                                "<div class = 'popupFormDivSelect'>" +
+                                "<select name='" +id+"'>" +
+                                "</select'>" +
+                                "</div>" +
+                                "</div>" +
+                                "</fieldset>").appendTo(that.$form);
+                    } else if (id!="OS_PWD"){
+                        label && $("<fieldset class='popupFormFiedSet'>" +
+                                "<div class='popupFromGroup'>" +
+                                "<label class='popupFormLabel'>" + label + "</label>" +
+                                "<div class = 'popupFormDivInput'>" +
+                                (disabled === true ? "<input class = 'popupFormInput' name='" + id + "' disabled=true >" :
+                                "<input class = 'popupFormInput' name='" + id + "' />") +
+                                "</div>" +
+                                "</div>" +
+                                "</fieldset>").appendTo(that.$form);
+                    }
                 }
             }
+            
             //解决出现滚动条的时候 FF和IE 下出现padding-bottom丢失情况，把原先的padding-bottom设置为0，最后一个元素添加padding高度
             $("<div style='height:15px'></div>").appendTo(that.$form);
         };
+        
+        //IP、用户和密码相关的函数
+        this.setUserInfo = function(userInfo) {
+        	this.options.userInfo = userInfo;
+        }
+        this.getUsersByIP = function() {
+        	var ip =  this.$form.find("select[name='IP']").val();
+        	var userList = "";
+        	for (var i in this.options.userInfo) {
+        		var server = this.options.userInfo[i];
+        		if (server.SERVER_IP === ip) {
+        			for (var j in server.SSH_LIST) {
+        				var user = server.SSH_LIST[j].SSH_NAME;
+        				userList += "<option value='"+user+"'>"+user+"</option>";
+        			}
+        			break;
+        		}
+        	}
+        	this.$form.find("select[name='OS_USER']").html(userList);
+        };
+        this.getPwdByUser = function() {
+        	var ip =  this.$form.find("select[name='IP']").val();
+        	var userName = this.$form.find("select[name='OS_USER']").val();
+        	for (var i in this.options.userInfo) {
+        		var server = this.options.userInfo[i];
+        		if (server.SERVER_IP === ip) {
+        			for (var j in server.SSH_LIST) {
+        				var user = server.SSH_LIST[j];
+        				if (user.SSH_NAME === userName) {
+        					return user.SSH_PWD;
+        				}
+        			}
+        		}
+        	}
+        };
+        
     };
     $.extend({
         popupForm: function (eleType, schema, submitCallBack, cancelCallBack) {
