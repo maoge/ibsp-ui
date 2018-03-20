@@ -20,7 +20,7 @@
 							"type":"object",
 							"required":true,
 							"properties": {
-								"MQ_SWITCH_ID": {"type":"string","required":true,"description":"MQ Switch ID"},
+								"MQ_SWITCH_ID": {"type":"string","required":true,"description":"MQ Switch ID","inputDisabled":true},
 								"MQ_SWITCH_NAME": {"type":"string","required":true,"description":"MQ Switch Name"},
 								"OS_USER": {"type":"string","required":true,"description":"系统账户"},
 								"OS_PWD": {"type":"string","required":true,"description":"系统密码"},
@@ -36,7 +36,7 @@
 					"type":"object",
 					"required":true,
 					"properties": {
-						"VBROKER_CONTAINER_ID": {"type":"string","required":true,"minLength":36,"description":"VBroker容器ID"},
+						"VBROKER_CONTAINER_ID": {"type":"string","required":true,"minLength":36,"description":"VBroker容器ID","inputDisabled":true},
 						"VBROKER_CONTAINER_NAME": {"type":"string","required":true,"description":"VBroker容器名字"},
 						
 						"MQ_VBROKER":{
@@ -70,7 +70,7 @@
 					"type":"object",
 					"required":false,
 					"properties": {
-						"COLLECTD_ID": {"type":"string","required":true,"minLength":36,"description":"COLLECTD ID"},
+						"COLLECTD_ID": {"type":"string","required":true,"minLength":36,"description":"COLLECTD ID","inputDisabled":true},
 						"COLLECTD_NAME": {"type":"string","required":true,"description":"COLLECTD NAME"},
 						"IP": {"type":"string","required":true,"description":"IP"},
 						"PORT": {"type":"string","required":true,"description":"服务端口"},

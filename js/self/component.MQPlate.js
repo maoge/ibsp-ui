@@ -107,6 +107,7 @@ var Component = window.Component || {};
 			//初始化2个container：MQSwitch、VBrokerContainer
 			/*this.SwitchContainer = this.makeContainer(
 					this.width*0.5-this.defaultWidth*2-this.padding, this.height*0.15, "MQ Switch集群", 1, 3, "node");*/
+			this.needInitTopo = true;
 			this.VBrokerContainer = this.makeContainer(
 					this.width*0.5-this.defaultContainerW*2-this.padding, this.height*0.5, "VBroker容器", 1, 3, "container");
 			
@@ -120,17 +121,13 @@ var Component = window.Component || {};
 	MQPlate.prototype.getMetaData = function(element) {
 		var data = {};
 		switch(element.type) {
-			case this.PD_CONST:
-				data.PD_ID = element._id;
-				data.PD_NAME = element.text;
+			case this.VBROKER_CONST:
+				data.VBROKER_CONTAINER_ID = element._id;
+				data.VBROKER_CONTAINER_NAME = element.text;
 				break;
-			case this.TIKV_CONST:
-				data.TIKV_ID = element._id;
-				data.TIKV_NAME = element.text;
-				break;
-			case this.TIDB_CONST:
-				data.TIDB_ID = element._id;
-				data.TIDB_NAME = element.text;
+			case this.BROKER_CONST:
+				data.BROKER_ID = element._id;
+				data.BROKER_NAME = element.text;
 				break;
 			case this.COLLECTD_CONST:
 				data.COLLECTD_ID = element._id;
@@ -146,6 +143,34 @@ var Component = window.Component || {};
 		}
 		return data;
 	};
+
+	//Tidb面板设置组件元数据
+	this.setMetaData = function(element, data) {
+		switch(element.type) {
+			case this.VBROKER_CONST:
+				var id = data.VBROKER_CONTAINER_ID,
+					name = data.VBROKER_CONTAINER_NAME;
+				delete data.VBROKER_CONTAINER_ID;
+				delete data.VBROKER_CONTAINER_NAME;
+				break;
+			case this.BROKER_CONST:
+				var id = data.BROKER_ID;
+				var name = data.BROKER_NAME;
+				delete data.BROKER_ID;
+				delete data.BROKER_NAME;
+				break;
+			case this.COLLECTD_CONST:
+				var id = data.COLLECTD_ID;
+				var name = data.COLLECTD_NAME;
+				delete data.COLLECTD_ID;
+				delete data.COLLECTD_NAME;
+				delete data.POS;
+				break;
+		}
+		element._id = id;
+		element.text = name;
+		element.meta = data; //metadata
+	}
 
 	//弹出 根据schema生成的输入框
 	MQPlate.prototype.popupForm = function(element) {
