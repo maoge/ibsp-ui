@@ -21,6 +21,7 @@ var Component = window.Component || {};
 			data = null;
 		}
 
+		this.PlateType = "DB";
 		this.tikvStatusInterval = "";
 
 		//图标(暂定)

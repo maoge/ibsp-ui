@@ -44,7 +44,7 @@ var Component = window.Component || {};
 		this.setRootUrl = function(url) {
 			this.url = url;
 		}
-		
+		this.PlateType = null;
 		//初始化舞台
 		this.initStage = function(id, name, canvas) {
 			this.id = id;
@@ -303,15 +303,16 @@ var Component = window.Component || {};
 		}
 		
 		//保存拓扑数据到后台
-		this.saveTopoData = function(params) {
-			var self = this;
-			var json = params ? plate.toPlateJson(false) : plate.toPlateJson(true);
+		this.saveTopoData = function(params,serverType) {
+			var self = this,
+				json = params ? plate.toPlateJson(false) : plate.toPlateJson(true),
+				type = serverType ? serverType : this.PlateType;
 			
 			$.ajax({
 				url: this.url+this.saveTopoServ,
 				type: "post",
 				dataType: "json",
-				data: {"TOPO_JSON": JSON.stringify(json), "SERV_TYPE":"DB"},
+				data: {"TOPO_JSON": JSON.stringify(json), "SERV_TYPE":type},
 				timeout: this.shortTimeout,
 				beforeSend: function() {
 					Util.showLoading();
