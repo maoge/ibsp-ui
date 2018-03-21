@@ -1,0 +1,117 @@
+{
+	"$schema": "http://json-schema.org/draft-03/schema#",
+	"type":"object",
+	"properties": {
+		"CACHE_SERV_CONTAINER":{
+			"type":"object",
+			"required":true,
+			"properties": {
+				"CACHE_SVC_CONTAINER_ID": {"type":"string","required":true,"minLength":36,"description":"Cache服务容器ID"},
+				"CACHE_SVC_CONTAINER_NAME": {"type":"string","required":true,"description":"Cache服务容器名字"},
+			
+				"CACHE_PROXY_CONTAINER":{
+					"type":"object",
+					"required":true,
+					"properties": {
+						"CACHE_PROXY_CONTAINER_ID": {"type":"string","required":true,"minLength":36,"description":"Cache proxy容器ID"},
+						"CACHE_PROXY_CONTAINER_NAME": {"type":"string","required":true,"description":"Cache proxy容器名字"},
+						"POS": {
+							"type":"object",
+							"required":true,
+							"properties": {
+								"x": {"type":"integer","required":true},
+								"y": {"type":"integer","required":true},
+								"width": {"type":"integer"},
+								"height":{"type":"integer"},
+								"row":{"type":"integer"},
+								"col":{"type":"integer"}
+							}
+						},
+						
+						"CACHE_PROXY":{
+							"type":"object",
+							"required":true,
+							"properties": {
+								"CACHE_PROXY_ID": {"type":"string","required":true,"minLength":36,"description":"Cache Proxy ID"},
+								"CACHE_PROXY_NAME": {"type":"string","required":true,"description":"Cache Proxy Name"},
+								"IP": {"type":"string","required":true,"description":"IP"},
+								"PORT": {"type":"string","required":true,"description":"服务端口"},
+								"OS_USER": {"type":"string","required":true,"description":"系统账户"},
+								"OS_PWD": {"type":"string","required":true,"description":"系统密码"}
+							}
+						}
+					}
+				},
+				
+				"CACHE_NODE_CONTAINER":{
+					"type":"object",
+					"required":true,
+					"properties": {
+						"CACHE_NODE_CONTAINER_ID": {"type":"string","required":true,"minLength":36,"description":"Cache node容器ID"},
+						"CACHE_NODE_CONTAINER_NAME": {"type":"string","required":true,"description":"Cache node容器名字"},
+						"POS": {
+							"type":"object",
+							"required":true,
+							"properties": {
+								"x": {"type":"integer","required":true},
+								"y": {"type":"integer","required":true},
+								"width": {"type":"integer"},
+								"height":{"type":"integer"},
+								"row":{"type":"integer"},
+								"col":{"type":"integer"}
+							}
+						},
+						
+						"CACHE_NODE_CLUSTER":{
+							"type":"object",
+							"required":true,
+							"properties": {
+								"CACHE_NODE_CLUSTER_CONTAINER_ID": {"type":"string","required":true,"minLength":36,"description":"Cache Node Cluster ID"},
+								"CACHE_NODE_CLUSTER_CONTAINER_NAME": {"type":"string","required":true,"description":"Cache Node Cluster 名字"},
+								"CACHE_SLOT": {"type":"string","required":false,"description":"Cache分片信息"},
+								
+								"CACHE_NODE":{
+									"type":"object",
+									"required":true,
+									"properties": {
+										"CACHE_NODE_ID": {"type":"string","required":true,"minLength":36,"description":"Cache Node ID"},
+										"CACHE_NODE_NAME": {"type":"string","required":true,"description":"Cache Node Name"},
+										"IP": {"type":"string","required":true,"description":"IP"},
+										"PORT": {"type":"string","required":true,"description":"服务端口"},
+										"OS_USER": {"type":"string","required":true,"description":"系统账户"},
+										"OS_PWD": {"type":"string","required":true,"description":"系统密码"}
+									}
+								}
+							}
+						}	
+					}
+				},
+				
+				"CACHE_COLLECTD":{
+					"type":"object",
+					"required":false,
+					"properties": {
+						"COLLECTD_ID": {"type":"string","required":true,"minLength":36,"description":"COLLECTD ID"},
+						"COLLECTD_NAME": {"type":"string","required":true,"description":"COLLECTD NAME"},
+						"IP": {"type":"string","required":true,"description":"IP"},
+						"PORT": {"type":"string","required":true,"description":"服务端口"},
+						"OS_USER": {"type":"string","required":true,"description":"系统账户"},
+						"OS_PWD": {"type":"string","required":true,"description":"系统密码"},
+						"POS": {
+							"type":"object",
+							"required":true,
+							"properties": {
+								"x": {"type":"integer","required":true},
+								"y": {"type":"integer","required":true},
+								"width": {"type":"integer"},
+								"height":{"type":"integer"},
+								"row":{"type":"integer"},
+								"col":{"type":"integer"}
+							}
+						}
+					}
+				}
+			}
+		}
+	}	
+}
