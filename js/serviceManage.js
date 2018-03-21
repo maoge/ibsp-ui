@@ -18,6 +18,12 @@ function init(id, name, type) {
 			$("#tidb-deploy").hide();
 			$("#mq-deploy").show();
 			break;
+		case "CACHE" :
+			$('#service_type').text("Cache集群管理");
+			plate = new Component.CachePlate(rootUrl, id, name, $("#canvas")[0]);
+			$("#tidb-deploy").hide();
+			$("#cache-deploy").show();
+			break;
 	}
 	
 	drag();

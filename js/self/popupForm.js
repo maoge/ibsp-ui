@@ -221,7 +221,12 @@
                     return;
                 }
                 for (var key in schema) {
-                    var jsonRoot = schema[key]['properties'];
+                	var jsonRoot;
+                	if (schema[key]['type'] === 'array') {
+                		jsonRoot = schema[key]['items']['properties'];
+                	} else {
+                		jsonRoot = schema[key]['properties'];
+                	}
                     jsonRoot && analysis(eleType, jsonRoot);
                 }
             }

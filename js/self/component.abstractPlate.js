@@ -178,7 +178,7 @@ var Component = window.Component || {};
 		}
 		
 		//新增一个container到container中
-		this.addContainerToContainer = function(x, y, text, rows, cols, container, type) {
+		this.addContainerToContainer = function(x, y, text, type, rows, cols, menu, container, isSaved) {
 			
 			x = this.width/2 - this.scene.translateX - (this.width/2 - x) / this.scene.scaleX;
 			y = this.width/2 - this.scene.translateY - (this.width/2 - y) / this.scene.scaleY;
@@ -186,9 +186,17 @@ var Component = window.Component || {};
 			if (container!=null && container.isInContainer(x, y)) {
 	    		var newContainer = this.makeContainer(x - this.defaultContainerW/2, y - this.defaultContainerH/2, text, 1, 2, "node");
 	    		container.add(newContainer);
-				if(type){
-					newContainer.type = type;
+				newContainer.type = type;
+		    	newContainer.addEventListener('contextmenu', function(e) {
+		    		menu.show(e);
+		    	});
+				if (!isSaved) {
+					newContainer.status = "new";
+					this.popupForm(newContainer); //弹出信息窗
+				} else {
+					newContainer.status = "saved";
 				}
+				
 				return newContainer;
 			} else {
 				return null;
