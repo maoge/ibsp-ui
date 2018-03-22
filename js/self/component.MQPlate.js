@@ -32,7 +32,7 @@ var Component = window.Component || {};
 
 
 		//初始化右键菜单
-		this.nodeMenu = $.contextMenu({
+		this.vbrokerMenu = $.contextMenu({
 			items:[
 				{label:'部署组件', icon:'../images/console/icon_install.png', callback: function(e){
 					self.deployElement(e.target);
@@ -51,7 +51,7 @@ var Component = window.Component || {};
 					});
 				}}]
 		});
-		this.deployedMenu = $.contextMenu({
+		this.deployedVbrokerMenu = $.contextMenu({
 			items:[
 				{label:'卸载(缩容)', icon:'../images/console/icon_delete.png', callback: function(e){
 					self.undeployElement(e.target);
@@ -77,8 +77,10 @@ var Component = window.Component || {};
 			self.plateMenu.show(e);
 		});
 
-		this.VBROKER_CONST = "MQ_VBROKER_CONTAINER";
-		this.BROKER_CONST = "MQ_VBROKER";
+		this.SWITCHCONTAINER_CONST = "MQ_SWITCH_CONTAINER";
+		this.SWITCH_CONST = "MQ_SWITCH";
+		this.VBROKER_CONST = "MQ_VBROKER";
+		this.BROKER_CONST = "MQ_BROKER";
 		this.COLLECTD_CONST = "MQ_COLLECTD";
 
 		//初始化弹出表单
@@ -87,10 +89,10 @@ var Component = window.Component || {};
 			self.popElement = null;
 		};
 		this.VBokerForm = $.popupForm(this.VBROKER_CONST, window["mq.schema"], function(json){
-			self.saveElementData(self.popElement, json, self.PDForm);
+			self.saveElementData(self.popElement, json, self.VBokerForm);
 		}, cancelFunction);
 		this.BrokerForm = $.popupForm(this.BROKER_CONST, window["mq.schema"], function(json){
-			self.saveElementData(self.popElement, json, self.TikvForm);
+			self.saveElementData(self.popElement, json, self.BrokerForm);
 		}, cancelFunction);
 		this.CollectdForm = $.popupForm(this.COLLECTD_CONST, window["mq.schema"], function(json){
 			self.saveElementData(self.popElement, json, self.CollectdForm);
@@ -98,6 +100,8 @@ var Component = window.Component || {};
 
 	}
 	MQPlate.prototype = new Component.Plate();
+	MQPlate.prototype.constructor = MQPlate;
+	MQPlate.superclass = Component.Plate.prototype;
 	Component.MQPlate = MQPlate;
 
 	/**
@@ -113,15 +117,19 @@ var Component = window.Component || {};
 				MQ_VBROKER_CONTAINER = data.MQ_VBROKER_CONTAINER,
 				collectd = data.DB_COLLECTD;
 
+			//加载SwitchContaniner
 			if(MQ_SWITCH_CONTAINER){
 				this.SwitchContainer = this.makeContainer(MQ_SWITCH_CONTAINER.POS.x,MQ_SWITCH_CONTAINER.POS.y,
 					MQ_SWITCH_CONTAINER.MQ_SWITCH_CONTAINER_NAME,MQ_SWITCH_CONTAINER.POS.row,MQ_SWITCH_CONTAINER.POS.col,"node");
+				this.SwitchContainer._id = MQ_SWITCH_CONTAINER.MQ_SWITCH_CONTAINER_ID;
+
 				for (var _switch in MQ_SWITCH_CONTAINER.MQ_SWITCH) {
 					var node = this.addNodeToContainer(this.SwitchContainer.x+1, this.SwitchContainer.y+1,
-						this.switchIcon, _switch.MQ_SWITCH_NAME, this.SW_CONST, this.nodeMenu, this.PDContainer, true);
+						this.switchIcon, _switch.MQ_SWITCH_NAME, this.SWITCH_CONST, this.nodeMenu, this.SwitchContainer, true);
 					this.setMetaData(node, _switch);
 				}
 			}
+			//加载collectd
 			if (collectd) {
 				var x = collectd.POS ? collectd.POS.x : 0;
 				var y = collectd.POS ? collectd.POS.y : 0;
@@ -130,47 +138,19 @@ var Component = window.Component || {};
 					this.setMetaData(this.collectd, collectd);
 			}
 
-			this.PDContainer = this.makeContainer(DB_PD_CONTAINER.POS.x, DB_PD_CONTAINER.POS.y,
-				DB_PD_CONTAINER.PD_CONTAINER_NAME, DB_PD_CONTAINER.POS.row, DB_PD_CONTAINER.POS.col, "node");
+			//加载MQ_SERV_CONTAINER
+			this.VBrokerContainer = this.makeContainer(MQ_VBROKER_CONTAINER.POS.x,MQ_VBROKER_CONTAINER.POS.y,
+				MQ_VBROKER_CONTAINER.VBROKER_CONTAINER_NAME,MQ_VBROKER_CONTAINER.POS.row,MQ_VBROKER_CONTAINER.POS.col,"container");
+			this.VBrokerContainer._id = MQ_VBROKER_CONTAINER.VBROKER_CONTAINER_ID;
 
-			this.PDContainer._id = DB_PD_CONTAINER.PD_CONTAINER_ID;
-			this.TikvContainer = this.makeContainer(DB_TIKV_CONTAINER.POS.x, DB_TIKV_CONTAINER.POS.y,
-				DB_TIKV_CONTAINER.TIKV_CONTAINER_NAME, DB_TIKV_CONTAINER.POS.row, DB_TIKV_CONTAINER.POS.col, "node");
-			this.TikvContainer._id = DB_TIKV_CONTAINER.TIKV_CONTAINER_ID;
-			this.TidbContainer = this.makeContainer(DB_TIDB_CONTAINER.POS.x, DB_TIDB_CONTAINER.POS.y,
-				DB_TIDB_CONTAINER.TIDB_CONTAINER_NAME, DB_TIDB_CONTAINER.POS.row, DB_TIDB_CONTAINER.POS.col, "node");
-			this.TidbContainer._id = DB_TIDB_CONTAINER.TIDB_CONTAINER_ID;
+			/*for (var vbroker in MQ_VBROKER_CONTAINER.MQ_VBROKER) {
+				var container = this.addContainerToContainer(MQ_VBROKER_CONTAINER.POS.x, MQ_VBROKER_CONTAINER.POS.y, text, 1, 2,this.vbrokerMenu, this.VBrokerContainer, this.VBROKER_CONST);
+				var node = this.addNodeToContainer(this.VBrokerContainer.x+1, this.VBrokerContainer.y+1,
+					this.brokerIcon, broker.MQ_SWITCH_NAME, this.BROKER_CONST, this.nodeMenu, this.VBrokerContainer, true);
+				this.setMetaData(node, broker);
+			}*/
 
-			for (var i=0; i<DB_PD_CONTAINER.DB_PD.length; i++) {
-				var pd = DB_PD_CONTAINER.DB_PD[i];
-				var node = this.addNodeToContainer(this.PDContainer.x+1, this.PDContainer.y+1,
-					this.iconDir+this.PDIcon, pd.PD_NAME, this.PD_CONST, this.nodeMenu, this.PDContainer, true);
-				this.setMetaData(node, pd);
-			}
-
-			for (var i=0; i<DB_TIKV_CONTAINER.DB_TIKV.length; i++) {
-				var tikv = DB_TIKV_CONTAINER.DB_TIKV[i];
-				var node = this.addNodeToContainer(this.TikvContainer.x+1, this.TikvContainer.y+1,
-					this.iconDir+this.TikvIcon, tikv.TIKV_NAME, this.TIKV_CONST, this.nodeMenu, this.TikvContainer, true);
-				this.setMetaData(node, tikv);
-			}
-
-			for (var i=0; i<DB_TIDB_CONTAINER.DB_TIDB.length; i++) {
-				var tidb = DB_TIDB_CONTAINER.DB_TIDB[i];
-				var node = this.addNodeToContainer(this.TidbContainer.x+1, this.TidbContainer.y+1,
-					this.iconDir+this.TidbIcon, tidb.TIDB_NAME, this.TIDB_CONST, this.nodeMenu, this.TidbContainer, true);
-				this.setMetaData(node, tidb);
-			}
-
-			if (collectd) {
-				var x = collectd.POS ? collectd.POS.x : 0;
-				var y = collectd.POS ? collectd.POS.y : 0;
-				this.addCollectd(x, y, this.iconDir+this.collectdIcon,
-					collectd.COLLECTD_NAME, this.COLLECTD_CONST, this.nodeMenu, true),
-					this.setMetaData(this.collectd, collectd);
-			}
-
-			this.getDeployFlag(deployFlag);
+			/*this.a(deployFlag);*/
 		} else {
 			//初始化2个container：MQSwitch、VBrokerContainer
 			/*this.SwitchContainer = this.makeContainer(
@@ -190,8 +170,8 @@ var Component = window.Component || {};
 		var data = {};
 		switch(element.type) {
 			case this.VBROKER_CONST:
-				data.VBROKER_CONTAINER_ID = element._id;
-				data.VBROKER_CONTAINER_NAME = element.text;
+				data.VBROKER_ID = element._id;
+				data.VBROKER_NAME = element.text;
 				break;
 			case this.BROKER_CONST:
 				data.BROKER_ID = element._id;
@@ -213,7 +193,7 @@ var Component = window.Component || {};
 	};
 
 	//Tidb面板设置组件元数据
-	this.setMetaData = function(element, data) {
+	MQPlate.prototype.setMetaData = function(element, data) {
 		switch(element.type) {
 			case this.VBROKER_CONST:
 				var id = data.VBROKER_CONTAINER_ID,
@@ -242,7 +222,6 @@ var Component = window.Component || {};
 
 	//弹出 根据schema生成的输入框
 	MQPlate.prototype.popupForm = function(element) {
-		debugger;
 		this.popElement = element; //存放目前正在填写信息的元素，表单窗口关闭时置为null
 		switch(element.type) {
 			case this.VBROKER_CONST:
@@ -270,7 +249,7 @@ var Component = window.Component || {};
 			
 		case "VBroker":
 			var text = "VBroker",
-				container = this.addContainerToContainer(x, y, text, 1, 2, this.VBrokerContainer, this.VBROKER_CONST),
+				container = this.addContainerToContainer(x, y, text, this.VBROKER_CONST, 1, 2,this.vbrokerMenu, this.VBrokerContainer),
 				success =  container!= null;
 			success && this.popupForm(container);
 			return success;
@@ -334,6 +313,18 @@ var Component = window.Component || {};
 		}
 
 		return {"MQ_SERV_CONTAINER": MQ_SERV_CONTAINER};
+	}
+
+	//组件部署成功时的处理
+	MQPlate.prototype.getElementDeployed = function(element) {
+		if (element.elementType=="node") {
+			element.status = "deployed";
+			var self = this;
+			element.removeEventListener('contextmenu');
+			element.addEventListener('contextmenu', function(e) {
+				self.deployedMenu.show(e);
+			});
+		}
 	}
 
 })(Component);
