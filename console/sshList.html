@@ -145,8 +145,8 @@
 		var $this = $(this), pageName = $this.data("load-page"),$main = $("#mainContent");
 		if(pageName != ""){
 			/*$main.load("pages/"+pageName+".html");*/
+			$(".contextMenu").remove();
 			$main.load(pageName+".html",function(){
-				$(".contextMenu").remove();
 				initPage();
 			});
 		}
