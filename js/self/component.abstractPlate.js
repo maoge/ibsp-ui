@@ -191,6 +191,7 @@ var Component = window.Component || {};
 			newContainer.addEventListener('contextmenu', function (e) {
 				menu.show(e);
 			});
+			debugger;
 			if (!isSaved) {
 				newContainer.status = "new";
 				this.popupForm(newContainer); //弹出信息窗
@@ -350,7 +351,6 @@ var Component = window.Component || {};
 
 	//保存组件（单个）数据到后台
 	Plate.prototype.saveElementData = function (element, jsonString, popupForm) {
-
 		//如果还没有保存拓扑结构，需要先保存拓扑结构
 		if (this.needInitTopo) {
 			this.saveTopoData([element, jsonString, popupForm]);
@@ -358,8 +358,8 @@ var Component = window.Component || {};
 		}
 		var parentID = (element.parentContainer != undefined && element.parentContainer != null) ? element.parentContainer._id : this.id;
 		var data = {};
+		debugger;
 		var type = element.status != "new" ? 2 : 1;
-
 		var json = JSON.parse(jsonString);
 		//collectd需要保存位置信息
 		if (element.type == this.COLLECTD_CONST) {
@@ -386,19 +386,19 @@ var Component = window.Component || {};
 			},
 			error: function (xhr) {
 				Component.Alert("error", "保存组件信息失败！" + xhr.status + ":" + xhr.statusText);
-				popupForm.clearLoading();
+				Util.hideLoading();
 			},
 			success: function (result) {
 				if (result.RET_CODE == 0) {
 					Component.Alert("success", "保存组件信息成功！");
 					self.setMetaData(element, json);
 					element.status = "saved";
-					popupForm.clearLoading();
+					Util.hideLoading();
 					popupForm.hide();
 					self.popElement = null;
 				} else {
 					Component.Alert("error", "保存组件信息失败！" + result.RET_INFO);
-					popupForm.clearLoading();
+					Util.hideLoading();
 				}
 			}
 		});
