@@ -16,7 +16,7 @@ var Component = window.Component || {};
 		this.initStage(id, name, canvas);
 		data = this.getTopoData(id);
 		if (data == null) {
-			this.loadingDiv.hide();
+			Util.hideLoading();
 			return;
 		} else if (data == "init") {
 			data = null;
@@ -35,9 +35,7 @@ var Component = window.Component || {};
 		
 		this.ProxyContainer = null;
 		this.ClusterContainer = null;
-		this.initContainer(data);
 		Util.hideLoading();
-		
 		var self = this;
 		
 		//初始化右键菜单
@@ -104,6 +102,8 @@ var Component = window.Component || {};
         }, cancelFunction);
 		this.getIpUser("CACHE", [this.ProxyForm, this.ClusterForm, this.NodeForm, this.CollectdForm]);
 		
+		//初始化Container
+		this.initContainer(data);
 	}
 	
 	CachePlate.prototype = new Component.Plate();
@@ -145,14 +145,21 @@ var Component = window.Component || {};
 				
 			for (var i=0; i<CACHE_NODE_CONTAINER.CACHE_NODE_CLUSTER.length; i++) {
 				var cluster = CACHE_NODE_CONTAINER.CACHE_NODE_CLUSTER[i];
-				var node = this.addContainerToContainer(this.ClusterContainer.x+1, 
+				var container = this.addContainerToContainer(this.ClusterContainer.x+1, 
 						this.ClusterContainer.y+1, cluster.CACHE_NODE_CLUSTER_CONTAINER_NAME, 
-						this.CLUSTER_CONST, 1, cluster.CACHE_NODE.length,
-						this.nodeMenu, this.ClusterContainer, true);
-				this.setMetaData(node, cluster);
+						this.CLUSTER_CONST, 1, 2, this.nodeMenu, 
+						this.ClusterContainer, true);
+				this.setMetaData(container, cluster);
+				for (var j=0; j<cluster.CACHE_NODE.length; j++) {
+					var cacheNode = cluster.CACHE_NODE[j];
+					var node = this.addNodeToContainer(container.x+1, container.y+1,
+							this.iconDir+this.NodeIcon, cacheNode.CACHE_NODE_NAME,
+							this.NODE_CONST, this.nodeMenu, container, true);
+					this.setMetaData(node, cacheNode);
+				}
 			}
 
-			if (collectd) {
+			if (collectd && !$.isEmptyObject(collectd)) {
 				var x = collectd.POS ? collectd.POS.x : 0;
 				var y = collectd.POS ? collectd.POS.y : 0;
 				this.addCollectd(x, y, this.iconDir+this.collectdIcon, 
@@ -231,7 +238,15 @@ var Component = window.Component || {};
 					datatype, 1, 2, this.nodeMenu, this.ClusterContainer, false) != null;
 			break;
 		case this.NODE_CONST:
-			
+			var success = false, childs = this.ClusterContainer.childs, img = this.iconDir+this.NodeIcon;
+			for (var i=0; i<childs.length; i++) {
+				if (this.addNodeToContainer(x, y, img, "cache_node", 
+						datatype, this.nodeMenu, childs[i], false) != null) {
+					success = true;
+					break;
+				}
+			}
+			return success;
 			break;
 		case this.COLLECTD_CONST:
 			return this.addCollectd(x, y, this.iconDir+this.collectdIcon, "collectd", datatype, this.nodeMenu, false);
@@ -270,13 +285,13 @@ var Component = window.Component || {};
 			delete data.CACHE_PROXY_ID;
 			delete data.CACHE_PROXY_NAME;
 			break;
-		case this.TIKV_CONST:
+		case this.CLUSTER_CONST:
 			var id = data.CACHE_NODE_CLUSTER_CONTAINER_ID;
 			var name = data.CACHE_NODE_CLUSTER_CONTAINER_NAME;
 			delete data.CACHE_NODE_CLUSTER_CONTAINER_ID;
 			delete data.CACHE_NODE_CLUSTER_CONTAINER_NAME;
 			break;
-		case this.TIDB_CONST:
+		case this.NODE_CONST:
 			var id = data.CACHE_NODE_ID;
 			var name = data.CACHE_NODE_NAME;
 			delete data.CACHE_NODE_ID;
@@ -346,51 +361,25 @@ var Component = window.Component || {};
 	 * 缓存面板卸载
 	 */
 	CachePlate.prototype.undeployElement = function(element){
-//		var res = true;
-//		switch (element.type) {
-//			case 'DB_TIDB' :
-//				if(element.parentContainer.childs.length <= 1 ){
-//					Component.Alert("error", "TIDB的数量不能小于1！");
-//					res = false;
-//				}
-//				break;
-//			case 'DB_TIKV' :
-//				if(element.parentContainer.childs.length <= 3 ){
-//					Component.Alert("error", "TIKV的数量不能小于3！");
-//					res = false;
-//				}
-//				break;
-//			case 'DB_PD' :
-//				if(element.parentContainer.childs.length <= 3 ){
-//					Component.Alert("error", "PD的数量不能小于3！");
-//					res = false;
-//				}
-//				break;
-//		}
-//		if(res) {
-//			TidbPlate.prototype.undeployElement.call(this, element);
-//		}
+		if(element.parentContainer.childs.length <= 1 ){
+			Component.Alert("error", "已经是最后一个组件！");
+		} else {
+			TidbPlate.prototype.undeployElement.call(this, element);
+		}
 	};
 	
-	//组件卸载成功时的处理
+	/**
+	 * 组件卸载成功时的处理
+	 */
 	CachePlate.prototype.getElementUndeployed = function(element) {
-//		if (element.elementType=="node") {
-//			//如果是tikv的卸载，特殊处理
-//			if(element.type == "DB_TIKV"){
-//				element.status = "waitFlash";
-//				var self = this;
-//				element.removeEventListener('contextmenu');
-//				//console.log(element);
-//				this.tikvStatusInterval = setInterval(this.tikvStatusCheck(id, element.meta.IP+":"+element.meta.PORT, element),1000);
-//				return;
-//			}
-//			element.status = "saved";
-//			var self = this;
-//			element.removeEventListener('contextmenu');
-//			element.addEventListener('contextmenu', function(e) {
-//				self.nodeMenu.show(e);
-//			});
-//		}
+		if (element.elementType=="node") {
+			element.status = "saved";
+			var self = this;
+			element.removeEventListener('contextmenu');
+			element.addEventListener('contextmenu', function(e) {
+				self.nodeMenu.show(e);
+			});
+		}
 	};
 	
 })(Component);

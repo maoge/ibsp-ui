@@ -15,7 +15,7 @@ var Component = window.Component || {};
 		this.initStage(id, name, canvas);
 		data = this.getTopoData(id);
 		if (data == null) {
-			this.loadingDiv.hide();
+			Util.hideLoading();
 			return;
 		} else if (data == "init") {
 			data = null;

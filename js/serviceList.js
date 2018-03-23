@@ -130,7 +130,6 @@ function delService() {
 		btn: ['是','否'],
 		title: "确认"
 	}, function(){
-		Util.alert("warn","dsds");
 		var services = $serverList.mTable("getSelections");
 		var data = {};
 		data.SERV_ID = services[0].INST_ID;
