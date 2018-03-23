@@ -93,6 +93,12 @@ var Util = window.Util = {
     strToDate : function(str){
         str = str.replace("/-/g", "/");
         return new Date(str);
+    },
+    isObjectNotNull : function(obj){
+        if(obj && JSON.stringify(obj) != "{}"){
+            return true;
+        }
+        return false;
     }
 };
 /*原生函數扩展*/

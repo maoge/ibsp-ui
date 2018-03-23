@@ -28,8 +28,6 @@ var Component = window.Component || {};
 		} else if (data == "init") {
 			data = null;
 		}
-		this.initContainer(data);
-
 
 		//初始化右键菜单
 		this.vbrokerMenu = $.contextMenu({
@@ -37,6 +35,22 @@ var Component = window.Component || {};
 				{label:'部署组件', icon:'../images/console/icon_install.png', callback: function(e){
 					self.deployElement(e.target);
 				}},
+				{label:'修改信息', icon:'../images/console/icon_edit.png', callback: function(e){
+					self.popupForm(e.target);
+				}},
+				{label:'删除组件', icon:'../images/console/icon_delete.png', callback: function(e){
+					var element = e.target;
+					layer.confirm("确认删除组件吗？", {
+						btn: ['是','否'], //按钮
+						title: "确认"
+					}, function(){
+						layer.close(layer.index);
+						self.deleteComponentBackground(element);
+					});
+				}}]
+		});
+		this.nodeMenu = $.contextMenu({
+			items:[
 				{label:'修改信息', icon:'../images/console/icon_edit.png', callback: function(e){
 					self.popupForm(e.target);
 				}},
@@ -98,6 +112,9 @@ var Component = window.Component || {};
 			self.saveElementData(self.popElement, json, self.CollectdForm);
 		}, cancelFunction);
 
+		this.getIpUser("MQ", [this.VBokerForm, this.BrokerForm, this.CollectdForm]);
+
+		this.initContainer(data);
 	}
 	MQPlate.prototype = new Component.Plate();
 	MQPlate.prototype.constructor = MQPlate;
@@ -115,10 +132,11 @@ var Component = window.Component || {};
 			var deployFlag = data.DEPLOY_FLAG,
 				MQ_SWITCH_CONTAINER = data.MQ_SWITCH_CONTAINER,
 				MQ_VBROKER_CONTAINER = data.MQ_VBROKER_CONTAINER,
+				vbrokers = MQ_VBROKER_CONTAINER.MQ_VBROKER,
 				collectd = data.DB_COLLECTD;
 
 			//加载SwitchContaniner
-			if(MQ_SWITCH_CONTAINER){
+			if(MQ_SWITCH_CONTAINER && Util.isObjectNotNull(MQ_SWITCH_CONTAINER)){
 				this.SwitchContainer = this.makeContainer(MQ_SWITCH_CONTAINER.POS.x,MQ_SWITCH_CONTAINER.POS.y,
 					MQ_SWITCH_CONTAINER.MQ_SWITCH_CONTAINER_NAME,MQ_SWITCH_CONTAINER.POS.row,MQ_SWITCH_CONTAINER.POS.col,"node");
 				this.SwitchContainer._id = MQ_SWITCH_CONTAINER.MQ_SWITCH_CONTAINER_ID;
@@ -130,7 +148,7 @@ var Component = window.Component || {};
 				}
 			}
 			//加载collectd
-			if (collectd) {
+			if (collectd && Util.isObjectNotNull(collectd)) {
 				var x = collectd.POS ? collectd.POS.x : 0;
 				var y = collectd.POS ? collectd.POS.y : 0;
 				this.addCollectd(x, y, this.iconDir+this.collectdIcon,
@@ -138,17 +156,26 @@ var Component = window.Component || {};
 					this.setMetaData(this.collectd, collectd);
 			}
 
-			//加载MQ_SERV_CONTAINER
+			//加载VBrokerContainer
 			this.VBrokerContainer = this.makeContainer(MQ_VBROKER_CONTAINER.POS.x,MQ_VBROKER_CONTAINER.POS.y,
 				MQ_VBROKER_CONTAINER.VBROKER_CONTAINER_NAME,MQ_VBROKER_CONTAINER.POS.row,MQ_VBROKER_CONTAINER.POS.col,"container");
 			this.VBrokerContainer._id = MQ_VBROKER_CONTAINER.VBROKER_CONTAINER_ID;
 
-			/*for (var vbroker in MQ_VBROKER_CONTAINER.MQ_VBROKER) {
-				var container = this.addContainerToContainer(MQ_VBROKER_CONTAINER.POS.x, MQ_VBROKER_CONTAINER.POS.y, text, 1, 2,this.vbrokerMenu, this.VBrokerContainer, this.VBROKER_CONST);
-				var node = this.addNodeToContainer(this.VBrokerContainer.x+1, this.VBrokerContainer.y+1,
-					this.brokerIcon, broker.MQ_SWITCH_NAME, this.BROKER_CONST, this.nodeMenu, this.VBrokerContainer, true);
-				this.setMetaData(node, broker);
-			}*/
+			debugger;
+			for (var vbrokerIndex in vbrokers) {
+				var vbroker = vbrokers[vbrokerIndex];
+				var container = this.addContainerToContainer(MQ_VBROKER_CONTAINER.POS.x, MQ_VBROKER_CONTAINER.POS.y,
+					vbroker.VBROKER_NAME, this.VBROKER_CONST, 1, 2, this.vbrokerMenu, this.VBrokerContainer,true);
+
+				var brokers  = vbroker.MQ_BROKER;
+				for(var brokerIndex in brokers){
+					var broker = brokers[brokerIndex];
+					var node = this.addNodeToContainer(container.x +1, container.y +1,
+						this.brokerIcon, broker.MQ_BROKER_NAME, this.BROKER_CONST, this.nodeMenu, container, true);
+					this.setMetaData(node, broker);
+				}
+				this.setMetaData(container, vbroker);
+			}
 
 			/*this.a(deployFlag);*/
 		} else {
@@ -196,10 +223,10 @@ var Component = window.Component || {};
 	MQPlate.prototype.setMetaData = function(element, data) {
 		switch(element.type) {
 			case this.VBROKER_CONST:
-				var id = data.VBROKER_CONTAINER_ID,
-					name = data.VBROKER_CONTAINER_NAME;
-				delete data.VBROKER_CONTAINER_ID;
-				delete data.VBROKER_CONTAINER_NAME;
+				var id = data.VBROKER_ID,
+					name = data.VBROKER_NAME;
+				delete data.VBROKER_ID;
+				delete data.VBROKER_NAME;
 				break;
 			case this.BROKER_CONST:
 				var id = data.BROKER_ID;
@@ -259,8 +286,9 @@ var Component = window.Component || {};
 				childs = this.VBrokerContainer.childs,
 				img = this.brokerIcon;
 			//逐个地判断是否落在VBroker容器中
+			debugger;
 			for (var i = 0; i<childs.length; i++) {
-				if (this.addNodeToContainer(x, y, img, datatype, datatype, this.nodeMenu,childs[i] ,true) != null) {
+				if (this.addNodeToContainer(x, y, img, datatype, this.BROKER_CONST, this.nodeMenu,childs[i] ,false) != null) {
 					success = true;
 					break;
 				}
