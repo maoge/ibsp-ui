@@ -75,6 +75,7 @@
 									"CACHE_NODE_CLUSTER_CONTAINER_ID": {"type":"string","required":true,"minLength":36,"description":"Cache Node Cluster ID"},
 									"CACHE_NODE_CLUSTER_CONTAINER_NAME": {"type":"string","required":true,"description":"Cache Node Cluster 名字"},
 									"CACHE_SLOT": {"type":"string","required":false,"description":"Cache分片信息"},
+									"MASTER_ID": {"type":"string","required":false,"description":"主节点ID"},
 									
 									"CACHE_NODE":{
 										"type":"array",
