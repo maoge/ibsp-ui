@@ -34,10 +34,11 @@
 							"items": {
 								"type":"object",
 								"properties": {
-									"CACHE_PROXY_ID": {"type":"string","required":true,"minLength":36,"description":"Cache Proxy ID"},
+									"CACHE_PROXY_ID": {"type":"string","required":true,"minLength":36,"description":"Cache Proxy ID","inputDisabled":true},
 									"CACHE_PROXY_NAME": {"type":"string","required":true,"description":"Cache Proxy Name"},
 									"IP": {"type":"string","required":true,"description":"IP"},
 									"PORT": {"type":"string","required":true,"description":"服务端口"},
+									"STAT_PORT": {"type":"string","required":true,"description":"统计数据端口"},
 									"OS_USER": {"type":"string","required":true,"description":"系统账户"},
 									"OS_PWD": {"type":"string","required":true,"description":"系统密码"}
 								}
@@ -72,10 +73,11 @@
 							"items": {
 								"type":"object",
 								"properties": {
-									"CACHE_NODE_CLUSTER_CONTAINER_ID": {"type":"string","required":true,"minLength":36,"description":"Cache Node Cluster ID"},
+									"CACHE_NODE_CLUSTER_CONTAINER_ID": {"type":"string","required":true,"minLength":36,"description":"Cache Node Cluster ID","inputDisabled":true},
 									"CACHE_NODE_CLUSTER_CONTAINER_NAME": {"type":"string","required":true,"description":"Cache Node Cluster 名字"},
 									"CACHE_SLOT": {"type":"string","required":false,"description":"Cache分片信息"},
 									"MASTER_ID": {"type":"string","required":false,"description":"主节点ID"},
+									"MAX_MEMORY": {"type":"string","required":true,"description":"最大内存限制(GB)"},
 									
 									"CACHE_NODE":{
 										"type":"array",
@@ -83,7 +85,7 @@
 										"items": {
 											"type":"object",
 											"properties": {
-												"CACHE_NODE_ID": {"type":"string","required":true,"minLength":36,"description":"Cache Node ID"},
+												"CACHE_NODE_ID": {"type":"string","required":true,"minLength":36,"description":"Cache Node ID","inputDisabled":true},
 												"CACHE_NODE_NAME": {"type":"string","required":true,"description":"Cache Node Name"},
 												"IP": {"type":"string","required":true,"description":"IP"},
 												"PORT": {"type":"string","required":true,"description":"服务端口"},

@@ -171,9 +171,9 @@ var Component = window.Component || {};
 		} else {
 			this.needInitTopo = true;
 			this.ProxyContainer = this.makeContainer(
-					this.width*0.5, this.height*0.2, "接入机集群", 1, 3, "node");
+					this.width*0.5, this.height*0.2, "接入机集群", 1, 2, "node");
 			this.ClusterContainer = this.makeContainer(
-					this.width*0.5, this.height*0.6, "Redis实例集群", 1, 3, "container");
+					this.width*0.5, this.height*0.6, "Redis实例集群", 1, 2, "container");
 		}
 			
 		//添加container连接
