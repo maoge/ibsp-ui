@@ -60,6 +60,7 @@
 	$(".breadcrumb>li>a").off("click").on("click",function(){
 		var $this = $(this);
 		pageName = $this.data("load-page");
+		$(".contextMenu").remove();
 		if(pageName != ""){
 			$mainContainer.load(pageName+".html",function(){
 				initPage();

@@ -33,7 +33,7 @@
             this.menu.hide();
         };
         function createMenu(options){
-            var $menu = $('<ul class="contextMenu"><div class="contextMenu"></div></ul>').appendTo(document.body);
+            var $menu = $('<ul class="contextMenu" style="display: none"><div class="contextMenu"></div></ul>').appendTo(document.body);
             options.title && $('<li class="header"></li>').text(options.title).appendTo($menu);
             options.items.forEach(function(item){
                 if(item && item === 'separator'){
