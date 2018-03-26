@@ -114,7 +114,6 @@ var Component = window.Component || {};
 		}, cancelFunction);
 
 		this.getIpUser("MQ", [this.VBokerForm, this.BrokerForm, this.CollectdForm]);
-
 		this.initContainer(data);
 	}
 	MQPlate.prototype = new Component.Plate();
@@ -127,11 +126,11 @@ var Component = window.Component || {};
 	 */
 	MQPlate.prototype.initContainer = function(data) {
 		if (data!=null) {
+			var deployFlag = data.DEPLOY_FLAG;
+
 			data = data.MQ_SERV_CONTAINER;
 			this.needInitTopo = false;
-
-			var deployFlag = data.DEPLOY_FLAG,
-				MQ_SWITCH_CONTAINER = data.MQ_SWITCH_CONTAINER,
+			var	MQ_SWITCH_CONTAINER = data.MQ_SWITCH_CONTAINER,
 				MQ_VBROKER_CONTAINER = data.MQ_VBROKER_CONTAINER,
 				vbrokers = MQ_VBROKER_CONTAINER.MQ_VBROKER,
 				collectd = data.MQ_COLLECTD;
@@ -176,8 +175,7 @@ var Component = window.Component || {};
 				}
 				this.setMetaData(container, vbroker);
 			}
-
-			/*this.a(deployFlag);*/
+			this.getDeployFlag(deployFlag);
 		} else {
 			//初始化2个container：MQSwitch、VBrokerContainer
 			/*this.SwitchContainer = this.makeContainer(
@@ -287,7 +285,11 @@ var Component = window.Component || {};
 				img = this.brokerIcon;
 			//逐个地判断是否落在VBroker容器中
 			for (var i = 0; i<childs.length; i++) {
-				if (this.addNodeToContainer(x, y, img, datatype, this.BROKER_CONST, this.nodeMenu,childs[i] ,false) != null) {
+				var vbroker = childs[i];
+				if(vbroker.status && vbroker.status == "deployed"){
+					continue;
+				}
+				if (this.addNodeToContainer(x, y, img, datatype, this.BROKER_CONST, this.nodeMenu,vbroker ,false) != null) {
 					success = true;
 					break;
 				}
@@ -347,14 +349,47 @@ var Component = window.Component || {};
 
 	//组件部署成功时的处理
 	MQPlate.prototype.getElementDeployed = function(element) {
-		if (element.elementType=="node") {
+		debugger;
+		var type = element.type,
+			self = this;
+		switch (type){
+			case this.VBROKER_CONST :
+				element.status = "deployed";
+				element.removeEventListener('contextmenu');
+				element.addEventListener('contextmenu', function(e) {
+					self.deployedElementMenu.show(e);
+				});
+				break;
+			case this.BROKER_CONST :
+				element.status = "deployed";
+				element.removeEventListener('contextmenu');
+				break;
+			case this.COLLECTD_CONST :
+				element.status = "deployed";
+				element.removeEventListener('contextmenu');
+				element.addEventListener('contextmenu', function(e) {
+					self.deployedElementMenu.show(e);
+				});
+				break;
+		}
+
+
+	/*	if (element.elementType=="node") {
+			element.status = "deployed";
+			var self = this;
+			element.removeEventListener('contextmenu');
+			element.addEventListener('contextmenu', function(e) {
+				self.deployedElementMenu.show(e);
+			});
+		}*/
+		/*if (element.elementType=="container") {
 			element.status = "deployed";
 			var self = this;
 			element.removeEventListener('contextmenu');
 			element.addEventListener('contextmenu', function(e) {
 				self.deployedMenu.show(e);
 			});
-		}
+		}*/
 	}
 
 })(Component);
