@@ -18,6 +18,7 @@ var Component = window.Component || {};
 		this.imgRootUrl = "../images/console/";
 		this.brokerIcon = this.imgRootUrl + "db_collectd_icon.png";
 		this.switchIcon = this.imgRootUrl + "db_collectd_icon.png";
+		this.collectdIcon = this.imgRootUrl + "db_collectd_icon.png";
 
 		var data = this.getTopoData(id),
 			self = this;
@@ -30,7 +31,7 @@ var Component = window.Component || {};
 		}
 
 		//初始化右键菜单
-		this.vbrokerMenu = $.contextMenu({
+		this.elementMenu = $.contextMenu({
 			items:[
 				{label:'部署组件', icon:'../images/console/icon_install.png', callback: function(e){
 					self.deployElement(e.target);
@@ -65,7 +66,7 @@ var Component = window.Component || {};
 					});
 				}}]
 		});
-		this.deployedVbrokerMenu = $.contextMenu({
+		this.deployedElementMenu = $.contextMenu({
 			items:[
 				{label:'卸载(缩容)', icon:'../images/console/icon_delete.png', callback: function(e){
 					self.undeployElement(e.target);
@@ -133,7 +134,7 @@ var Component = window.Component || {};
 				MQ_SWITCH_CONTAINER = data.MQ_SWITCH_CONTAINER,
 				MQ_VBROKER_CONTAINER = data.MQ_VBROKER_CONTAINER,
 				vbrokers = MQ_VBROKER_CONTAINER.MQ_VBROKER,
-				collectd = data.DB_COLLECTD;
+				collectd = data.MQ_COLLECTD;
 
 			//加载SwitchContaniner
 			if(MQ_SWITCH_CONTAINER && Util.isObjectNotNull(MQ_SWITCH_CONTAINER)){
@@ -151,8 +152,8 @@ var Component = window.Component || {};
 			if (collectd && Util.isObjectNotNull(collectd)) {
 				var x = collectd.POS ? collectd.POS.x : 0;
 				var y = collectd.POS ? collectd.POS.y : 0;
-				this.addCollectd(x, y, this.iconDir+this.collectdIcon,
-					collectd.COLLECTD_NAME, this.COLLECTD_CONST, this.nodeMenu, true),
+				this.addCollectd(x, y, this.collectdIcon,
+					collectd.COLLECTD_NAME, this.COLLECTD_CONST, this.elementMenu, true),
 					this.setMetaData(this.collectd, collectd);
 			}
 
@@ -161,11 +162,10 @@ var Component = window.Component || {};
 				MQ_VBROKER_CONTAINER.VBROKER_CONTAINER_NAME,MQ_VBROKER_CONTAINER.POS.row,MQ_VBROKER_CONTAINER.POS.col,"container");
 			this.VBrokerContainer._id = MQ_VBROKER_CONTAINER.VBROKER_CONTAINER_ID;
 
-			debugger;
 			for (var vbrokerIndex in vbrokers) {
 				var vbroker = vbrokers[vbrokerIndex];
 				var container = this.addContainerToContainer(MQ_VBROKER_CONTAINER.POS.x, MQ_VBROKER_CONTAINER.POS.y,
-					vbroker.VBROKER_NAME, this.VBROKER_CONST, 1, 2, this.vbrokerMenu, this.VBrokerContainer,true);
+					vbroker.VBROKER_NAME, this.VBROKER_CONST, 1, 2, this.elementMenu, this.VBrokerContainer,true);
 
 				var brokers  = vbroker.MQ_BROKER;
 				for(var brokerIndex in brokers){
@@ -276,7 +276,7 @@ var Component = window.Component || {};
 			
 		case "VBroker":
 			var text = "VBroker",
-				container = this.addContainerToContainer(x, y, text, this.VBROKER_CONST, 1, 2,this.vbrokerMenu, this.VBrokerContainer),
+				container = this.addContainerToContainer(x, y, text, this.VBROKER_CONST, 1, 2,this.elementMenu, this.VBrokerContainer),
 				success =  container!= null;
 			success && this.popupForm(container);
 			return success;
@@ -286,7 +286,6 @@ var Component = window.Component || {};
 				childs = this.VBrokerContainer.childs,
 				img = this.brokerIcon;
 			//逐个地判断是否落在VBroker容器中
-			debugger;
 			for (var i = 0; i<childs.length; i++) {
 				if (this.addNodeToContainer(x, y, img, datatype, this.BROKER_CONST, this.nodeMenu,childs[i] ,false) != null) {
 					success = true;
@@ -294,6 +293,9 @@ var Component = window.Component || {};
 				}
 			}
 			return success;
+
+		case "MQ_COLLECTD":
+			return this.addCollectd(x, y, this.collectdIcon, "collectd", datatype, this.elementMenu, false);
 			
 		default: 
 			return false;

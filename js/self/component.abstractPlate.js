@@ -529,7 +529,8 @@ var Component = window.Component || {};
 	}
 
 	Plate.prototype.getDeployLog = function (key) {
-		var res;
+		var res,
+			self = this;
 		if (this.isNotNull(key)) {
 			$.ajax({
 				url: this.url + this.deployLogServ,
