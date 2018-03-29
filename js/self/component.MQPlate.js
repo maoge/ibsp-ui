@@ -136,7 +136,7 @@ var Component = window.Component || {};
 				collectd = data.MQ_COLLECTD;
 
 			//加载SwitchContaniner
-			if(MQ_SWITCH_CONTAINER && Util.isObjectNotNull(MQ_SWITCH_CONTAINER)){
+			if(MQ_SWITCH_CONTAINER && !$.isEmptyObject(MQ_SWITCH_CONTAINER)){
 				this.SwitchContainer = this.makeContainer(MQ_SWITCH_CONTAINER.POS.x,MQ_SWITCH_CONTAINER.POS.y,
 					MQ_SWITCH_CONTAINER.MQ_SWITCH_CONTAINER_NAME,MQ_SWITCH_CONTAINER.POS.row,MQ_SWITCH_CONTAINER.POS.col,"node");
 				this.SwitchContainer._id = MQ_SWITCH_CONTAINER.MQ_SWITCH_CONTAINER_ID;
@@ -148,7 +148,7 @@ var Component = window.Component || {};
 				}
 			}
 			//加载collectd
-			if (collectd && Util.isObjectNotNull(collectd)) {
+			if (collectd && !$.isEmptyObject(collectd)) {
 				var x = collectd.POS ? collectd.POS.x : 0;
 				var y = collectd.POS ? collectd.POS.y : 0;
 				this.addCollectd(x, y, this.collectdIcon,
