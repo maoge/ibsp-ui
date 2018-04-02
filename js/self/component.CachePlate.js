@@ -264,6 +264,13 @@ var Component = window.Component || {};
 			break;
 		case this.CLUSTER_CONST:
 			this.ClusterForm.show(this.getMetaData(element));
+			var nodeList = "",
+				self = this;
+			element.childs.forEach(function (node) {
+				var meta = self.getMetaData(node);
+				nodeList += "<option value='"+meta["CACHE_NODE_ID"]+"'>"+meta["IP"]+":"+meta["PORT"]+"</option>";
+			});
+			this.ClusterForm.setMasterSelect(nodeList);
 			break;
 		case this.NODE_CONST:
 			this.NodeForm.show(this.getMetaData(element));
@@ -347,13 +354,20 @@ var Component = window.Component || {};
 	 * 组件部署成功时的处理
 	 */
 	CachePlate.prototype.getElementDeployed = function(element) {
+		var self = this;
 		if (element.elementType=="node") {
 			element.status = "deployed";
-			var self = this;
 			element.removeEventListener('contextmenu');
 			element.addEventListener('contextmenu', function(e) {
 				self.deployedMenu.show(e);
 			});
+		} else if (element.elementType=="container") {
+			if (element.parentContainer!=undefined && element.parentContainer!=null) {
+				element.removeEventListener('contextmenu');
+				element.addEventListener('contextmenu', function(e) {
+					self.deployedMenu.show(e);
+				});
+			}
 		}
 	};
 	
