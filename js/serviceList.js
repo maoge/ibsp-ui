@@ -90,11 +90,6 @@ function loadServiceList() {
             },{
 				text:"元数据",
 				//配置隐藏属性
-				format:function(value,row,index){
-					if(row.SERV_TYPE != 'DB' || row.IS_DEPLOYED!=1){
-						return { hided:true };
-					}
-				},
 				onClick:function(button,row,index){
 					$mainContainer.load("metadata.html",function(){
 						searchByRemote(row.INST_ID);
