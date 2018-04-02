@@ -354,13 +354,20 @@ var Component = window.Component || {};
 	 * 组件部署成功时的处理
 	 */
 	CachePlate.prototype.getElementDeployed = function(element) {
+		var self = this;
 		if (element.elementType=="node") {
 			element.status = "deployed";
-			var self = this;
 			element.removeEventListener('contextmenu');
 			element.addEventListener('contextmenu', function(e) {
 				self.deployedMenu.show(e);
 			});
+		} else if (element.elementType=="container") {
+			if (element.parentContainer!=undefined && element.parentContainer!=null) {
+				element.removeEventListener('contextmenu');
+				element.addEventListener('contextmenu', function(e) {
+					self.deployedMenu.show(e);
+				});
+			}
 		}
 	};
 	
