@@ -88,10 +88,23 @@ function loadServiceList() {
             		})
             	}
             },{
+					text:"队列信息",
+					//配置隐藏属性
+					format:function(value,row,index){
+						if(row.SERV_TYPE != 'MQ' || row.IS_DEPLOYED !=1){
+							return { hided:true };
+						}
+					},
+					onClick:function(button,row,index){
+						$mainContainer.load("queue.html",function(){
+							/*searchByRemote(row.INST_ID);*/
+						})
+					}
+			},{
 				text:"元数据",
 				//配置隐藏属性
 				format:function(value,row,index){
-					if(row.SERV_TYPE != 'DB' || row.IS_DEPLOYED!=1){
+					if(row.IS_DEPLOYED !=1){
 						return { hided:true };
 					}
 				},

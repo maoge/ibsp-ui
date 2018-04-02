@@ -99,6 +99,79 @@ var Util = window.Util = {
             return true;
         }
         return false;
+    },
+    getFormParam : function(formName){
+        //遍历所有的input select textarea元素
+        var $form = $("#"+formName),
+            params = {};
+        $form.find("input,select,textarea").each(function(){
+            var $this = $(this),
+                type = $this.prop("type"),
+                name = $this.prop("name").toUpperCase(),
+                val = $this.val();
+            if(type === "radio" || type === "checkbox"){
+                if($this.prop("checked")){
+                    if(params[name]){
+                        params[name] = params[name] + "," + val;
+                    }else{
+                        params[name] = val;
+                    }
+                }
+                return true;//跳出本次循环
+            }
+            params[name] = val;
+        });
+        return params;
+    },
+    clearForm : function(formName){
+        var $form = $("#"+formName);
+        $form.find("input,select,textarea").each(function(){
+            //select默认选择第一个 radio checkbox 不选择 其它的置为空
+            var $this = $(this),
+                type = $this.prop("type"),
+                name = $this.prop("name").toUpperCase();
+            //select-multiple很少用不添加，后面需要可以再添加
+            if(type === "select-one"){
+                $this.find("option:eq(0)").prop("selected",true);
+                return true;//跳出本次循环
+            }
+            if(type === "radio" || type === "checkbox"){
+                $this.prop("checked",false);
+                return true;//跳出本次循环
+            }
+            $this.val("");
+        });
+    },
+    setFormData : function(formName,json){
+        var $form = $("#"+formName);
+        $.each(json,function(name,value){
+            var $eles = $form.find("[name='"+name+"']"),
+                type = $eles.prop("type");
+            if(type == "radio"){
+                $eles.each(function(){
+                    var $this = $(this);
+                    if($this.val() == value){
+                        $this.prop("checked",true);
+                    }
+                })
+                return true;
+            }
+            if(type == "checkbox"){
+                var checkValues = value.split(",");
+                $eles.each(function(){
+                    var $this = $(this);
+                    if($.inArray($this.val(),checkValues) > -1){
+                        $this.prop("checked",true);
+                    }
+                })
+                return true;
+            }
+            if(type =="select-one"){
+                $eles.find("option[value='"+value+"']").prop("selected",true);
+                return true;
+            }
+            $eles.val(value);
+        });
     }
 };
 /*原生函數扩展*/
