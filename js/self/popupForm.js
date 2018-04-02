@@ -63,6 +63,10 @@
             this.$popupBody.width(this.contentWidth);
             this.$popupContent.height(this.$popupBody.height() - this.$popupTitle.height() - this.$popupFoot.height() - padding * 2);//30是2 * padding的高度
         };
+        this.setMasterSelect = function (options) {
+        	var masterSelect = this.$form.find("select[name='MASTER_ID']");
+        	masterSelect.html(options);
+        };
         this.createPopupForm = function (options) {
             var that = this;
             this.createForm(options),
@@ -135,7 +139,9 @@
                         type = field['type'],
                         pattern = field['pattern'],
                         disabled = field['inputDisabled'];
-                    if (id=="IP" || id=="OS_USER") {
+                    if (id=="MASTER_ID")
+                    	label = "主节点";
+                    if (id=="IP" || id=="OS_USER" || id=="MASTER_ID") {
                         label && $("<fieldset class='popupFormFiedSet'>" +
                                 "<div class='popupFromGroup'>" +
                                 "<label class='popupFormLabel'>" + label + "</label>" +

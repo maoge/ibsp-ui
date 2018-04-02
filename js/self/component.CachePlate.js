@@ -264,6 +264,13 @@ var Component = window.Component || {};
 			break;
 		case this.CLUSTER_CONST:
 			this.ClusterForm.show(this.getMetaData(element));
+			var nodeList = "",
+				self = this;
+			element.childs.forEach(function (node) {
+				var meta = self.getMetaData(node);
+				nodeList += "<option value='"+meta["CACHE_NODE_ID"]+"'>"+meta["IP"]+":"+meta["PORT"]+"</option>";
+			});
+			this.ClusterForm.setMasterSelect(nodeList);
 			break;
 		case this.NODE_CONST:
 			this.NodeForm.show(this.getMetaData(element));
