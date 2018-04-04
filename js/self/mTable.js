@@ -345,8 +345,10 @@
                         };*/
                         var state = button.format(value,item,i);
                         var buttonHided = state === true || (state && state.hided)? "none" : "inline";//按钮隐藏
+                        var buttonDisabled = state === true || (state && state.disabled)? "disabled" : "";//按钮不可用
+                        var buttonStyleClass = state === true || (state && state.style)? state.style : "";//按钮其它样式
 
-                        textArr.push(sprintf('<button class="btn btn-default" type="button" style="display:%s"> ',buttonHided) +
+                        textArr.push(sprintf('<button %s class="btn btn-default %s" type="button" style="display:%s;"> ',buttonDisabled,buttonStyleClass,buttonHided) +
                             //sprintf('id="$s" name="%s" title="%s" onclick="onClick('+button+','+item+','+i+')">',button.id,button.name,button.title) +
                             sprintf('id="$s" name="%s" title="%s" >',button.id,button.name,button.title) +
                             button.text+

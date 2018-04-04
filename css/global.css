@@ -325,6 +325,14 @@ body .layui-layer-self .layui-layer-btn .layui-layer-btn1{
 }
 /*--------------sshLint.html------------------*/
 
+/*---------------queue.html-------------------*/
+.btn-onlymsg{
+    background-color: green!important;
+    color: white!important;
+    font-weight: 500!important;
+}
+
+
 /*.nav-masthead .nav-link {
     padding: .25rem 0;
     font-weight: 400;

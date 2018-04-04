@@ -2,6 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<meta charset="utf-8"/>
+	<link href="../css/self/mTable.css" type="text/css" rel="stylesheet"/>
 </head>
 
 <body>
@@ -35,7 +36,7 @@
 </div>
 
 <div class="row-fluid" style="margin-top:10px">
-	<table id="service_list">
+	<table id="queue_list">
 	</table>
 </div>
 
@@ -54,6 +55,7 @@
 				<div class="tab-pane active in" id="home">
 					<form id="newQueueForm" class="form-horizontal">
 						<input type="hidden" value="" name="QUEUE_ID" id="QUEUE_ID"/>
+						<input type="hidden" value="" name="SERV_ID" id="SERV_ID"/>
 						<div class="form-group row ">
 							<label for="QUEUE_NAME" class="col-sm-4 control-label form-control-label">Queue/Topic名称：</label>
 							<div class="col-sm-8">
@@ -64,8 +66,8 @@
 							<label for="QUEUE_TYPE" class="col-sm-4 control-label form-control-label">类型：</label>
 							<div class="col-sm-8">
 								<select class="custom-select" name="QUEUE_TYPE" id="QUEUE_TYPE">
-									<option value ="0" selected>队列</option>
-									<option value ="1">广播</option>
+									<option value ="1" selected>队列</option>
+									<option value ="2">广播</option>
 								</select>
 							</div>
 						</div>
@@ -73,12 +75,12 @@
 							<label class="col-sm-4 control-label form-control-label">是否持久化：</label>
 							<div class="col-sm-8">
 								<div class="form-check mt-3 form-check-inline">
-									<input class="form-check-input" type="radio" name="IS_DURABLE" value="0">
-									<label class="form-check-label" >是</label>
+									<input class="form-check-input " type="radio" name="IS_DURABLE" value="0">
+									<label class="form-check-label " >否</label>
 								</div>
 								<div class="form-check mt-3 form-check-inline">
-									<input class="form-check-input " type="radio" name="IS_DURABLE" value="1">
-									<label class="form-check-label " >否</label>
+									<input class="form-check-input" type="radio" name="IS_DURABLE" value="1">
+									<label class="form-check-label" >是</label>
 								</div>
 							</div>
 						</div>
@@ -86,12 +88,12 @@
 							<label class="col-sm-4 control-label form-control-label">是否全局有序：</label>
 							<div class="col-sm-8">
 								<div class="form-check mt-3 form-check-inline">
-									<input class="form-check-input" type="radio" name="GLOBAL_ORDERED" value="0">
-									<label class="form-check-label" >是</label>
+									<input class="form-check-input " type="radio" name="IS_ORDERED" value="0">
+									<label class="form-check-label " >否</label>
 								</div>
 								<div class="form-check mt-3 form-check-inline">
-									<input class="form-check-input " type="radio" name="GLOBAL_ORDERED" value="1">
-									<label class="form-check-label " >否</label>
+									<input class="form-check-input" type="radio" name="IS_ORDERED" value="1">
+									<label class="form-check-label" >是</label>
 								</div>
 							</div>
 						</div>

@@ -9,5 +9,10 @@ var Url = window.Url = {
         loadServiceListCount : rootUrl + "configsvr/getServiceCount",
         saveService:rootUrl + "deploy/addOrModifyService",
         delService: rootUrl + "deploy/deleteService"
+    },
+    queueList:{
+        getQueueList : rootUrl + "mqsvr/getQueueList",
+        getQueueListCount : rootUrl + "mqsvr/getQueueListCount",
+        saveQueue : rootUrl + "mqsvr/saveQueue"
     }
 };

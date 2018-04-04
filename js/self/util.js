@@ -192,6 +192,24 @@ Date.prototype.simpleFormat = function (fmt) {
     return fmt;
 };
 
+//全局ajax事件和默认参数设置
+$.ajaxSetup({
+    type: "post",
+    dataType: "json",
+    async: false,
+    timeout: 5000
+});
+$(document).ajaxStart(function(){
+    Util.showLoading();
+});
+$(document).ajaxError(function(event, jqxhr, settings, exception){
+    Util.hideLoading();
+    Util.alert("error",jqxhr.statusText);
+});
+$(document).ajaxComplete(function(){
+    Util.hideLoading();
+});
+
 function extend(subClass, superClass) {
     var F = function() {};
     F.prototype = superClass.prototype;
