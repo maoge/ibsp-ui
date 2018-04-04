@@ -75,7 +75,7 @@ var Component = window.Component || {};
 						type: "get",
 						async: false,
 						success: function (data) {
-							window[schemaName] = JSON.parse(data);
+							window[schemaName] = data;
 						}
 					});
 				}
