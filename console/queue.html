@@ -14,12 +14,12 @@
 	</div>
 	<div class="col-lg-8 col-sm-12">
 		<div class="form-inline mt-md-0 mr-2 pt-1 float-right" >
-			<input id= "S_SERVICE_NAME" class="form-control mr-sm-2" type="text" placeholder="请输入队列名称" >
+			<input id= "S_QUEUE_NAME" class="form-control mr-sm-2" type="text" placeholder="请输入队列名称" >
 			<div class="input-group">
-				<select class="custom-select" id="S_SERVICE_TYPE">
+				<select class="custom-select" id="S_QUEUE_TYPE">
 					<option selected value = "">服务类型（默认所有）</option>
-					<option value ="queue">Queue（ 队列 ）</option>
-					<option value ="topic">Topic（ 广播 ）</option>
+					<option value ="1">Queue（ 队列 ）</option>
+					<option value ="2">Topic（ 广播 ）</option>
 				</select>
 				<div class="input-group-append">
 					<button class="btn btn-outline-success" onclick="searchQueues();">

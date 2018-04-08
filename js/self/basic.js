@@ -13,6 +13,8 @@ var Url = window.Url = {
     queueList:{
         getQueueList : rootUrl + "mqsvr/getQueueList",
         getQueueListCount : rootUrl + "mqsvr/getQueueListCount",
-        saveQueue : rootUrl + "mqsvr/saveQueue"
+        saveQueue : rootUrl + "mqsvr/saveQueue",
+        delQueue : rootUrl + "mqsvr/delQueue",
+        releaseQueue : rootUrl + "mqsvr/releaseQueue"
     }
 };
