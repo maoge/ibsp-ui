@@ -378,7 +378,7 @@ var Component = window.Component || {};
 		if(element.parentContainer.childs.length <= 1 ){
 			Component.Alert("error", "已经是最后一个组件！");
 		} else {
-			TidbPlate.prototype.undeployElement.call(this, element);
+			Component.Plate.prototype.undeployElement.call(this, element);
 		}
 	};
 	
