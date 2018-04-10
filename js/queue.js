@@ -1,9 +1,13 @@
 var servId = "",
+    servName = "";
     $queueList = $("#queue_list");
 function init(name,id){
+    console.log(name);
     var queueParam = {"SERV_ID" : id};
     servId = id;
+    servName = name;
     $('#SERV_ID').val(servId);
+    $("#servName").text(name);
     listQueue(queueParam);
 }
 
@@ -21,7 +25,6 @@ function searchQueues(){
 }
 
 function listQueue(queueParam){
-    debugger;
     $queueList.mTable({
         url: Url.queueList.getQueueList,
         countUrl: Url.queueList.getQueueListCount,
@@ -100,14 +103,17 @@ function listQueue(queueParam){
                     }
                 },
             },{
-                text:"绑定",
+                text:"绑定广播",
                 format:function(value,row,index){
                     if(row.QUEUE_TYPE == '1' ||  row.IS_DEPLOY == "0"){
                         return { hided:true};
                     }
                 },
                 onClick:function(button,row,index){
-                    bindTopic(row);
+                    $mainContainer.load("bindTopic.html",function(){
+                        debugger;
+                        init(row.QUEUE_ID, row.QUEUE_NAME, servName ,servId);
+                    })
                 }
             }]
         }]

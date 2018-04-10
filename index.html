@@ -173,9 +173,7 @@
     $(".dropdown-menu>a").off("click").on("click",function(){
         var $this = $(this), pageName = $this.data("load-page"),$main = $("#mainContent");
         if(pageName != ""){
-            /*$main.load("pages/"+pageName+".html");*/
             $main.load(pageName+".html",function(){
-                initPage();
             });
         }
     });

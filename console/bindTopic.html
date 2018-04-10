@@ -1,0 +1,99 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta charset="utf-8"/>
+	<link href="../css/self/mTable.css" type="text/css" rel="stylesheet"/>
+</head>
+
+<body>
+<div class="row bg-light	">
+	<div class="col-lg-4 col-sm-12 breadcrumb bg-light">
+		<li class="breadcrumb-item">基础服务功能</li>
+		<li class="breadcrumb-item"><a data-load-page="serviceList" href="#">服务集群管理</a></li>
+		<li class="breadcrumb-item"><a data-load-page="queue" id="backQueuePage" href="#"><span id="servName"></span> </a></li>
+		<li class="breadcrumb-item"><span id="queueName"></span> </a></li>
+	</div>
+	<div class="col-lg-8 col-sm-12">
+		<div class="form-inline mt-md-0 mr-2 pt-1 float-right" >
+
+			<div class="input-group">
+				<input id= "S_CONSUMER_ID" class="input-append form-control" type="text" placeholder="请输入ConsumerID" >
+				<div class="input-group-append">
+					<button class="btn btn-outline-success" onclick="searchBinds();">
+						<i class="iconfont ibsp-chaxun mr-1"></i>搜索
+					</button>
+				</div>
+			</div>
+		</div>
+		<div class="btn-group float-left my-sm-1 mr-5">
+			<button class="btn btn-outline-primary" onclick="permnentBind();">持久化绑定</button>
+			<button class="btn btn-outline-info" onclick="wildcardBind();">扩展通配绑定</button>
+		</div>
+	</div>
+</div>
+
+<div class="row-fluid" style="margin-top:10px">
+	<table id="permnent_topic_list">
+	</table>
+</div>
+
+
+<div class="modal fade" id="newPermnentTopic" tabindex="-1" role="dialog" aria-labelledby="newServiceHeader" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="newQueueHeader">Topic绑定</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">×</span>
+				</button>
+			</div>
+
+			<div class="modal-body">
+				<div class="tab-pane active in" id="home">
+					<form id="newPermnentTopicForm" class="form-horizontal">
+						<input type="hidden" value="" name="QUEUE_ID" id="QUEUE_ID"/>
+						<div class="form-group row ">
+							<label for="CONSUMER_ID" class="col-sm-4 control-label form-control-label">consumerId：</label>
+							<div class="col-sm-8">
+								<input type="text" class="form-control" name="CONSUMER_ID" id="CONSUMER_ID" placeholder="请输入consumerId">
+							</div>
+						</div>
+						<div class="form-group row">
+							<label class="col-sm-4 control-label form-control-label"></label>
+							<div class="col-sm-8" style="padding-left: 2.25rem">
+								<input class="form-check-input" name="autoCheckBox" id="autoGenerateConsumerIdCheckbox" type="checkbox"> 自动生成
+							</div>
+						</div>
+						<div class="form-group row" id="subkeyRow">
+							<label class="col-sm-4 control-label form-control-label">SubKey：</label>
+							<div class="col-sm-8">
+								<input type="text" class="form-control" name="SUB_KEY" id="SUB_KEY" placeholder="请输入SubKey">
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-outline-secondary" data-dismiss="modal">关闭</button>
+				<button type="button" onclick="bindTopic()" class="btn btn-primary ">提交</button>
+			</div>
+		</div>
+	</div>
+
+</div>
+</body>
+<script type="text/javascript" src="../js/bindTopic.js"></script>
+<script type="text/javascript">
+	$(".breadcrumb>li>a").off("click").on("click",function(){
+		debugger;
+		var $this = $(this), pageName = $this.data("load-page"),$main = $("#mainContent");
+		if(pageName != ""){
+			/*$main.load("pages/"+pageName+".html");*/
+			$(".contextMenu").remove();
+			$main.load(pageName+".html",function(){
+				initPage();
+			});
+		}
+	});
+</script>
+</html>

@@ -10,7 +10,7 @@
 	<div class="col-lg-4 col-sm-12 breadcrumb bg-light">
 		<li class="breadcrumb-item">基础服务功能</li>
 		<li class="breadcrumb-item"><a data-load-page="serviceList" href="#">服务集群管理</a></li>
-		<li class="breadcrumb-item">队列信息管理</li>
+		<li class="breadcrumb-item"><span id="servName"></span> </li>
 	</div>
 	<div class="col-lg-8 col-sm-12">
 		<div class="form-inline mt-md-0 mr-2 pt-1 float-right" >
@@ -45,7 +45,7 @@
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h5 class="modal-title" id="newQueueHeader">新增服务集群 title</h5>
+				<h5 class="modal-title" id="newQueueHeader">新增队列 title</h5>
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 					<span aria-hidden="true">×</span>
 				</button>
@@ -127,6 +127,7 @@
 <script type="text/javascript" src="../js/queue.js"></script>
 <script type="text/javascript">
 	$(".breadcrumb>li>a").off("click").on("click",function(){
+		debugger;
 		var $this = $(this), pageName = $this.data("load-page"),$main = $("#mainContent");
 		if(pageName != ""){
 			/*$main.load("pages/"+pageName+".html");*/

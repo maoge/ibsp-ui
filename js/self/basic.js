@@ -16,5 +16,11 @@ var Url = window.Url = {
         saveQueue : rootUrl + "mqsvr/saveQueue",
         delQueue : rootUrl + "mqsvr/delQueue",
         releaseQueue : rootUrl + "mqsvr/releaseQueue"
+    },
+    permnentTopicList : {
+        getPermnentTopicList : rootUrl + "mqsvr/getPermnentTopicList",
+        getPermnentTopicCount : rootUrl + "mqsvr/getPermnentTopicCount",
+        savePermnentTopic : rootUrl + "mqsvr/savePermnentTopic",
+        delPermnentTopic : rootUrl + "mqsvr/delPermnentTopic"
     }
 };
