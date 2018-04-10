@@ -34,14 +34,14 @@ function listQueue(queueParam){
         pageSize : 10,
         pageNumber : 1,
         columns : [{
-            checkbox:true/*,
+            checkbox:true,
             format:function(value,row,index){//value是值，row是当前的行记录，index是行数 从0开始
-                if(row.IS_DEPLOY === '1'){
+                if(row.C_SHOW === '1'){
                     return {
                         disabled:true,
                     }
                 }
-            }*/
+            }
         },{
             field : "QUEUE_ID",
             title : "队列ID"
