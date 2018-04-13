@@ -211,17 +211,17 @@ Date.prototype.simpleFormat = function (fmt) {
 $.ajaxSetup({
     type: "post",
     dataType: "json",
-    timeout: 5000
-});
-$(document).ajaxStart(function(){
-    Util.showLoading();
-});
-$(document).ajaxError(function(event, jqxhr, settings, exception){
-    Util.hideLoading();
-    Util.alert("error",jqxhr.statusText);
-});
-$(document).ajaxComplete(function(){
-    Util.hideLoading();
+    timeout: 5000,
+    beforeSend : function () {
+        Util.showLoading();
+    },
+    error : function () {
+        Util.hideLoading();
+        Util.alert("error",event.type + ":" + jqxhr.statusText);
+    },
+    complete : function () {
+        Util.hideLoading();
+    }
 });
 
 function extend(subClass, superClass) {

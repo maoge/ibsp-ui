@@ -8,20 +8,10 @@ function loadServiceList() {
         url: Url.serverList.loadServiceList,
         countUrl: Url.serverList.loadServiceListCount,
         queryParams: serviceListParams,
-        method : 'post',
-        showHeader: true,
         striped : true,
-        showToggle: true,
         pagination : true,
         pageSize : 10,
         pageNumber : 1,
-        showColumns : true,
-        showPaginationSwitch: true,
-        showRefresh : true,
-        paginationHAlign:'right',
-        paginationVAlign:'both',
-
-        clickToSelect : true,
         columns : [{
             checkbox:true,
             format:function(value,row,index){//value是值，row是当前的行记录，index是行数 从0开始

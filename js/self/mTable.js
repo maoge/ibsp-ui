@@ -611,12 +611,12 @@
                     that.options.totalRows = res[that.options.countCloumnName]
                 }
                 that.initPagination();
-            },
+            }/*,
             error: function (res) {
                 var fun = that.options.ajaxError;
                 fun.call(fun,res);
                 throw new Error("请求count失败");
-            }
+            }*/
         };
         /*if (this._xhr && this._xhr.readyState !== 4) {
             this._xhr.abort();
@@ -652,13 +652,16 @@
                 that.load(data);
                 //that.trigger('load-success', res);
                 that.$tableLoading.hide();
-            },
+            }/*,
             error: function (res) {
                 //that.trigger('load-error', res.status, res);
                 var fun = that.options.ajaxError;
                 fun.call(fun,res);
                 that.$tableLoading.hide();
                 throw new Error("请求date失败");
+            }*/,
+            complete : function () {
+                that.$tableLoading.hide();
             }
         };
 

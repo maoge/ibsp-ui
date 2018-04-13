@@ -78,11 +78,7 @@ function listQueue(queueParam){
                     }
                 },
                 onClick:function(button,row,index){
-                    debugger;
-                    Util.setFormData("newQueueForm",row);
-                    $('#newQueueHeader').text("修改队列");
-                    $('#newQueue').modal("show");
-                    $(".modal-backdrop").appendTo($("#mainContent"));
+                    editQueue(row);
                 }
             },{
                 text:"发布",
@@ -111,10 +107,7 @@ function listQueue(queueParam){
                     }
                 },
                 onClick:function(button,row,index){
-                    $mainContainer.load("bindTopic.html",function(){
-                        debugger;
-                        init(row.QUEUE_ID, row.QUEUE_NAME, servName ,servId);
-                    })
+                    bindTopic(row);
                 }
             }]
         }]
@@ -127,6 +120,13 @@ function addQueue() {
     $('#SERV_ID').val(servId);
     $('#newQueue').modal("show");
     //bootstrap4 在jquery load html的时候出现modal的出现bug
+    $(".modal-backdrop").appendTo($("#mainContent"));
+}
+
+function editQueue(row) {
+    Util.setFormData("newQueueForm",row);
+    $('#newQueueHeader').text("修改队列");
+    $('#newQueue').modal("show");
     $(".modal-backdrop").appendTo($("#mainContent"));
 }
 
@@ -165,7 +165,6 @@ function delQueue(){
         $.ajax({
             url: Url.queueList.delQueue,
             data: data,
-            async: false,
             success: function(result) {
                 if (result.RET_CODE == 0) {
                     Util.msg("删除成功");
@@ -183,7 +182,6 @@ function releaseQueue(param){
     $.ajax({
         url: Url.queueList.releaseQueue,
         data: param,
-        async: false,
         success: function(result) {
             if (result.RET_CODE == 0) {
                 Util.msg("发布成功");
@@ -196,5 +194,7 @@ function releaseQueue(param){
 }
 
 function bindTopic(row){
-    console.log(row);
+    $mainContainer.load("bindTopic.html",function(){
+        init(row.QUEUE_ID, row.QUEUE_NAME, servName ,servId);
+    })
 }
