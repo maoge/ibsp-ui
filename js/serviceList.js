@@ -146,18 +146,6 @@ function delService() {
 		$.ajax({
 			url: Url.serverList.delService,
 			data: data,
-			async: true,
-			type: "post",
-			dataType: "json",
-			beforeSend: function() {
-				loading.show();
-			},
-			complete: function() {
-				loading.hide();
-			},
-			error: function(xhr) {
-				Util.alert("error", "删除服务集群失败！"+xhr.status+":"+xhr.statusText);
-			},
 			success: function(result) {
 				if (result.RET_CODE == 0) {
 					Util.msg("删除成功");
@@ -181,18 +169,6 @@ function saveService() {
 	$.ajax({
 		url:  Url.serverList.saveService,
 		data: data,
-		async: true,
-		type: "post",
-		dataType: "json",
-		beforeSend: function() {
-			loading.show();
-		},
-		complete: function() {
-			loading.hide();
-		},
-		error: function(xhr) {
-			Util.alert("error", "新增服务集群失败！"+xhr.status+":"+xhr.statusText);
-		},
 		success: function(result) {
 			if (result.RET_CODE == 0) {
 				$('#newService').modal("hide");

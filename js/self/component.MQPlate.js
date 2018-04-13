@@ -23,6 +23,7 @@ var Component = window.Component || {};
 		var data = this.getTopoData(id),
 			self = this;
 
+		console.log(data);
 		if (data == null) {
 			Util.hideLoading();
 			return;
@@ -349,7 +350,6 @@ var Component = window.Component || {};
 
 	//组件部署成功时的处理
 	MQPlate.prototype.getElementDeployed = function(element) {
-		debugger;
 		var type = element.type,
 			self = this;
 		switch (type){
@@ -359,6 +359,12 @@ var Component = window.Component || {};
 				element.addEventListener('contextmenu', function(e) {
 					self.deployedElementMenu.show(e);
 				});
+                var brokers = element.childs;
+                for(var index in brokers){
+                    var broker = brokers[index];
+                    broker.status = "deployed";
+                    broker.removeEventListener('contextmenu');
+                }
 				break;
 			case this.BROKER_CONST :
 				element.status = "deployed";
@@ -390,6 +396,51 @@ var Component = window.Component || {};
 				self.deployedMenu.show(e);
 			});
 		}*/
-	}
+	};
+
+    MQPlate.prototype.getElementUndeployed = function (element) {
+        var type = element.type,
+            self = this;
+        switch (type){
+            case this.VBROKER_CONST :
+                element.status = "saved";
+                element.removeEventListener('contextmenu');
+                element.addEventListener('contextmenu', function(e) {
+                    self.elementMenu.show(e);
+                });
+                var brokers = element.childs;
+                for(var index in brokers){
+                	var broker = brokers[index];
+                    broker.status = "saved";
+                    broker.removeEventListener('contextmenu');
+                    broker.addEventListener('contextmenu', function(e) {
+                        self.nodeMenu.show(e);
+                    });
+				}
+                break;
+            case this.BROKER_CONST :
+                element.status = "saved";
+                element.removeEventListener('contextmenu');
+                broker.addEventListener('contextmenu', function(e) {
+                    self.nodeMenu.show(e);
+                });
+                break;
+            case this.COLLECTD_CONST :
+                element.status = "saved";
+                element.removeEventListener('contextmenu');
+                element.addEventListener('contextmenu', function(e) {
+                    self.deployedElementMenu.show(e);
+                });
+                break;
+        }
+    }
+
+    MQPlate.prototype.undeployElement = function(element){
+        if(element.parentContainer.childs.length <= 1 ){
+            Component.Alert("error", "已经是最后一个组件！");
+        } else {
+            Component.Plate.prototype.undeployElement.call(this, element);
+        }
+    };
 
 })(Component);

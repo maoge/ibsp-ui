@@ -211,7 +211,6 @@ Date.prototype.simpleFormat = function (fmt) {
 $.ajaxSetup({
     type: "post",
     dataType: "json",
-    async: false,
     timeout: 5000
 });
 $(document).ajaxStart(function(){

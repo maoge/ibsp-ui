@@ -73,7 +73,7 @@ var Component = window.Component || {};
 					$.ajax({
 						url: url,
 						type: "get",
-						async: false,
+						async : false,
 						success: function (data) {
 							window[schemaName] = data;
 						}
@@ -231,19 +231,7 @@ var Component = window.Component || {};
 
 		$.ajax({
 			url: this.url + this.delElementServ,
-			type: "post",
-			dataType: "json",
 			data: {"PARENT_ID": parentID, "INST_ID": element._id},
-			timeout: this.shortTimeout,
-			beforeSend: function () {
-				Util.showLoading();
-			},
-			complete: function () {
-				Util.hideLoading();
-			},
-			error: function (xhr) {
-				Component.Alert("error", "删除组件信息失败！" + xhr.status + ":" + xhr.statusText);
-			},
 			success: function (result) {
 				if (result.RET_CODE == 0) {
 					Component.Alert("success", "删除组件信息成功！");
@@ -272,13 +260,8 @@ var Component = window.Component || {};
 		var value = null;
 		$.ajax({
 			url: this.url + this.getTopoServ,
-			type: "post",
-			dataType: "json",
 			async: false,
 			data: {"INST_ID": id},
-			error: function (xhr) {
-				Component.Alert("error", "获取组件信息失败！" + xhr.status + ":" + xhr.statusText);
-			},
 			success: function (result) {
 				if (result.RET_CODE == 0) {
 					value = result.RET_INFO;
@@ -320,19 +303,7 @@ var Component = window.Component || {};
 
 		$.ajax({
 			url: this.url + this.saveTopoServ,
-			type: "post",
-			dataType: "json",
 			data: {"TOPO_JSON": JSON.stringify(json), "SERV_TYPE": type},
-			timeout: this.shortTimeout,
-			beforeSend: function () {
-				Util.showLoading();
-			},
-			complete: function () {
-				Util.hideLoading();
-			},
-			error: function (xhr) {
-				Component.Alert("error", "保存面板信息失败！" + xhr.status + ":" + xhr.statusText);
-			},
 			success: function (result) {
 				if (result.RET_CODE == 0) {
 					self.needInitTopo = false;
@@ -374,20 +345,7 @@ var Component = window.Component || {};
 
 		$.ajax({
 			url: this.url + this.saveElementServ,
-			type: "post",
-			dataType: "json",
 			data: {"NODE_JSON": JSON.stringify(data), "PARENT_ID": parentID, "OP_TYPE": type},
-			timeout: this.shortTimeout,
-			beforeSend: function () {
-				Util.showLoading();
-			},
-			complete: function () {
-				Util.hideLoading();
-			},
-			error: function (xhr) {
-				Component.Alert("error", "保存组件信息失败！" + xhr.status + ":" + xhr.statusText);
-				Util.hideLoading();
-			},
 			success: function (result) {
 				if (result.RET_CODE == 0) {
 					Component.Alert("success", "保存组件信息成功！");
@@ -411,12 +369,8 @@ var Component = window.Component || {};
 		var self = this;
 		var url = element ? this.url + this.deployInstanceServ : this.url + this.deployServ;
 		$("#log").html("deploy start ...<br/>");
-		var myCurrInt = this.openLayer(key, myCurrInt);
-
 		$.ajax({
 			url: url,
-			type: "post",
-			dataType: "json",
 			data: {"INST_ID": id, "SERV_ID": this.id, "SESSION_KEY": key},
 			timeout: this.longTimeout,
 			error: function (xhr) {
@@ -448,7 +402,8 @@ var Component = window.Component || {};
 				}
 			}
 		});
-	}
+        var myCurrInt = this.openLayer(key);
+    }
 
 	//卸载组件（只能一个组件）
 	Plate.prototype.undeployElement = function (element) {
@@ -456,18 +411,10 @@ var Component = window.Component || {};
 		var self = this;
 		var url = this.url + this.undeployServ;
 		$("#log").html("undeploy start ...<br/>");
-		var myCurrInt = this.openLayer(key, myCurrInt);
-
 		$.ajax({
 			url: url,
-			type: "post",
-			dataType: "json",
 			data: {"INST_ID": element._id, "SERV_ID": this.id, "SESSION_KEY": key},
 			timeout: this.longTimeout,
-			error: function (xhr) {
-				clearInterval(myCurrInt);
-				Component.Alert("error", "组件卸载失败！" + xhr.status + ":" + xhr.statusText);
-			},
 			success: function (result) {
 				clearInterval(myCurrInt);
 				if (self.isNotNull(myCurrInt)) {
@@ -485,9 +432,10 @@ var Component = window.Component || {};
 				}
 			}
 		});
+        var myCurrInt = this.openLayer(key);
 	}
 
-	Plate.prototype.openLayer = function (key, myCurrInt) {
+	Plate.prototype.openLayer = function (key) {
 		var height = $(window).height() * 0.7;
 		var width = $(window).width() * 0.7;
 		var self = this;
@@ -535,7 +483,6 @@ var Component = window.Component || {};
 			$.ajax({
 				url: this.url + this.deployLogServ,
 				type: "get",
-				dataType: "json",
 				data: {key: key},
 				async: false,
 				success: function (result) {
@@ -552,8 +499,6 @@ var Component = window.Component || {};
 		var self = this;
 		$.ajax({
 			url: this.url + this.getUserServ,
-			type: "post",
-			dataType: "json",
 			data: {"SERVICE_TYPE": type},
 			success: function (result) {
 				if (result.RET_CODE == 0) {

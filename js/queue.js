@@ -1,6 +1,7 @@
 var servId = "",
     servName = "";
     $queueList = $("#queue_list");
+
 function init(name,id){
     console.log(name);
     var queueParam = {"SERV_ID" : id};
