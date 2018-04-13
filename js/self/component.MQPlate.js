@@ -144,7 +144,7 @@ var Component = window.Component || {};
 
 				for (var _switch in MQ_SWITCH_CONTAINER.MQ_SWITCH) {
 					var node = this.addNodeToContainer(this.SwitchContainer.x+1, this.SwitchContainer.y+1,
-						this.switchIcon, _switch.MQ_SWITCH_NAME, this.SWITCH_CONST, this.nodeMenu, this.SwitchContainer, true);
+						this.switchIcon, _switch.MQ_SWITCH_NAME, this.SWITCH_CONST, this.nodeMenu, this.SwitchContainer, true, false);
 					this.setMetaData(node, _switch);
 				}
 			}
@@ -171,7 +171,7 @@ var Component = window.Component || {};
 				for(var brokerIndex in brokers){
 					var broker = brokers[brokerIndex];
 					var node = this.addNodeToContainer(container.x +1, container.y +1,
-						this.brokerIcon, broker.MQ_BROKER_NAME, this.BROKER_CONST, this.nodeMenu, container, true);
+						this.brokerIcon, broker.MQ_BROKER_NAME, this.BROKER_CONST, this.nodeMenu, container, true, false);
 					this.setMetaData(node, broker);
 				}
 				this.setMetaData(container, vbroker);
@@ -290,10 +290,13 @@ var Component = window.Component || {};
 				if(vbroker.status && vbroker.status == "deployed"){
 					continue;
 				}
-				if (this.addNodeToContainer(x, y, img, datatype, this.BROKER_CONST, this.nodeMenu,vbroker ,false) != null) {
+				if (this.addNodeToContainer(x, y, img, datatype, this.BROKER_CONST, this.nodeMenu,vbroker ,false, false) != null) {
 					success = true;
 					break;
 				}
+			}
+			if (!success) {
+				Component.Alert("warn", "请将组件拖放到对应的容器中！");
 			}
 			return success;
 

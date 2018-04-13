@@ -143,7 +143,7 @@ var Component = window.Component || {};
 	/**
 	 * 新增一个node到container中
 	 */
-	Plate.prototype.addNodeToContainer = function (x, y, img, text, type, menu, container, isSaved) {
+	Plate.prototype.addNodeToContainer = function (x, y, img, text, type, menu, container, isSaved, needAlarm) {
 		x = this.width / 2 - this.scene.translateX - (this.width / 2 - x) / this.scene.scaleX;
 		y = this.height / 2 - this.scene.translateY - (this.height / 2 - y) / this.scene.scaleY;
 
@@ -156,7 +156,9 @@ var Component = window.Component || {};
 			}
 			return node;
 		} else {
-			Component.Alert("warn", "请将组件拖放到对应的容器中！");
+			if (needAlarm) {
+				Component.Alert("warn", "请将组件拖放到对应的容器中！");
+			}
 			return null;
 		}
 	}
@@ -201,6 +203,7 @@ var Component = window.Component || {};
 
 			return newContainer;
 		} else {
+			Component.Alert("warn", "请将组件拖放到对应的容器中！");
 			return null;
 		}
 	}

@@ -148,13 +148,13 @@ var Component = window.Component || {};
 				var container = this.addContainerToContainer(this.ClusterContainer.x+1, 
 						this.ClusterContainer.y+1, cluster.CACHE_NODE_CLUSTER_CONTAINER_NAME, 
 						this.CLUSTER_CONST, 1, 2, this.nodeMenu, 
-						this.ClusterContainer, true);
+						this.ClusterContainer, true, false);
 				this.setMetaData(container, cluster);
 				for (var j=0; j<cluster.CACHE_NODE.length; j++) {
 					var cacheNode = cluster.CACHE_NODE[j];
 					var node = this.addNodeToContainer(container.x+1, container.y+1,
 							this.iconDir+this.NodeIcon, cacheNode.CACHE_NODE_NAME,
-							this.NODE_CONST, this.nodeMenu, container, true);
+							this.NODE_CONST, this.nodeMenu, container, true, false);
 					this.setMetaData(node, cacheNode);
 				}
 			}
@@ -232,7 +232,7 @@ var Component = window.Component || {};
 		switch(datatype) {
 		case this.PROXY_CONST:
 			return this.addNodeToContainer(x, y, this.iconDir+this.ProxyIcon, 
-					"proxy", datatype, this.nodeMenu, this.ProxyContainer, false) != null;
+					"proxy", datatype, this.nodeMenu, this.ProxyContainer, false, true) != null;
 		case this.CLUSTER_CONST:
 			return this.addContainerToContainer(x, y, "cluster", 
 					datatype, 1, 2, this.nodeMenu, this.ClusterContainer, false) != null;
@@ -241,10 +241,13 @@ var Component = window.Component || {};
 			var success = false, childs = this.ClusterContainer.childs, img = this.iconDir+this.NodeIcon;
 			for (var i=0; i<childs.length; i++) {
 				if (this.addNodeToContainer(x, y, img, "cache_node", 
-						datatype, this.nodeMenu, childs[i], false) != null) {
+						datatype, this.nodeMenu, childs[i], false, false) != null) {
 					success = true;
 					break;
 				}
+			}
+			if (!success) {
+				Component.Alert("warn", "请将组件拖放到对应的容器中！");
 			}
 			return success;
 			break;

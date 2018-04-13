@@ -131,21 +131,21 @@ var Component = window.Component || {};
 				for (var i=0; i<DB_PD_CONTAINER.DB_PD.length; i++) {
 					var pd = DB_PD_CONTAINER.DB_PD[i];
 					var node = this.addNodeToContainer(this.PDContainer.x+1, this.PDContainer.y+1,
-							this.iconDir+this.PDIcon, pd.PD_NAME, this.PD_CONST, this.nodeMenu, this.PDContainer, true);
+							this.iconDir+this.PDIcon, pd.PD_NAME, this.PD_CONST, this.nodeMenu, this.PDContainer, true, false);
 					this.setMetaData(node, pd);
 				}
 					
 				for (var i=0; i<DB_TIKV_CONTAINER.DB_TIKV.length; i++) {
 					var tikv = DB_TIKV_CONTAINER.DB_TIKV[i];
 					var node = this.addNodeToContainer(this.TikvContainer.x+1, this.TikvContainer.y+1, 
-							this.iconDir+this.TikvIcon, tikv.TIKV_NAME, this.TIKV_CONST, this.nodeMenu, this.TikvContainer, true);
+							this.iconDir+this.TikvIcon, tikv.TIKV_NAME, this.TIKV_CONST, this.nodeMenu, this.TikvContainer, true, false);
 					this.setMetaData(node, tikv);
 				}
 					
 				for (var i=0; i<DB_TIDB_CONTAINER.DB_TIDB.length; i++) {
 					var tidb = DB_TIDB_CONTAINER.DB_TIDB[i];
 					var node = this.addNodeToContainer(this.TidbContainer.x+1, this.TidbContainer.y+1, 
-							this.iconDir+this.TidbIcon, tidb.TIDB_NAME, this.TIDB_CONST, this.nodeMenu, this.TidbContainer, true);
+							this.iconDir+this.TidbIcon, tidb.TIDB_NAME, this.TIDB_CONST, this.nodeMenu, this.TidbContainer, true, false);
 					this.setMetaData(node, tidb);
 				}
 					
@@ -201,7 +201,7 @@ var Component = window.Component || {};
 			case this.COLLECTD_CONST:
 				return this.addCollectd(x, y, this.iconDir+this.collectdIcon, "collectd", datatype, this.nodeMenu, false);
 			}
-			return this.addNodeToContainer(x, y, img, text, datatype, this.nodeMenu, container, false) != null;
+			return this.addNodeToContainer(x, y, img, text, datatype, this.nodeMenu, container, false, true) != null;
 		}
 		
 		//Tidb面板设置组件元数据
