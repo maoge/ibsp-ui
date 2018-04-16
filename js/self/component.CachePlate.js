@@ -64,7 +64,7 @@ var Component = window.Component || {};
 			    	   self.undeployElement(e.target);
 			       }}]
 		});
-		this.plateMenu = $.contextMenu({
+		/*this.plateMenu = $.contextMenu({
 			items:[
 			       {label:'保存面板结构', icon:'../images/console/icon_save.png', callback: function(e){
 			    	   self.saveTopoData();
@@ -81,7 +81,7 @@ var Component = window.Component || {};
 		});
 		this.scene.addEventListener('contextmenu', function(e) {
 			self.plateMenu.show(e);
-		});
+		});*/
 		
 		//初始化弹出表单
         var cancelFunction = function(){

@@ -34,6 +34,7 @@ var Component = window.Component || {};
 		this.deployInstanceServ = "deploy/deployInstance"; //部署实例
 		this.undeployServ = "deploy/undeployInstance"; //卸载组件
 		this.getUserServ = "resourcesvr/getUserByServiceType" //获取服务器IP及操作系统用户信息
+		this.unDeployPlateUrl = "deploy/undeployService";//卸载面板
 
 		//状态图标
 		this.deployedIcon = new Image();
@@ -47,6 +48,7 @@ var Component = window.Component || {};
 		this.PlateType = null;
 		//初始化舞台
 		this.initStage = function (id, name, canvas) {
+			var self = this;
 			this.id = id;
 			this.name = name;
 
@@ -83,6 +85,35 @@ var Component = window.Component || {};
 			loadSchema("tidb.schema");
 			loadSchema("mq.schema");
 			loadSchema("cache.schema");
+
+            this.plateMenu = $.contextMenu({
+                items:[
+                    {label:'保存面板结构', icon:'../images/console/icon_save.png', callback: function(e){
+                            self.saveTopoData();
+                        }},
+                    {label:'部署面板', icon:'../images/console/icon_install.png', callback: function(e){
+                            layer.confirm('确认要部署集群“'+self.name+'”吗？', {
+                                btn: ['是','否'], //按钮
+                                title: "确认"
+                            }, function(){
+                                layer.close(layer.index);
+                                self.deployElement(e.target);
+                            });
+                        }},
+                    {label:'卸载面板', icon:'../images/console/icon_install.png', callback: function(e){
+                            layer.confirm('确认要卸载集群“'+self.name+'”吗？', {
+                                btn: ['是','否'], //按钮
+                                title: "确认"
+                            }, function(){
+                                layer.close(layer.index);
+                                self.unDeployPlate(e.target);
+                            });
+                        }}]
+            });
+
+            this.scene.addEventListener('contextmenu', function(e) {
+                self.plateMenu.show(e);
+            });
 		}
 	}
 
@@ -408,6 +439,41 @@ var Component = window.Component || {};
         var myCurrInt = this.openLayer(key);
     }
 
+    Plate.prototype.unDeployPlate = function () {
+        var key = this.randomStr(20, 'k'),
+			self = this,
+			url = this.url + this.unDeployPlateUrl;
+
+        $("#log").html("deploy start ...<br/>");
+
+        $.ajax({
+            url: url,
+            data: {"SERV_ID": this.id, "SESSION_KEY": key},
+            timeout: this.longTimeout,
+            error: function (xhr) {
+                clearInterval(myCurrInt);
+                Component.Alert("error", "组件部署失败！" + xhr.status + ":" + xhr.statusText);
+            },
+            success: function (result) {
+                clearInterval(myCurrInt);
+                if (self.isNotNull(myCurrInt)) {
+                    var logs = self.getDeployLog(key);
+                    if (self.isNotNull(logs)) {
+                        $("#log").append(logs);
+                        $("#log").parent().scrollTop($("#log").height() + 20);
+                    }
+                }
+                if (result.RET_CODE == 0) {
+                    Component.Alert("success", "卸载成功！");
+					self.setAllUndeploy();
+                } else {
+                    Component.Alert("error", "卸载失败！" + result.RET_INFO);
+                }
+            }
+        });
+        var myCurrInt = this.openLayer(key);
+    }
+
 	//卸载组件（只能一个组件）
 	Plate.prototype.undeployElement = function (element) {
 		var key = this.randomStr(20, 'k');
@@ -512,6 +578,12 @@ var Component = window.Component || {};
 			}
 		});
 	}
+
+	Plate.prototype.setAllUndeploy = function () {
+        this.scene.childs.forEach(function (element) {
+            element.status = "saved";
+        });
+    }
 
 	//随机串
 	Plate.prototype.randomStr = function (len, radix) {

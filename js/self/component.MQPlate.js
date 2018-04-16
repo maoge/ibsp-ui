@@ -73,25 +73,7 @@ var Component = window.Component || {};
 					self.undeployElement(e.target);
 				}}]
 		});
-		this.plateMenu = $.contextMenu({
-			items:[
-				{label:'保存面板结构', icon:'../images/console/icon_save.png', callback: function(e){
-					self.saveTopoData();
-				}},
-				{label:'部署面板', icon:'../images/console/icon_install.png', callback: function(e){
-					layer.confirm('确认要部署集群“'+self.name+'”吗？', {
-						btn: ['是','否'], //按钮
-						title: "确认"
-					}, function(){
-						layer.close(layer.index);
-						self.deployElement(e.target);
-					});
-				}}]
-		});
 
-		this.scene.addEventListener('contextmenu', function(e) {
-			self.plateMenu.show(e);
-		});
 
 		this.SWITCHCONTAINER_CONST = "MQ_SWITCH_CONTAINER";
 		this.SWITCH_CONST = "MQ_SWITCH";
