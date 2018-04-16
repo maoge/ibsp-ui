@@ -89,9 +89,7 @@
 												"SYNC_PORT": {"type":"string","required":true,"description":"同步端口"},
 												"OS_USER": {"type":"string","required":true,"description":"系统账户"},
 												"OS_PWD": {"type":"string","required":true,"description":"系统密码"},
-												"ROOT_PWD": {"type":"string","required":true,"description":"root密码"},
-												"HOST_NAME": {"type":"string","required":false,"description":"host name"},
-												"ERL_COOKIE": {"type":"string","required":false,"description":"erlang cookie"}
+												"ERL_COOKIE": {"type":"string","required":false}
 											}
 										},
 										"minItems":1
