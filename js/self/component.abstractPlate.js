@@ -19,7 +19,7 @@ var Component = window.Component || {};
 		this.defaultHeight = 36;
 		this.padding = 15;
 		this.shortTimeout = 5000; //超时时间(短)
-		this.longTimeout = 60000; //超时时间(长，如安装部署等)
+		this.longTimeout = 300000; //超时时间(长，如安装部署等)
 
 		//一些与html及外部有关的参数
 		this.iconDir = "../images/console/"; //图标路径
@@ -580,8 +580,17 @@ var Component = window.Component || {};
 	}
 
 	Plate.prototype.setAllUndeploy = function () {
+		var self = this;
         this.scene.childs.forEach(function (element) {
             element.status = "saved";
+            debugger;
+            if(element.childs){
+                element.childs.forEach(function (child) {
+                    child.status = "saved";
+                    self.getElementUndeployed(child);
+				})
+			}
+            self.getElementUndeployed(element);
         });
     }
 
