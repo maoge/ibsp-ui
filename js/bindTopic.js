@@ -42,6 +42,7 @@ function searchBinds(){
 function permnentBind(){
     $("#newPermnentTopic").modal("show");
     $("#subkeyRow").hide();
+    $("#SUB_TOPIC").val("");
     var $checkbox =  $("#autoGenerateConsumerIdCheckbox"),
         $consumerInput = $("#CONSUMER_ID");
     $checkbox.prop("checked",true);
