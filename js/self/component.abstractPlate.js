@@ -224,7 +224,6 @@ var Component = window.Component || {};
 			newContainer.addEventListener('contextmenu', function (e) {
 				menu.show(e);
 			});
-			debugger;
 			if (!isSaved) {
 				newContainer.status = "new";
 				this.popupForm(newContainer); //弹出信息窗
@@ -363,7 +362,6 @@ var Component = window.Component || {};
 		}
 		var parentID = (element.parentContainer != undefined && element.parentContainer != null) ? element.parentContainer._id : this.id;
 		var data = {};
-		debugger;
 		var type = element.status != "new" ? 2 : 1;
 		var json = JSON.parse(jsonString);
 		//collectd需要保存位置信息
@@ -583,7 +581,6 @@ var Component = window.Component || {};
 		var self = this;
         this.scene.childs.forEach(function (element) {
             element.status = "saved";
-            debugger;
             if(element.childs){
                 element.childs.forEach(function (child) {
                     child.status = "saved";
