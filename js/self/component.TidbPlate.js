@@ -351,18 +351,26 @@ var Component = window.Component || {};
 		this.tikvStatusCheck = function(servId, instAdd, element, interval){
 			var that = this;
 			return function(){
-				$.get(url + 'tidbsvr/tikvStatusService',{"SERV_ID":servId,"INST_ADD":instAdd},function(data){
-					var store = data.RET_INFO;
-					if(store == null || store == ""){
-						//清除闪烁状态
-						clearInterval(that.tikvStatusInterval);
-						element.status = "saved";
-						element.removeEventListener('contextmenu');
-						element.addEventListener('contextmenu', function(e) {
-							self.nodeMenu.show(e);
-						});
-					}
-				});
+				$.ajax({
+                    "url" : url + 'tidbsvr/tikvStatusService',
+                    "data" : {"SERV_ID":servId,"INST_ADD":instAdd},
+                    beforeSend : function () {
+                    },
+                    complete : function () {
+                    },
+                    success: function (data) {
+                        var store = data.RET_INFO;
+                        if(store == null || store == ""){
+                            //清除闪烁状态
+                            clearInterval(that.tikvStatusInterval);
+                            element.status = "saved";
+                            element.removeEventListener('contextmenu');
+                            element.addEventListener('contextmenu', function(e) {
+                                self.nodeMenu.show(e);
+                            });
+                        }
+                    }
+                });
 			};
 		}
 		
