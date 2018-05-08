@@ -69,8 +69,7 @@
 	var $instId = $("#instId"),
 			$cardMetaInfo = $("#cardMetaInfo"),
 			$tree = $('#treeview'),
-			$containerName = $("#containerName"),
-			basicUrl = "http://127.0.0.1:9991/";
+			$containerName = $("#containerName");
 
 	function searchByRemote(instId){
 		$instId.val(instId);
@@ -116,7 +115,7 @@
 	function getMetaTree(inst_id,callback){
 		var res = "";
 		var req = {
-			url:basicUrl + "configsvr/getTreeMetaDataByInstId",
+			url:rootUrl + "configsvr/getTreeMetaDataByInstId",
 			type:"post",
 			data:{"INST_ID":inst_id},
 			success: function (res) {
@@ -145,7 +144,7 @@
 
 	function getMetaData(inst_id,callback){
 		var req = {
-			url:basicUrl+"configsvr/getMetaDataByInstId",
+			url:rootUrl+"configsvr/getMetaDataByInstId",
 			type:"post",
 			data:{"INST_ID":inst_id},
 			success: function (res) {
