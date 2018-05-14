@@ -68,6 +68,12 @@ function listQueue(queueParam){
                 return value=='1' ? '是' : '否';
             }
         } ,{
+            field : "IS_PRIORITY",
+            title : "是否优先级队列",
+            format:function(value,row,index){
+                return value=='1' ? '是' : '否';
+            }
+        } ,{
             title : "操作",
             isButtonColumn:true,
             buttons:[{
