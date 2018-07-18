@@ -214,6 +214,28 @@ var Component = window.Component || {};
 				var name = data.BROKER_NAME;
 				delete data.BROKER_ID;
 				delete data.BROKER_NAME;
+
+                element.addEventListener('dbclick', function(e) {
+                	var url = "/rabbitmgr=?url=http://" + element.meta.IP + ":" + element.meta.MGR_PORT+"/",
+						mqPage = window.open(url, "_blank"),
+
+                		interval = setInterval(function () {
+							if(mqPage.document.URL != "about:blank"){
+								clearInterval(interval);
+                                var userName = mqPage.document.getElementsByName("username"),
+                                    passWord = mqPage.document.getElementsByName("password");
+
+                                if(userName && userName.length == 1 && passWord && passWord.length == 1){
+                                    userName[0].value = "mq";
+                                    passWord[0].value = "ibsp_mq@123321";
+                                    mqPage.document.getElementsByTagName("input")[2].click();
+                                }
+							}
+
+							/*console.log("invoke");*/
+						}, 500)
+                });
+
 				break;
 			case this.COLLECTD_CONST:
 				var id = data.COLLECTD_ID;
