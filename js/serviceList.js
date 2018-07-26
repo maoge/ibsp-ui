@@ -91,6 +91,20 @@ function loadServiceList() {
 					})
 				}
 			},{
+                text:"监控",
+                //配置隐藏属性
+                format:function(value,row){
+                    if(row.SERV_TYPE != 'MQ' || row.IS_DEPLOYED!=1){
+                        return { hided:true };
+                    }
+                },
+                onClick:function(button,row){
+                    $mainContainer.load("mqMonitor.html",function(){
+                        /*init(row.SERV_NAME, row.INST_ID);*/
+						init(row.INST_ID);
+                    })
+                }
+            },{
 				text:"元数据",
 				//配置隐藏属性
 				onClick:function(button,row,index){

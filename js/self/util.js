@@ -24,6 +24,22 @@ var Util = window.Util = {
             this.$backuDrop = $('<div class="modal-backdrop fade show"></div>').appendTo(document.body);
         }
     },
+    sprintf : function (str) {
+        var args = arguments,
+            flag = true,
+            i = 1;
+
+        str = str.replace(/%s/g, function () {
+            var arg = args[i++];
+
+            if (typeof arg === 'undefined') {
+                flag = false;
+                return '';
+            }
+            return arg;
+        });
+        return flag ? str : '';
+    },
     msg:function(){
         layer.msg.apply(null,arguments);
     },
