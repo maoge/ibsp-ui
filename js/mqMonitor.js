@@ -311,8 +311,6 @@
 
                                 if(that.currentQueueId && that.currentQueueId != cQueueId) {
                                     $tr.click(function () {
-                                        console.log($(this).html());
-                                        console.log(cQueueId, cQueueName);
                                         $(this).unbind();
                                         that.reInitQueue(cQueueId, cQueueName);
                                     });
@@ -340,7 +338,6 @@
     }
 
     MqMonitor.prototype.initEcharts =function (vbrokerName, data, instId, type) {
-        debugger;
         var that = this,
             echarDiv = type == "vbroker" ? that.options.VB_ECHART_ELE : that.options.Q_ECHART_ELE;
 
@@ -404,7 +401,6 @@
                     vbDataOption.series[1]['data'].push([item.REC_TIME, item.CONSUMER_RATE]);
                 };
                 chart.setOption(vbDataOption);
-                console.log(vbDataOption);
                 if(type == "vbroker") {
                     that.vbLastStartTs = endTs;
                 }else {

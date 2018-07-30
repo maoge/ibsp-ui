@@ -225,7 +225,7 @@ Date.prototype.simpleFormat = function (fmt) {
 
 //全局ajax事件和默认参数设置
 $.ajaxSetup({
-    type: "post",
+    type: "get",
     dataType: "json",
     timeout: 5000,
     beforeSend : function () {
