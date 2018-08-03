@@ -62,11 +62,11 @@
 	</div>
 
 
-	<div class="container-fuild" id="ems" style="">
+	<div class="container-fuild" id="ems" style="height: calc(100% - 150px);">
 
-		<div class="row" >
-			<div class="col-sm-12 col-md-4">
-				<div class="card card-outline-info text-center" style="height: 280px">
+		<div class="row" style="height: 100%;">
+			<div class="col-sm-12 col-md-4" style="height: 100%;">
+				<div class="card card-outline-info text-center" style="height: 48%">
 					<div class="card-block">
 						<h4 class="card-title">接入机监控数据</h4>
 						<blockquote class="card-blockquote">
@@ -91,11 +91,12 @@
 									</table>
 								</div>
 							</div>
+							<footer>共计 TPS : <cite id="proxyCountCite" title=""></cite></footer>
 						</blockquote>
 					</div>
 				</div>
 				<br>
-				<div class="card card-outline-info text-center" style="height: 280px">
+				<div class="card card-outline-info text-center" style="height: 48%">
 					<div class="card-block">
 						<h4 class="card-title">Redis监控数据</h4>
 						<blockquote class="card-blockquote">
@@ -110,7 +111,7 @@
 													<th>数据量</th>
 													<th>使用内存</th>
 													<th>内存总量</th>
-													<th>tps</th>
+													<th>TPS</th>
 													<th>连接数</th>
 												</tr>
 											</thead>
@@ -121,19 +122,19 @@
 									</div>
 								</div>
 							</div>
-							<footer>共计 <cite title="">Source Title</cite></footer>
+							<footer>共计 TPS : <cite id="redisCountCite" title=""></cite></footer>
 						</blockquote>
 					</div>
 				</div>
 			</div>
-			<div class="col-sm-8">
-				<div class="card card-outline-info text-center" style="height: 280px">
-					<div class="card-block" id="proxyHisDiv" style="height: 278px">
+			<div class="col-sm-8" style="height: 100%">
+				<div class="card card-outline-info text-center" style="height: 48%">
+					<div class="card-block" id="proxyHisDiv"  style="height: 100%">
 					</div>
 				</div>
 				<br>
-				<div class="card card-outline-info text-center" style="height: 280px">
-					<div class="card-block" id="redisHisDiv" style="height: 278px">
+				<div class="card card-outline-info text-center" style="height: 48%">
+					<div class="card-block" id="redisHisDiv"  style="height: 100%">
 					</div>
 				</div>
 			</div>
@@ -206,6 +207,8 @@
             REDIS_TABLE_ELE  : $("#redisCollectTable"),
             PROXY_ECHART_ELE: $("#proxyHisDiv"),
             REDIS_ECHART_ELE : $("#redisHisDiv"),
+            PROXY_CITE_ELE : $("#proxyCountCite"),
+            REDIS_CITE_ELE : $("#redisCountCite"),
             START_TS : preN.getTime(),
             END_TS : now.getTime()
         });

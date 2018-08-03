@@ -98,6 +98,12 @@
                 end: 100
             }
         ],
+        grid:[{
+            x : '5%',
+            y : '20%',
+            width : '90%',
+            height: '50%'
+        }],
         yAxis:{
             scale: true//不显示从0开始
         },
@@ -150,7 +156,6 @@
     }
 
     MqMonitor.prototype.reInitVbroker = function(vbrokerId, vbrokerName) {
-        clearInterval(this.vbHisInterval);
         var that = this;
         this.currentVbrokerId = vbrokerId;
         this.currentVbrokerName = vbrokerName;
@@ -161,7 +166,6 @@
     }
 
     MqMonitor.prototype.reInitQueue = function(queueId, queueName) {
-        clearInterval(this.qHisInterval);
         var that = this;
         this.currentQueueId = queueId;
         this.currentQueueName = queueName;
@@ -259,6 +263,15 @@
                     if(res['RET_CODE'] === 0){
                         var data = res['RET_INFO'];
                         that.options.VB_TABLE_ELE.html("");
+
+                        if(data.length > 0 && that.firstVbInit) {
+                            if(!that.currentVbrokerId) {
+                                that.currentVbrokerId = data[0]["VBROKER_ID"];
+                                that.currentVbrokerName = data[0]["VBROKER_NAME"];
+                            }
+                            vbCallback.call(that, that.currentVbrokerId, that.currentVbrokerName);
+                        }
+
                         for(var index in data) {
                             var collectInfo = data[index];
                             let cVbName = collectInfo.VBROKER_NAME,
@@ -268,22 +281,24 @@
                                     collectInfo.CONSUMER_RATE, collectInfo.CONSUMER_COUNTS),
                                 $tr = $(tr);
 
+                            var clickFun =  function () {
+                                $(this).unbind();
+                                $(this).css("background-color", "#dbdee2");
+                                that.reInitVbroker(cVbId, cVbName);
+                                $(this).siblings().click(clickFun).css("background-color", "white");
+
+                            };
+
                             if(that.currentVbrokerId && that.currentVbrokerId != cVbId) {
-                                $tr.click(function () {
-                                    $(this).unbind();
-                                    that.reInitVbroker(cVbId, cVbName);
-                                });
+                                $tr.click(clickFun);
+                            }else {
+                                $tr.css("background-color", "#dbdee2");
                             }
+
                             that.options.VB_TABLE_ELE.append($tr);
 
                         }
-                        if(data.length > 0 && that.firstVbInit) {
-                            if(!that.currentVbrokerId) {
-                                that.currentVbrokerId = data[0]["VBROKER_ID"];
-                                that.currentVbrokerName = data[0]["VBROKER_NAME"];
-                            }
-                            vbCallback.call(that, that.currentVbrokerId, that.currentVbrokerName);
-                        }
+
                     }else{
                         console.log(res['RET_INFO']);
                         alert("error ,please check the console command!");
@@ -308,13 +323,19 @@
                                     collectInfo.CONSUMER_RATE, collectInfo.CONSUMER_COUNTS),
                                     $tr = $(tr);
 
+                            var clickFun = function () {
+                                $(this).unbind();
+                                $(this).css("background-color", "#dbdee2");
+                                that.reInitQueue(cQueueId, cQueueName);
+                                $(this).siblings().click(clickFun).css("background-color", "white");
+                            };
 
-                                if(that.currentQueueId && that.currentQueueId != cQueueId) {
-                                    $tr.click(function () {
-                                        $(this).unbind();
-                                        that.reInitQueue(cQueueId, cQueueName);
-                                    });
-                                }
+                            if(that.currentQueueId && that.currentQueueId != cQueueId) {
+                                $tr.click(clickFun);
+                            }else {
+                                $tr.css("background-color", "#dbdee2");
+                            }
+
                             that.options.Q_TABLE_ELE.append($tr);
                         }
                         if(data.length >0 && that.firstQueueInit) {
@@ -377,10 +398,12 @@
         };
         chart.setOption(vbDataOption);
         if(type == "vbroker") {
+            clearInterval(this.vbHisInterval);
             this.vbHisInterval = setInterval(function () {
                 that.getHisIntervalData(instId, vbDataOption, chart, type);
             }, 10000);
         }else {
+            clearInterval(this.qHisInterval);
             this.qHisInterval = setInterval(function () {
                 that.getHisIntervalData(instId, vbDataOption, chart, type);
             }, 10000);

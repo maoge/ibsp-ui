@@ -78,8 +78,14 @@
                 end: 100
             }
         ],
+        grid:[{
+            x : '5%',
+            y : '20%',
+            width : '90%',
+            height: '50%'
+        }],
         yAxis:{
-            scale: true//不显示从0开始
+            scale: false
         },
         xAxis: {
             type: 'time',
@@ -89,6 +95,7 @@
             minInterval : 10,
             rotate: 45,
             tickMax: true,
+            boundaryGap:['5%','5%'],
             min: 'dataMin',
             max: 'dataMax',
             axisLabel:{
@@ -121,7 +128,8 @@
                     that.initEcharts(firstName, data, instId, type);
                 }, redis);
                 this.firstRedisInit = false;
-            }
+            },
+            true
         );
         //定时更新当前数据
         this.currentInterval = setInterval(function () {
@@ -130,24 +138,22 @@
     }
 
     CacheMonitor.prototype.reInitProxy = function(proxyID, proxyName) {
-        clearInterval(this.proxyHisInterval);
         var that = this;
         this.currentProxyId = proxyID;
         this.currentProxyName = proxyName;
         that.getHisData(proxyID, that.options.START_TS, that.options.END_TS, function (data, type) {
             that.initEcharts(proxyName, data, proxyID, type);
-        }, "vbroker");
+        }, "proxy");
         this.firstProxyInit = false;
     }
 
     CacheMonitor.prototype.reInitRedis = function(redisID, redisName) {
-        clearInterval(this.redisHisInterval);
         var that = this;
         this.currentRedisId = redisID;
         this.currentRedisName = redisName;
         that.getHisData(redisID, that.options.START_TS, that.options.END_TS, function (data, type) {
             that.initEcharts(redisName, data, redisID, type);
-        }, "queue");
+        }, "redis");
         this.firstRedisInit = false;
     }
 
@@ -224,12 +230,23 @@
                 async : true,
                 success :function(res){
                     if(res['RET_CODE'] === 0){
-                        var data = res['RET_INFO'];
+                        var data = res['RET_INFO'],
+                            countTPS = 0;
                         that.options.PROXY_TABLE_ELE.html("");
+
+                        if(data.length > 0 && that.firstProxyInit) {
+                            if(!that.currentProxyId) {
+                                that.currentProxyId = data[0]["CACHE_PROXY_ID"];
+                                that.currentProxyName = data[0]["CACHE_PROXY_NAME"];
+                            }
+                            proxyCallback.call(that, that.currentProxyId, that.currentProxyName);
+                        }
+
                         for(var index in data) {
                             var collectInfo = data[index];
                             let cProxyName = collectInfo.CACHE_PROXY_NAME,
                                 cProxybId = collectInfo.CACHE_PROXY_ID;
+                            countTPS += collectInfo.ACCESS_REQUEST_TPS;
                             var tr = Util.sprintf('<tr><th scope="row">%s</th><td>%s</td><td>%s</td><td>%s</td>' +
                                 '<td>%s</td><td>%s</td><td>%s</td></tr>',
                                     collectInfo.CACHE_PROXY_NAME,
@@ -240,23 +257,22 @@
                                     collectInfo.ACCESS_PROCESS_MAXTIME,
                                     collectInfo.ACCESS_PROCESS_AVTIME),
                                 $tr = $(tr);
+                            var clickFun = function () {
+                                $(this).unbind();
+                                $(this).siblings().click(clickFun).css("background-color", "white");
+                                $(this).css("background-color", "#dbdee2");
+                                that.reInitProxy(cProxybId, cProxyName);
+                            };
 
-                            if(that.currentProxyId && that.currentProxyId != cProxybId) {
-                                $tr.click(function () {
-                                    $(this).unbind();
-                                    that.reInitProxy(cProxybId, cProxyName);
-                                });
+                            if(cProxybId != that.currentProxyId) {
+                                $tr.click(clickFun);
+                            }else {
+                                $tr.css("background-color", "#dbdee2");
                             }
                             that.options.PROXY_TABLE_ELE.append($tr);
+                            that.options.PROXY_CITE_ELE.html(countTPS);
+                        }
 
-                        }
-                        if(data.length > 0 && that.firstProxyInit) {
-                            if(!that.currentProxyId) {
-                                that.currentProxyId = data[0]["CACHE_PROXY_ID"];
-                                that.currentProxyName = data[0]["CACHE_PROXY_NAME"];
-                            }
-                            proxyCallback.call(that, that.currentProxyId, that.currentProxyName);
-                        }
                     }else{
                         console.log(res['RET_INFO']);
                         alert("error ,please check the console command!");
@@ -270,29 +286,10 @@
                 async : true,
                 success :function(res){
                     if(res['RET_CODE'] === 0){
-                        var data = res['RET_INFO'];
+                        var data = res['RET_INFO'],
+                            countTps = 0;
                         that.options.REDIS_TABLE_ELE.html("");
-                        for(var index in data) {
-                            var collectInfo = data[index];
-                            let cRedisName = collectInfo.CACHE_NODE_NAME,
-                                cRedisd = collectInfo.CACHE_NODE_ID;
-                            var tr = Util.sprintf('<tr><th scope="row">%s</th><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>',
-                                    cRedisName,
-                                    collectInfo.DB_SIZE,
-                                    collectInfo.MEMORY_USED,
-                                    collectInfo.MEMORY_TOTAL,
-                                    collectInfo.PROCESS_TPS,
-                                    collectInfo.CONNECTED_CLIENTS),
-                                    $tr = $(tr);
 
-                                if(that.currentRedisId && that.currentRedisId != cRedisd) {
-                                    $tr.click(function () {
-                                        $(this).unbind();
-                                        that.reInitRedis(cRedisd, cRedisName);
-                                    });
-                                }
-                            that.options.REDIS_TABLE_ELE.append($tr);
-                        }
                         if(data.length >0 && that.firstRedisInit) {
                             if(!that.currentRedisId) {
                                 that.currentRedisId = data[0]["CACHE_NODE_ID"];
@@ -301,6 +298,37 @@
 
                             redisCallback.call(that, that.currentRedisId, that.currentRedisName);
                         }
+
+                        for(var index in data) {
+                            var collectInfo = data[index];
+                            let cRedisName = collectInfo.CACHE_NODE_NAME,
+                                cRedisd = collectInfo.CACHE_NODE_ID;
+
+                            countTps += collectInfo.PROCESS_TPS;
+
+                            var tr = Util.sprintf('<tr><th scope="row">%s</th><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>',
+                                    cRedisName,
+                                    collectInfo.DB_SIZE,
+                                    collectInfo.MEMORY_USED,
+                                    collectInfo.MEMORY_TOTAL,
+                                    collectInfo.PROCESS_TPS,
+                                    collectInfo.CONNECTED_CLIENTS),
+                                    $tr = $(tr);
+                            var clickFun = function () {
+                                $(this).unbind();
+                                $(this).siblings().click(clickFun).css("background-color", "white");
+                                $(this).css("background-color", "#dbdee2");
+                                that.reInitRedis(cRedisd, cRedisName);
+                            }
+                            if(that.currentRedisId != cRedisd) {
+                                $tr.click(clickFun);
+                            }else {
+                                $tr.css("background-color", "#dbdee2");
+                            }
+                            that.options.REDIS_TABLE_ELE.append($tr);
+                            that.options.REDIS_CITE_ELE.html(countTps);
+                        }
+
                     }else{
                         console.log(res['RET_INFO']);
                         alert("error ,please check the console command!")
@@ -346,10 +374,12 @@
         };
         chart.setOption(vbDataOption);
         if(type == "proxy") {
+            clearInterval(this.proxyHisInterval);
             this.proxyHisInterval = setInterval(function () {
                 that.getHisIntervalData(instId, vbDataOption, chart, type);
             }, 10000);
         }else {
+            clearInterval(this.redisHisInterval);
             this.redisHisInterval = setInterval(function () {
                 that.getHisIntervalData(instId, vbDataOption, chart, type);
             }, 10000);
