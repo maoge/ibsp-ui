@@ -1,0 +1,36 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8"/>
+	<link href="../css/self/mTable.css" type="text/css" rel="stylesheet"/>
+</head>
+
+<body>
+	<div class="row bg-light	">
+		<div class="col-lg-4 col-sm-12 breadcrumb bg-light">
+			<li class="breadcrumb-item">告警</li>
+			<li class="breadcrumb-item">告警信息列表</li>
+		</div>
+		<div class="col-lg-8 col-sm-12"></div>
+	</div>
+	
+	<div class="container-fluid">
+		<div class="row-fluid" style="margin-top:10px">
+        	<table id="alarms_list">
+        	</table>
+		</div>
+	</div>
+</body>
+
+<script src="../js/self/mTable.js" type="text/javascript" ></script>
+<script src="../js/alarmsList.js" type="text/javascript" ></script>
+
+<script>
+    function initPage() {
+        new AlarmsList({
+            TABLE_ELE : $("#alarms_list")
+        });
+	}
+
+</script>
+</html>

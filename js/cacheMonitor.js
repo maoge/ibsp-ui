@@ -249,13 +249,13 @@
                             countTPS += collectInfo.ACCESS_REQUEST_TPS;
                             var tr = Util.sprintf('<tr><th scope="row">%s</th><td>%s</td><td>%s</td><td>%s</td>' +
                                 '<td>%s</td><td>%s</td><td>%s</td></tr>',
-                                    collectInfo.CACHE_PROXY_NAME,
-                                    collectInfo.ACCESS_CLIENT_CONNS,
-                                    collectInfo.ACCESS_REDIS_CONNS,
-                                    collectInfo.ACCESS_REQUEST_TPS,
-                                    collectInfo.ACCESS_REQUEST_EXCEPTS,
-                                    collectInfo.ACCESS_PROCESS_MAXTIME,
-                                    collectInfo.ACCESS_PROCESS_AVTIME),
+                                collectInfo.CACHE_PROXY_NAME,
+                                collectInfo.ACCESS_CLIENT_CONNS,
+                                collectInfo.ACCESS_REDIS_CONNS,
+                                collectInfo.ACCESS_REQUEST_TPS,
+                                collectInfo.ACCESS_REQUEST_EXCEPTS,
+                                (collectInfo.ACCESS_PROCESS_MAXTIME).toFixed(4),
+                                (collectInfo.ACCESS_PROCESS_AVTIME).toFixed(4)),
                                 $tr = $(tr);
                             var clickFun = function () {
                                 $(this).unbind();
@@ -307,13 +307,13 @@
                             countTps += collectInfo.PROCESS_TPS;
 
                             var tr = Util.sprintf('<tr><th scope="row">%s</th><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>',
-                                    cRedisName,
-                                    collectInfo.DB_SIZE,
-                                    collectInfo.MEMORY_USED,
-                                    collectInfo.MEMORY_TOTAL,
-                                    collectInfo.PROCESS_TPS,
-                                    collectInfo.CONNECTED_CLIENTS),
-                                    $tr = $(tr);
+                                cRedisName,
+                                collectInfo.DB_SIZE,
+                                (collectInfo.MEMORY_USED /1024 /1024).toFixed(0) + "M",
+                                (collectInfo.MEMORY_TOTAL /1024 /1024).toFixed(0) + "M",
+                                collectInfo.PROCESS_TPS,
+                                collectInfo.CONNECTED_CLIENTS),
+                                $tr = $(tr);
                             var clickFun = function () {
                                 $(this).unbind();
                                 $(this).siblings().click(clickFun).css("background-color", "white");
@@ -393,19 +393,19 @@
             endTs   = now.getTime(),
             that = this;
 
-            this.getHisData(instId, startTs, endTs, function (data) {
-                for(var index in data) {
-                    var item = data[index];
-                    dataOption.series[0]['data'].push([item.REC_TIME, item.TPS]);
-                };
-                chart.setOption(dataOption);
-                if(type == "proxy") {
-                    that.proxyLastStartTs = endTs;
-                }else {
-                    that.redisLastStartTs = endTs;
-                }
+        this.getHisData(instId, startTs, endTs, function (data) {
+            for(var index in data) {
+                var item = data[index];
+                dataOption.series[0]['data'].push([item.REC_TIME, item.TPS]);
+            };
+            chart.setOption(dataOption);
+            if(type == "proxy") {
+                that.proxyLastStartTs = endTs;
+            }else {
+                that.redisLastStartTs = endTs;
+            }
 
-            },type);
+        },type);
 
     }
 
