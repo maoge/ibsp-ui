@@ -5,6 +5,13 @@
 
 	<link href="../css/self/contextMenu.css" type="text/css" rel="stylesheet"/>
 	<link href="../css/self/popupForm.css" type="text/css" rel="stylesheet"/>
+	<style>
+		.floatDiv {
+			z-index: 9999;
+			width: 500px;
+			position: fixed;
+		}
+	</style>
 </head>
 
 <body>
@@ -110,8 +117,28 @@
     	</li>
     	<li class="active" id="service_name"></li>
 	</ul>-->
-</body>
 
+<div class="floatDiv" id="metadata" tabindex="-1" role="dialog" aria-labelledby="metadataHeader">
+	<div class="" role="document">
+		<div class="modal-content">
+			<div class="modal-body">
+				<div class="tab-pane active in">
+					<table class="table" >
+						<thead>
+						<tr class="info">
+							<th>属性名称</th>
+							<th>属性内容</th>
+						</tr>
+						</thead>
+						<tbody id="componentMetadata">
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</body>
 
 <!-- 改造过的jtopo -->
 <script src="../js/jtopo-0.4.8/jtopo.01.element.js" type="text/javascript" ></script>
@@ -152,6 +179,7 @@
 			});
 		}
 	});
+    $("#metadata").hide();
 	//toolbox drag
 	/*var $serviceManager = $("#serviceManager"),
 			x = $serviceManager.outerWidth(),

@@ -202,6 +202,7 @@ var Component = window.Component || {};
 
 	//Tidb面板设置组件元数据
 	MQPlate.prototype.setMetaData = function(element, data) {
+		var that = this;
 		switch(element.type) {
 			case this.VBROKER_CONST:
 				var id = data.VBROKER_ID,
@@ -236,6 +237,12 @@ var Component = window.Component || {};
 						}, 500)
                 });
 
+                element.addEventListener('mouseover', function(e) {
+                    that.showMetadata(e.target, e);
+				});
+                element.addEventListener('mouseout', function(e) {
+                    that.hideMetadata(e.target);
+                });
 				break;
 			case this.COLLECTD_CONST:
 				var id = data.COLLECTD_ID;
@@ -243,6 +250,12 @@ var Component = window.Component || {};
 				delete data.COLLECTD_ID;
 				delete data.COLLECTD_NAME;
 				delete data.POS;
+                element.addEventListener('mouseover', function(e) {
+                    that.showMetadata(e.target, e);
+                });
+                element.addEventListener('mouseout', function(e) {
+                    that.hideMetadata(e.target)
+                });
 				break;
 		}
 		element._id = id;

@@ -94,7 +94,7 @@ function loadServiceList() {
                 text:"监控",
                 //配置隐藏属性
                 format:function(value,row){
-                    if(row.SERV_TYPE == 'DB' || row.IS_DEPLOYED!=1){
+                    if(row.IS_DEPLOYED!=1){
                         return { hided:true };
                     }
                 },
@@ -107,6 +107,12 @@ function loadServiceList() {
 					}
                     if(row.SERV_TYPE == 'CACHE') {
                         $mainContainer.load("cacheMonitor.html",function(){
+                            /*init(row.SERV_NAME, row.INST_ID);*/
+                            init(row.INST_ID);
+                        });
+                    }
+                    if(row.SERV_TYPE == 'DB') {
+                        $mainContainer.load("dbMonitor.html",function(){
                             /*init(row.SERV_NAME, row.INST_ID);*/
                             init(row.INST_ID);
                         });

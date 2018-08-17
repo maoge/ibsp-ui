@@ -1,7 +1,7 @@
 /**
  * Created by guozh on 2018/3/1.
  */
-var rootUrl="http://172.20.0.83:9991/",
+var rootUrl="http://172.20.0.81:9991/",
 //var rootUrl="http://127.0.0.1:9991/",
     $mainContainer = $("#mainContent");
 var Url = window.Url = {

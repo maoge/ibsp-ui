@@ -206,24 +206,43 @@ var Component = window.Component || {};
 		
 		//Tidb面板设置组件元数据
 		this.setMetaData = function(element, data) {
+			var that = this;
 			switch(element.type) {
 			case this.PD_CONST:
 				var id = data.PD_ID;
 				var name = data.PD_NAME;
 				delete data.PD_ID;
 				delete data.PD_NAME;
+                element.addEventListener('mouseover', function(e) {
+                    that.showMetadata(e.target, e);
+                });
+                element.addEventListener('mouseout', function(e) {
+                    that.hideMetadata(e.target);
+                });
 				break;
 			case this.TIKV_CONST:
 				var id = data.TIKV_ID;
 				var name = data.TIKV_NAME;
 				delete data.TIKV_ID;
 				delete data.TIKV_NAME;
+                element.addEventListener('mouseover', function(e) {
+                    that.showMetadata(e.target, e);
+                });
+                element.addEventListener('mouseout', function(e) {
+                    that.hideMetadata(e.target);
+                });
 				break;
 			case this.TIDB_CONST:
 				var id = data.TIDB_ID;
 				var name = data.TIDB_NAME;
 				delete data.TIDB_ID;
 				delete data.TIDB_NAME;
+                element.addEventListener('mouseover', function(e) {
+                    that.showMetadata(e.target, e);
+                });
+                element.addEventListener('mouseout', function(e) {
+                    that.hideMetadata(e.target);
+                });
 				break;
 			case this.COLLECTD_CONST:
 				var id = data.COLLECTD_ID;
@@ -231,6 +250,12 @@ var Component = window.Component || {};
 				delete data.COLLECTD_ID;
 				delete data.COLLECTD_NAME;
 				delete data.POS;
+                element.addEventListener('mouseover', function(e) {
+                    that.showMetadata(e.target, e);
+                });
+                element.addEventListener('mouseout', function(e) {
+                    that.hideMetadata(e.target);
+                });
 				break;
 			}
 			element._id = id;

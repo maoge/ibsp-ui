@@ -248,10 +248,9 @@
                                 cProxybId = collectInfo.CACHE_PROXY_ID;
                             countTPS += collectInfo.ACCESS_REQUEST_TPS;
                             var tr = Util.sprintf('<tr><th scope="row">%s</th><td>%s</td><td>%s</td><td>%s</td>' +
-                                '<td>%s</td><td>%s</td><td>%s</td></tr>',
+                                '<td>%s</td><td>%s</td></tr>',
                                 collectInfo.CACHE_PROXY_NAME,
                                 collectInfo.ACCESS_CLIENT_CONNS,
-                                collectInfo.ACCESS_REDIS_CONNS,
                                 collectInfo.ACCESS_REQUEST_TPS,
                                 collectInfo.ACCESS_REQUEST_EXCEPTS,
                                 (collectInfo.ACCESS_PROCESS_MAXTIME).toFixed(4),

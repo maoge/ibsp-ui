@@ -21,6 +21,10 @@ var Component = window.Component || {};
 		this.shortTimeout = 5000; //超时时间(短)
 		this.longTimeout = 300000; //超时时间(长，如安装部署等)
 
+        //这两个可以改成动态创建（类似popupForm），暂时写死
+        this.$componentMetadata = $("#componentMetadata");
+        this.$metadataModal = $('#metadata');
+
 		//一些与html及外部有关的参数
 		this.iconDir = "../images/console/"; //图标路径
 
@@ -624,4 +628,68 @@ var Component = window.Component || {};
 		}
 	}
 	Component.Plate = Plate;
+
+    //展示组件元数据信息
+    Plate.prototype.showMetadata = function (element, e) {
+        var self = this;
+        self.$componentMetadata.html("");
+        self.$componentMetadata.append('<tr class=""><td>ID</td> <td>'+element._id+'</td></tr>');
+        self.$componentMetadata.append('<tr class=""><td>NAME</td> <td>'+element.text+'</td></tr>');
+        var meta = element.meta;
+
+		var windowInnerHeight = window.innerHeight;
+		var windowInnerWidth  = window.innerWidth;
+		/*var x = e.x + 500 > windowInnerWidth ? e.offsetX : e.offsetX - 500;
+        var y = e.y - 500 > windowInnerHeight ? e.offsetY : e.offsetY - 500;*/
+
+
+        console.log(e);
+
+        for (var attr in meta) {
+            switch(attr) {
+                case "MASTER_ID":
+                    element.childs.forEach(function (child) {
+                        if (child._id == meta[attr]) {
+                            self.$componentMetadata.append('<tr class=""><td>MASTER</td> <td>'+child.text+'</td></tr>');
+                        }
+                    });
+                    break;
+                case "OS_PWD":
+                    break;
+                default:
+                    self.$componentMetadata.append('<tr class=""><td>'+attr+'</td> <td>'+meta[attr]+'</td></tr>');
+                    break;
+            }
+        }
+        self.$metadataModal.show();
+
+        var eleWidth = self.$componentMetadata[0].offsetWidth;
+        var eleHigh = self.$componentMetadata[0].offsetHeight;
+        var x = 0;
+        if(e.offsetX + eleWidth + 48 > windowInnerWidth){
+            console.log(1);
+            x = windowInnerWidth - eleWidth - 5;
+		}else{
+            console.log(2);
+            x = e.offsetX + 48;
+		}
+        console.log(x + "    " +e.offsetX + "   " + eleWidth);
+        var y = 0;
+        if(e.offsetY <= eleHigh + 48){
+        	y = 48;
+		}else {
+        	y = e.offsetY - eleHigh - 24;
+		}
+
+        self.$metadataModal.css("left" , x);
+        self.$metadataModal.css("top" , y);
+    }
+
+    Plate.prototype.hideMetadata = function (element) {
+    	var self = this;
+
+            self.$metadataModal.hide();
+
+
+    }
 })(Component);
