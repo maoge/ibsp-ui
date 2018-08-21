@@ -225,14 +225,20 @@ Date.prototype.simpleFormat = function (fmt) {
 
 //全局ajax事件和默认参数设置
 $.ajaxSetup({
-    type: "get",
+    type: "post",
     dataType: "json",
     timeout: 5000,
-    beforeSend : function () {
+    beforeSend : function (xhr) {
+        xhr.setRequestHeader("MAGIC_KEY", $.cookie("MAGIC_KEY"));
         Util.showLoading();
     },
     error : function (jqxhr) {
         Util.hideLoading();
+        if(jqxhr.status === 401 || jqxhr.status === 400){
+            alert("密码错误或者Token过期，请重新登录！");
+            window.location.href="../login.html";
+            return;
+        }
         Util.alert("error", jqxhr.status + ":" + jqxhr.statusText);
     },
     complete : function () {

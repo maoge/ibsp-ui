@@ -62,7 +62,7 @@
                 <a class="nav-link dropdown-toggle text-white" href="#" id="userinfo" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">admin</a>
                 <div class="dropdown-menu bg-dark" aria-labelledby="userinfo">
                     <a class="dropdown-item text-white ui-dropdown-hover" href="#">修改密码</a>
-                    <a class="dropdown-item text-white ui-dropdown-hover" href="#">退出</a>
+                    <a class="dropdown-item text-white ui-dropdown-hover"  onclick = "logout()" >退出</a>
                 </div>
             </div>
         </div>
@@ -77,6 +77,7 @@
 <script src="../js/thirdParty/popper.min.js" type="text/javascript"></script>
 <script src="../js/thirdParty/bootstrap.js" type="text/javascript"></script>
 <script src="../js/thirdParty/layer/layer.js" type="text/javascript" charset="UTF-8"></script>
+<script src="../js/thirdParty/jquery.cookie.js" type="text/javascript" charset="UTF-8"></script>
 
 <script src="../js/self/basic.js" type="text/javascript"></script>
 <script src="../js/self/util.js" type="text/javascript"></script>
@@ -93,5 +94,10 @@
         }
     });
     $(".dropdown-menu>a:eq(0)").click();
+
+    function logout() {
+        $.cookie("MAGIC_KEY", "", {path:"/"});
+        window.location.href = "../login.html";
+    }
 </script>
 </html>
