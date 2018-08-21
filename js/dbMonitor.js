@@ -179,6 +179,7 @@
             success :function(res){
                 if(res['RET_CODE'] === 0){
                     var data = res['RET_INFO'];
+                    that.options.END_TS = endTs;
                     callback.call(that, data, type);
                 }else{
                     console.log(res['RET_INFO']);
@@ -220,10 +221,10 @@
                             countTPS += collectInfo.STATEMENT_COUNT;
                             var tr = Util.sprintf('<tr><th scope="row">%s</th><td>%s</td><td>%s</td><td>%s</td>' +
                                 '<td>%s</td></tr>',
-                                collectInfo.TIDB_NAME + "-",
+                                collectInfo.TIDB_NAME + "-" + collectInfo.IP + ":" + collectInfo.PORT,
                                 (collectInfo.QPS).toFixed(0),
+                                (collectInfo.STATEMENT_COUNT).toFixed(0),
                                 collectInfo.CONNECTION_COUNT,
-                                (collectInfo.STATEMENT_COUNT).toFixed(4),
                                 (collectInfo.QUERY_DURATION_99PERC * 1000).toFixed(0)),
                                 $tr = $(tr);
                             var clickFun = function () {

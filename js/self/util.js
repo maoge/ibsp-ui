@@ -231,9 +231,9 @@ $.ajaxSetup({
     beforeSend : function () {
         Util.showLoading();
     },
-    error : function () {
+    error : function (jqxhr) {
         Util.hideLoading();
-        Util.alert("error");
+        Util.alert("error", jqxhr.status + ":" + jqxhr.statusText);
     },
     complete : function () {
         Util.hideLoading();

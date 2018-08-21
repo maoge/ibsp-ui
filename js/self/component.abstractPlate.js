@@ -37,6 +37,7 @@ var Component = window.Component || {};
 		this.deployLogServ = "deploy/getDeployLog"; //部署日志
 		this.deployInstanceServ = "deploy/deployInstance"; //部署实例
 		this.undeployServ = "deploy/undeployInstance"; //卸载组件
+        this.forceUndeployServ = "deploy/forceUndeployInstance"; //卸载组件
 		this.getUserServ = "resourcesvr/getUserByServiceType" //获取服务器IP及操作系统用户信息
 		this.unDeployPlateUrl = "deploy/undeployService";//卸载面板
 

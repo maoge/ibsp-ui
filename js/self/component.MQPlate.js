@@ -71,7 +71,11 @@ var Component = window.Component || {};
 			items:[
 				{label:'卸载(缩容)', icon:'../images/console/icon_delete.png', callback: function(e){
 					self.undeployElement(e.target);
-				}}]
+				}},
+                {label:'强制卸载', icon:'../images/console/icon_delete.png', callback: function(e){
+                    self.forceUndeployElement(e.target);
+                }}
+				]
 		});
 
 
@@ -461,6 +465,47 @@ var Component = window.Component || {};
         } else {
             Component.Plate.prototype.undeployElement.call(this, element);
         }
+    };
+
+    MQPlate.prototype.forceUndeployElement = function(element){
+        var self = this;
+        var url = this.url + this.forceUndeployServ;
+
+        var len = 0, eles = element.parentContainer.childs;
+        for(var ele in eles) {
+        	debugger;
+        	if(eles[ele].status == "deployed"){
+        		len++;
+			}
+		}
+
+        if(len <= 1){
+            Component.Alert("error", "已经是最后一个组件！请先扩容！");
+            return;
+        }
+
+
+        Util.confirm("确认强制卸载这个vbroker吗？", {
+            btn: ['是','否'],
+            title: "确认"
+        }, function(){
+            $.ajax({
+                url: url,
+                data: {"INST_ID": element._id, "SERV_ID": self.id},
+                beforeSend : function () {
+                },
+                complete : function () {
+                },
+                success: function (result) {
+                    if (result.RET_CODE == 0) {
+                        Component.Alert("success", "组件卸载成功！");
+                        self.getElementUndeployed(element);
+                    } else {
+                        Component.Alert("error", "组件卸载失败！" + result.RET_INFO);
+                    }
+                }
+            });
+        });
     };
 
 })(Component);

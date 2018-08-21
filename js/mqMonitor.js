@@ -219,6 +219,7 @@
             success :function(res){
                 if(res['RET_CODE'] === 0){
                     var data = res['RET_INFO'];
+                    that.options.END_TS = endTs;
                     callback.call(that, data, type);
                 }else{
                     console.log(res['RET_INFO']);
