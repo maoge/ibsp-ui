@@ -93,6 +93,9 @@
             beforeSend : function(){},
             error : function () {
                 Util.alert("error", "服务不可用！");
+                if(!isRefresh) {
+                    clearInterval(that.currInterval);
+                }
             },
             complete : function () {
                 Util.hideLoading();
