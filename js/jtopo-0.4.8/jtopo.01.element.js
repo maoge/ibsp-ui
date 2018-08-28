@@ -1,4 +1,28 @@
 !function(window) {
+    //扩展text换行
+    CanvasRenderingContext2D.prototype.wrapText = function(str,x,y){
+        var textArray = str.split('\n');
+        if(textArray==undefined||textArray==null)return false;
+
+        var rowCnt = textArray.length;
+        var i = 0,imax = rowCnt,maxLength = 0;maxText = textArray[0];
+        for(;i<imax;i++){
+            var nowText = textArray[i],textLength = nowText.length;
+            if(textLength >=maxLength){
+                maxLength = textLength;
+                maxText = nowText;
+            }
+        }
+        var maxWidth = this.measureText(maxText).width;
+        var lineHeight = this.measureText("元").width;
+        x-= lineHeight*2;
+        for(var j= 0;j<textArray.length;j++){
+            var words = textArray[j];
+            this.fillText(words,-(maxWidth/2),y-textArray.length*lineHeight/100);
+            y+= lineHeight;
+        }
+    };
+
     function Element() {
         this.initialize = function() {
             this.elementType = "element";

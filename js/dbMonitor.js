@@ -136,6 +136,7 @@
         this.currentInterval = setInterval(function () {
             that.getCurrentCollectData();
         }, 10000);
+        Util.saveInterval(this.currentInterval);
     }
 
     DBMonitor.prototype.reInitTiDB = function(id, name) {
@@ -150,13 +151,13 @@
 
     DBMonitor.prototype.clear = function() {
         if(this.currentInterval) {
-            clearInterval(this.currentInterval);
+            Util.clearInterval(this.currentInterval);
         }
         if(this.tidbHisInterval) {
-            clearInterval(this.tidbHisInterval)
+            Util.clearInterval(this.tidbHisInterval)
         }
         if(this.pdHisInterval) {
-            clearInterval(this.pdHisInterval);
+            Util.clearInterval(this.pdHisInterval);
         }
     }
 
@@ -215,6 +216,9 @@
                         }
 
                         for(var index in data) {
+                            if(index == "remove") {
+                                return;
+                            }
                             var collectInfo = data[index];
                             let cTiDBName = collectInfo.TIDB_NAME,
                                 cTiDBId = collectInfo.TIDB_ID;
@@ -222,8 +226,8 @@
                             var tr = Util.sprintf('<tr><th scope="row">%s</th><td>%s</td><td>%s</td><td>%s</td>' +
                                 '<td>%s</td></tr>',
                                 collectInfo.TIDB_NAME + "-" + collectInfo.IP + ":" + collectInfo.PORT,
-                                (collectInfo.QPS).toFixed(0),
-                                (collectInfo.STATEMENT_COUNT).toFixed(0),
+                                collectInfo.QPS.toFixed(0),
+                                collectInfo.STATEMENT_COUNT.toFixed(0),
                                 collectInfo.CONNECTION_COUNT,
                                 (collectInfo.QUERY_DURATION_99PERC * 1000).toFixed(0)),
                                 $tr = $(tr);
@@ -268,6 +272,9 @@
                         }
 
                         for(var index in data) {
+                            if(index == "remove") {
+                                return;
+                            }
                             var collectInfo = data[index];
                             let cPDName = collectInfo.PD_NAME,
                                 cPDId = collectInfo.PD_ID;
@@ -320,6 +327,9 @@
                         }
 
                         for(var index in data) {
+                            if(index == "remove") {
+                                return;
+                            }
                             var collectInfo = data[index];
                             let cTiKVName = collectInfo.TIKV_NAME,
                                 cTiKVId = collectInfo.TIKV_ID;
@@ -386,10 +396,11 @@
         };
         chart.setOption(dataOption);
 
-        clearInterval(this.tidbHisInterval);
+        Util.clearInterval(this.tidbHisInterval);
         this.tidbHisInterval = setInterval(function () {
             that.getHisIntervalData(instId, dataOption, chart, "tidb");
         }, 10000);
+        Util.saveInterval(this.tidbHisInterval);
 
     }
 

@@ -39,6 +39,8 @@
                     <div class="dropdown-menu bg-dark" aria-labelledby="monitor">
                         <a data-load-page="monitor" class="dropdown-item text-white ui-dropdown-hover" href="#">
                             <i class="iconfont ibsp-real-time-alarm mr-2"></i>监控</a>
+                        <a data-load-page="sms/monitor" class="dropdown-item text-white ui-dropdown-hover" href="#">
+                            <i class="iconfont ibsp-real-time-alarm mr-2"></i>sms监控</a>
                     </div>
                 </li>
                 <li class="nav-item mr-2 dropdown navbar-dark">
@@ -83,16 +85,19 @@
 <script src="../js/self/util.js" type="text/javascript"></script>
 
 <script type="text/javascript">
+
     $(".dropdown-menu>a").off("click").on("click",function(){
         var $this = $(this), pageName = $this.data("load-page");
         if(pageName != ""){
             /*$main.load("pages/"+pageName+".html");*/
+            Util.clearAllInterval();
             $mainContainer.load(pageName+".html",function(){
                 $(".contextMenu").remove();
                 initPage();
             });
         }
     });
+
     $(".dropdown-menu>a:eq(0)").click();
 
     function logout() {

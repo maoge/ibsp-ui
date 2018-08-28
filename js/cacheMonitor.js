@@ -135,6 +135,7 @@
         this.currentInterval = setInterval(function () {
             that.getCurrentCollectData();
         }, 10000);
+        Util.saveInterval(this.currentInterval);
     }
 
     CacheMonitor.prototype.reInitProxy = function(proxyID, proxyName) {
@@ -159,13 +160,13 @@
 
     CacheMonitor.prototype.clear = function() {
         if(this.currentInterval) {
-            clearInterval(this.currentInterval);
+            Util.clearInterval(this.currentInterval);
         }
         if(this.proxyHisInterval) {
-            clearInterval(this.proxyHisInterval)
+            Util.clearInterval(this.proxyHisInterval)
         }
         if(this.redisHisInterval) {
-            clearInterval(this.redisHisInterval);
+            Util.clearInterval(this.redisHisInterval);
         }
     }
 
@@ -244,13 +245,16 @@
                         }
 
                         for(var index in data) {
+                            if(index == "remove") {
+                                return;
+                            }
                             var collectInfo = data[index];
                             let cProxyName = collectInfo.CACHE_PROXY_NAME,
                                 cProxybId = collectInfo.CACHE_PROXY_ID;
                             countTPS += collectInfo.ACCESS_REQUEST_TPS;
                             var tr = Util.sprintf('<tr><th scope="row">%s</th><td>%s</td><td>%s</td><td>%s</td>' +
                                 '<td>%s</td><td>%s</td></tr>',
-                                collectInfo.CACHE_PROXY_NAME,
+                                collectInfo.CACHE_PROXY_NAME+ "-" + collectInfo.IP + ":" + collectInfo.PORT,
                                 collectInfo.ACCESS_CLIENT_CONNS,
                                 collectInfo.ACCESS_REQUEST_TPS,
                                 collectInfo.ACCESS_REQUEST_EXCEPTS,
@@ -300,6 +304,9 @@
                         }
 
                         for(var index in data) {
+                            if(index == "remove") {
+                                return;
+                            }
                             var collectInfo = data[index];
                             let cRedisName = collectInfo.CACHE_NODE_NAME,
                                 cRedisd = collectInfo.CACHE_NODE_ID;
@@ -374,15 +381,17 @@
         };
         chart.setOption(vbDataOption);
         if(type == "proxy") {
-            clearInterval(this.proxyHisInterval);
+            Util.clearInterval(this.proxyHisInterval);
             this.proxyHisInterval = setInterval(function () {
                 that.getHisIntervalData(instId, vbDataOption, chart, type);
             }, 10000);
+            Util.saveInterval(this.proxyHisInterval);
         }else {
-            clearInterval(this.redisHisInterval);
+            Util.clearInterval(this.redisHisInterval);
             this.redisHisInterval = setInterval(function () {
                 that.getHisIntervalData(instId, vbDataOption, chart, type);
             }, 10000);
+            Util.saveInterval(this.redisHisInterval);
         }
 
     }

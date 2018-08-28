@@ -150,9 +150,11 @@
             }
         );
         //定时更新当前数据
+        Util.clearInterval(this.currentInterval);
         this.currentInterval = setInterval(function () {
             that.getCurrentCollectData();
         }, 10000);
+        Util.saveInterval(this.currentInterval);
     }
 
     MqMonitor.prototype.reInitVbroker = function(vbrokerId, vbrokerName) {
@@ -189,13 +191,13 @@
 
     MqMonitor.prototype.clear = function() {
         if(this.currentInterval) {
-            clearInterval(this.currentInterval);
+            Util.clearInterval(this.currentInterval);
         }
         if(this.vbHisInterval) {
-            clearInterval(this.vbHisInterval)
+            Util.clearInterval(this.vbHisInterval)
         }
         if(this.qHisInterval) {
-            clearInterval(this.qHisInterval);
+            Util.clearInterval(this.qHisInterval);
         }
     }
 
@@ -399,15 +401,17 @@
         };
         chart.setOption(vbDataOption);
         if(type == "vbroker") {
-            clearInterval(this.vbHisInterval);
+            Util.clearInterval(this.vbHisInterval);
             this.vbHisInterval = setInterval(function () {
                 that.getHisIntervalData(instId, vbDataOption, chart, type);
             }, 10000);
+            Util.saveInterval(this.vbHisInterval);
         }else {
-            clearInterval(this.qHisInterval);
+            Util.clearInterval(this.qHisInterval);
             this.qHisInterval = setInterval(function () {
                 that.getHisIntervalData(instId, vbDataOption, chart, type);
             }, 10000);
+            Util.saveInterval(this.qHisInterval);
         }
 
     }

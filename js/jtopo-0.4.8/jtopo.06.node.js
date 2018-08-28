@@ -91,8 +91,22 @@
                 }
             },
             this.paintText = function(canvas) {
-                var context = this.text;
-                if (null != context && "" != context) {
+                //扩展text换行
+                var context = this.text,
+                    contextArr = ("" + context).split('\n');
+
+                if(contextArr.length >1 ) {
+
+                    var offsetX = canvas.measureText(context).width,
+                        offsetY = canvas.measureText("田").width;
+
+                    canvas.beginPath(),
+                        canvas.font = this.font,
+                        canvas.fillStyle = "rgba(" + this.fontColor + ", " + this.alpha + ")";
+                        canvas.wrapText(this.text,this.height/2 + offsetX,this.height + offsetY,("rgba(" + this.fontColor + ", " + this.alpha + ")"));
+                    canvas.closePath();
+                    return;
+                }else if (null != context && "" != context) {
                     canvas.beginPath(),
                         canvas.font = this.font;
                     var offsetX = canvas.measureText(context).width,
@@ -106,7 +120,7 @@
                     canvas.fillStyle = "rgba(" + this.fontColor + ", " + this.alpha + ")";
                     var pos = this.getTextPostion(this.textPosition, offsetX, offsetY);
                     canvas.fillText(context, pos.x, pos.y),
-                        canvas.closePath()
+                        canvas.closePath();
                 }
             },
             this.paintBorder = function(canvas) {

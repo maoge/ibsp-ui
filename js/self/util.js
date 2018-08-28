@@ -83,8 +83,7 @@ var Util = window.Util = {
     },
     hideLoading : function(){
         this.hideBackuDrop();
-        this.initLoading();
-        this.$loading.hide();
+        this.$loading && this.$loading.hide();
     },
     drag : function(title,body,range){
         var w=window,win=body||title,x,y,_left,_top,range=range||function(x){return x};
@@ -203,6 +202,26 @@ var Util = window.Util = {
             }
             $eles.val(value);
         });
+    },
+    saveInterval : function (interval) {
+        this.intervalArr = this.intervalArr || [];
+        this.intervalArr.push(interval);
+    },
+    clearAllInterval : function () {
+        if(this.intervalArr) {
+            for(var i in this.intervalArr) {
+                clearInterval(this.intervalArr[i]);
+            }
+
+            this.intervalArr = [];
+        }
+    },
+    clearInterval : function (interval) {
+        if(this.intervalArr) {
+            clearInterval(interval);
+            this.intervalArr.remove(interval);
+        }
+
     }
 };
 /*原生函數扩展*/
@@ -223,6 +242,12 @@ Date.prototype.simpleFormat = function (fmt) {
     return fmt;
 };
 
+Array.prototype.remove = function (val) {
+    var index = this.indexOf(val);
+    if (index > -1) {
+        this.splice(index, 1);
+    }
+};
 //全局ajax事件和默认参数设置
 $.ajaxSetup({
     type: "post",
