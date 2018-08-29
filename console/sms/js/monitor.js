@@ -1,3 +1,4 @@
+
 (function ($,window,JTopo) {
 
     var SmsMonitor = function (options) {
@@ -16,7 +17,15 @@
         this.spqOutLineNodeArr= [];
         this.chanTaskNodeArr  = [];
         this.chanTaskOutNodeArr  = [];
+        this.saveRptInLineNodeArr      = [];
+        this.saveMtInLineNodeArr       = [];
+        this.saveRptOutLineNodeArr     = [];
+        this.saveMtOutLineNodeArr      = [];
         this.saveRepOutNodeArr   = [];
+        this.mqReadyLimit = options.mqReadyLimit;
+        this.redisQueueLimit = options.redisQueueLimit;
+        this.floatDivTable = options.floatDivTable;
+        this.floatDiv = options.floatDiv;
         //初始化
         this.init();
         this.autoRefresh();
@@ -44,15 +53,42 @@
             this.spqInLineArr[i].text  = "in:" +spqQueue[i]["produceRate"];
             this.spqOutLineArr[i].text = "out:"+spqQueue[i]["consumeRate"];
             this.spqOutLineNodeArr[i].text = "剩余:" + spqQueue[i]["msgReady"];
+            if(spqQueue[i]["msgReady"] >= this.mqReadyLimit) {
+                this.spqOutLineNodeArr[i].fillColor = "255,0,0";
+                this.spqOutLineNodeArr[i].fontColor = "255,0,0";
+            } else {
+                this.spqOutLineNodeArr[i].fillColor = "0,111,255";
+                this.spqOutLineNodeArr[i].fontColor = "0,0,255";
+            }
         }
+
 
         for(let i = 0; i< chanTask.length; i++) {
             this.chanTaskNodeArr[i].text = chanTask[i]["queueName"];
             this.chanTaskOutNodeArr[i].text = "剩余:" + chanTask[i]["count"];
+            if(chanTask[i]["count"] >= this.redisQueueLimit) {
+                this.chanTaskOutNodeArr[i].fillColor = "255,0,0";
+                this.chanTaskOutNodeArr[i].fontColor = "255,0,0";
+            }else {
+                this.chanTaskOutNodeArr[i].fillColor = "0,111,255";
+                this.chanTaskOutNodeArr[i].fontColor = "0,0,255";
+            }
         }
 
         for(let i = 0; i< saveRep.length; i++) {
             this.saveRepOutNodeArr[i].text = "saveRpt剩余:"+saveRep[i]["msgReady"]+"\nsaveMt 剩余:"+ saveMt[i]["msgReady"];
+            this.saveRptInLineNodeArr[i].text = "in:"+saveRep[i]["produceRate"];
+            this.saveMtInLineNodeArr[i].text = "in:"+saveRep[i]["produceRate"];
+            this.saveRptOutLineNodeArr[i].text = "out:"+saveRep[i]["consumeRate"];
+            this.saveMtOutLineNodeArr[i].text = "out:"+saveRep[i]["consumeRate"];
+
+            if(saveRep[i]["msgReady"] >= this.mqReadyLimit || saveMt[i]["msgReady"] >= this.mqReadyLimit) {
+                this.saveRepOutNodeArr[i].fillColor = "255,0,0";
+                this.saveRepOutNodeArr[i].fontColor = "255,0,0";
+            } else {
+                this.saveRepOutNodeArr[i].fillColor = "0,111,255";
+                this.saveRepOutNodeArr[i].fontColor = "0,0,255";
+            }
         }
     }
 
@@ -71,10 +107,51 @@
 
         var scene = this.scene = new JTopo.Scene(stage);
         scene.alpha = 1;
-        scene.mode = "drag";
+        scene.mode = "normal";
 
         stage.add(scene);
         this.getAjaxData();
+    }
+
+    SmsMonitor.prototype.showDetail = function(element, e) {
+        let self = this;
+
+        this.floatDivTable.html("");
+        let detail = element.meta.detail;
+        let i = 0;
+        for (let index in detail) {
+            if(index == "countVal"){
+                continue;
+            }
+            this.floatDivTable.append("<tr><td>" +element.meta.queueName +":"+ i++ +"</td><td>" + detail[index] + "</td></tr>");
+        }
+
+        this.floatDiv.show();
+        var windowInnerWidth  = window.innerWidth;
+
+        var eleWidth = self.floatDiv[0].offsetWidth;
+        var eleHigh = self.floatDiv[0].offsetHeight;
+        var x = 0;
+        if(e.offsetX + eleWidth + 30 > windowInnerWidth){
+            x = windowInnerWidth - eleWidth - 5;
+        }else{
+            x = e.offsetX + 48;
+        }
+        var y = 0;
+        if(e.offsetY <= eleHigh){
+            y = 48;
+        }else {
+            y = e.offsetY;
+        }
+
+        self.floatDiv.css("left" , x);
+        self.floatDiv.css("top" , y);
+
+    }
+
+    SmsMonitor.prototype.hideDetail = function(element, e) {
+        var that = this;
+        this.floatDiv.hide();
     }
 
     SmsMonitor.prototype.getAjaxData = function(isRefresh) {
@@ -109,6 +186,8 @@
             chanTask = data["chantask:queue:"],
             saveRep  = data["Q:saveRptTask:"],
             saveMt   = data["Q:saveMtTask:"],
+
+            that     = this,
 
             startX = 100,
             startY = this.heigth / 2 - 23;
@@ -179,6 +258,14 @@
             let redisNode = this.makeContainerNode(chanTask[i]["queueName"], null, 150, 30);
             redisContainer.add(redisNode);
 
+            redisNode.meta = chanTask[i];
+            redisNode.addEventListener('mouseover', function(e) {
+                that.showDetail(e.target, e);
+            });
+            redisNode.addEventListener('mouseout', function(e) {
+                that.hideDetail(e.target);
+            });
+
             let inRedisCircleNode = this.makeCircleNode("", redisNode.x, redisNode.y);
             let outRedisCircleNode = this.makeCircleNode("剩余:" + chanTask[i]["count"], redisNode.x, redisNode.y);
 
@@ -219,13 +306,18 @@
             let outMQCircleNode = this.makeCircleNode("saveRpt剩余:"+saveRep[i]["msgReady"]+"\nsaveMt 剩余:"+ saveMt[i]["msgReady"] , mqGroupContainer.x, mqGroupContainer.y);
 
             this.makeLink(clientsNode, inMQCircleNode);
-            this.makeLink(inMQCircleNode, rptNode, "in:" + saveRep[i]["produceRate"]);
-            this.makeLink(inMQCircleNode, mtNode, "in:" + saveMt[i]["produceRate"]);
-            this.makeLink(rptNode, outMQCircleNode, "out:" + saveRep[i]["consumeRate"]);
-            this.makeLink(mtNode, outMQCircleNode, "out:" + saveMt[i]["consumeRate"]);
+            let repInLine = this.makeLink(inMQCircleNode, rptNode, "in:" + saveRep[i]["produceRate"]);
+            let mtInLine = this.makeLink(inMQCircleNode, mtNode, "in:" + saveMt[i]["produceRate"]);
+            let repOutLine = this.makeLink(rptNode, outMQCircleNode, "out:" + saveRep[i]["consumeRate"]);
+            let mtOutLine = this.makeLink(mtNode, outMQCircleNode, "out:" + saveMt[i]["consumeRate"]);
             this.makeLink(outMQCircleNode, batSaveNode);
 
             this.saveRepOutNodeArr.push(outMQCircleNode);
+
+            this.saveRptInLineNodeArr.push(repInLine);
+            this.saveMtInLineNodeArr.push(mtInLine);
+            this.saveRptOutLineNodeArr.push(repOutLine);
+            this.saveMtOutLineNodeArr.push(mtOutLine);
 
             setTimeout(function () {
                 inMQCircleNode.x = mqGroupContainer.x - 65 ;
@@ -278,7 +370,6 @@
         node.text = text;
         node.setLocation(x, y);
         this.scene.add(node);
-
         /*node.mouseover(function(){this.text = text;});
         node.mouseout(function(){this.text = null;});*/
 

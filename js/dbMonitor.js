@@ -216,9 +216,7 @@
                         }
 
                         for(var index in data) {
-                            if(index == "remove") {
-                                return;
-                            }
+
                             var collectInfo = data[index];
                             let cTiDBName = collectInfo.TIDB_NAME,
                                 cTiDBId = collectInfo.TIDB_ID;
@@ -272,9 +270,6 @@
                         }
 
                         for(var index in data) {
-                            if(index == "remove") {
-                                return;
-                            }
                             var collectInfo = data[index];
                             let cPDName = collectInfo.PD_NAME,
                                 cPDId = collectInfo.PD_ID;
@@ -327,9 +322,7 @@
                         }
 
                         for(var index in data) {
-                            if(index == "remove") {
-                                return;
-                            }
+
                             var collectInfo = data[index];
                             let cTiKVName = collectInfo.TIKV_NAME,
                                 cTiKVId = collectInfo.TIKV_ID;

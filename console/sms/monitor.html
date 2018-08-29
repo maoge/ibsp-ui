@@ -25,6 +25,20 @@
 	<canvas id="canvas" style="background: white;"></canvas>
 </div>
 
+<div class="floatDiv" id="detail" tabindex="-1" role="dialog" aria-labelledby="metadataHeader" style="opacity: .7">
+	<div class="" role="document">
+		<div class="modal-content">
+			<div class="modal-body">
+				<div class="tab-pane active in">
+					<table class="table" >
+						<tbody id="tableDetail">
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
 </body>
 
 <!-- 改造过的jtopo -->
@@ -48,8 +62,12 @@
 
 <script type="text/javascript">
     var smsMonitor = new SmsMonitor({
-		basicUrl : "http://127.0.0.1:18999/TidbQuerySerivce/getMonitorData",
-		canvas : $("#canvas")
+        floatDiv : $("#detail"),
+        floatDivTable : $("#tableDetail"),
+		basicUrl : "http://172.20.0.81:18999/TidbQuerySerivce/getMonitorData",
+		canvas : $("#canvas"),
+		mqReadyLimit : 1000,
+		redisQueueLimit :10000
 	});
 
 

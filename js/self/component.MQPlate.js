@@ -149,6 +149,8 @@ var Component = window.Component || {};
 			this.VBrokerContainer._id = MQ_VBROKER_CONTAINER.VBROKER_CONTAINER_ID;
 
 			for (var vbrokerIndex in vbrokers) {
+
+
 				var vbroker = vbrokers[vbrokerIndex];
 				var container = this.addContainerToContainer(MQ_VBROKER_CONTAINER.POS.x, MQ_VBROKER_CONTAINER.POS.y,
 					vbroker.VBROKER_NAME, this.VBROKER_CONST, 1, 2, this.elementMenu, this.VBrokerContainer,true);

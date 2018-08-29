@@ -219,7 +219,13 @@ var Util = window.Util = {
     clearInterval : function (interval) {
         if(this.intervalArr) {
             clearInterval(interval);
-            this.intervalArr.remove(interval);
+
+            var index = this.intervalArr.indexOf(val);
+            if (index > -1) {
+                this.intervalArr(index, 1);
+            }
+            /*
+            this.intervalArr.remove(interval);*/
         }
 
     }
@@ -242,12 +248,12 @@ Date.prototype.simpleFormat = function (fmt) {
     return fmt;
 };
 
-Array.prototype.remove = function (val) {
+/*Array.prototype.remove = function (val) {
     var index = this.indexOf(val);
     if (index > -1) {
         this.splice(index, 1);
     }
-};
+};*/
 //全局ajax事件和默认参数设置
 $.ajaxSetup({
     type: "post",

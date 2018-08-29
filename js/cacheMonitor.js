@@ -245,9 +245,7 @@
                         }
 
                         for(var index in data) {
-                            if(index == "remove") {
-                                return;
-                            }
+
                             var collectInfo = data[index];
                             let cProxyName = collectInfo.CACHE_PROXY_NAME,
                                 cProxybId = collectInfo.CACHE_PROXY_ID;
@@ -304,9 +302,6 @@
                         }
 
                         for(var index in data) {
-                            if(index == "remove") {
-                                return;
-                            }
                             var collectInfo = data[index];
                             let cRedisName = collectInfo.CACHE_NODE_NAME,
                                 cRedisd = collectInfo.CACHE_NODE_ID;
