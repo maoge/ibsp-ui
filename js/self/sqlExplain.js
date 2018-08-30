@@ -1,131 +1,60 @@
-var id = "";
-var myChart = null;
+/**
+ * Created by guozh on 2018/8/30.
+ */
 
-var tidbStyle = {};
-var tidb = {};
-tidb.color = '#b0c4de';
-tidb.borderColor = '#0000ff';
-tidb.borderWidth = 3;
-tidbStyle.normal = tidb;
-tidbStyle.emphasis = tidb;
+(function ($,window) {
+	var SQLExplain = function (options) {
+		this.id = options.id;
+		this.$tableEle  = options.tableEle;
+		this.$sqlStrEle = options.sqlStrEle;
+		this.$schemaEle = options.schemaEle;
+		this.$userEle   = options.userEle;
+		this.$pwdEle    = options.pwdEle;
+		this.isExecute = false;
+    }
 
-var tikvStyle = {};
-var tikv = {};
-tikv.color = '#b0c4de';
-tikv.borderColor = '#ff7f00';
-tikv.borderWidth = 3;
-tikvStyle.normal = tikv;
-tikvStyle.emphasis = tikv;
+    SQLExplain.prototype.execute = function (){
+		let data = {
+			SERV_ID : this.id,
+            SQL_STR : this.$sqlStrEle.val(),
+            SCHEMA_NAME : this.$schemaEle.val(),
+            USER_NAME : this.$userEle.val(),
+            USER_PWD : this.$pwdEle.val()
+		};
 
-var largeSize = $('#button-group').height();
-var smallSize = largeSize-$('#top-div').height();
+        if(!this.isExecute) {
+            this.$tableEle.mTable({
+                url: rootUrl+'tidbsvr/sqlExplainService',
+                queryParams: data,
+                striped : true,
+                pagination : true,
+                pageSize : 10,
+                pageNumber : 1,
+                columns : [{
+                    field : "ID",
+                    title : "ID",
+                    align: 'left',
+                    format : function (value) {
+                        return (""+value).replace(" ", "&nbsp;");
+                    },
+                    height:'20px'
+                }, {
+                    field : "COUNT",
+                    title : "COUNT",
+                }, {
+                    field : "TASK",
+                    title : "TASK",
+                }, {
+                    field : "OPERATOR INFO",
+                    title : "OPERATOR_INFO",
+                }]
+            });
+        }else {
+            this.$tableEle.mTable("refresh");
+        }
 
-function init(servName, servID) {
-	$('#service_name').text(servName);
-	//$('#explainGraph').css('min-height', smallSize);
-	id = servID;
-}
-
-function sqlExplain() {
-	data = {};
-	data.SERV_ID = id;
-	data.SQL_STR = $('#S_SQL_STR').val();
-	data.SCHEMA_NAME = $('#S_SCHEMA_NAME').val();
-	data.USER_NAME = $('#S_USER_NAME').val();
-	data.USER_PWD = $('#S_USER_PWD').val();
-	
-	$.ajax({
-		url: rootUrl+"tidbsvr/sqlExplainService",
-		data: data,
-		async: true,
-		type: "post",
-		dataType: "json",
-		beforeSend: function() {
-			Util.showLoading();
-		},
-		complete: function() {
-			Util.hideLoading();
-		},
-		error: function(xhr) {
-			Util.alert("error", "获取SQL执行计划失败！"+xhr.status+":"+xhr.statusText);
-		},
-		success: function(result) {
-			if (result.RET_CODE == 0) {
-				var data = result.RET_INFO;
-				if (myChart!=null) {
-					myChart.dispose();
-				}
-			    myChart = echarts.init(document.getElementById('explainGraph'));
-			    forEachNodeStyle(data);
-			    
-			    myChart.setOption(option = {
-				    backgroundColor: '#fff',
-			    	tooltip: {
-			    		trigger: 'item',
-			    		triggerOn: 'mousemove',
-			    		formatter: function(a) {
-			    			return a.data.value;
-			    		}
-			    	},
-			    	series: [{
-			    		type: 'tree',
-			    		data: [data],
-
-			    		top: '1%',
-			    		left: '7%',
-			    		bottom: '1%',
-			    		right: '20%',
-			    		symbolSize: 12,
-			    		initialTreeDepth: -1,
-			    		
-			    		label: {
-			    			normal: {
-			    				position: 'bottom',
-			    				fontSize: 12
-			    			}
-			    		},
-
-			    		animationDuration: 550,
-			    		animationDurationUpdate: 750
-			    	}]
-			    });
-			} else {
-				Util.alert("error", "获取SQL执行计划失败！"+result.RET_INFO);
-			}
-		}
-	});
-}
-
-function forEachNodeStyle(element) {
-	if (element.type=="root") {
-		element.itemStyle = tidbStyle;
-	} else {
-		element.itemStyle = tikvStyle;
+        this.isExecute = true;
 	}
-	delete element.type;
-	
-	if (element.children) {
-		element.children.forEach(function(child, index) {
-			forEachNodeStyle(child);
-		});
-	}
-}
 
-function toggleTopDiv() {
-	if ($('#top-div').css("display")=="none") {
-		$('#top-div').css("display", "");
-		$('#button_explain').css("display", "");
-		$('#explainGraph').css('min-height', smallSize);
-		$('#button_toggle').attr("title", "收起");
-		$('#button_toggle').attr("src", "./img/less.png");
-		myChart.resize();
-
-	} else {
-		$('#top-div').css("display", "none");
-		$('#button_explain').css("display", "none");
-		$('#explainGraph').css('min-height', largeSize);
-		$('#button_toggle').attr("title", "展开");
-		$('#button_toggle').attr("src", "./img/more.png");
-		myChart.resize();
-	}
-}
+    window.SQLExplain = SQLExplain;
+}(jQuery, window));

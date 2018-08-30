@@ -220,9 +220,9 @@ var Util = window.Util = {
         if(this.intervalArr) {
             clearInterval(interval);
 
-            var index = this.intervalArr.indexOf(val);
+            var index = this.intervalArr.indexOf(interval);
             if (index > -1) {
-                this.intervalArr(index, 1);
+                this.intervalArr.splice(index, 1);
             }
             /*
             this.intervalArr.remove(interval);*/

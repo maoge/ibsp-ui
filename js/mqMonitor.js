@@ -227,8 +227,7 @@
                     console.log(res['RET_INFO']);
                     alert("error ,please check the console command!");
                 }
-            },
-            beforeSend : function () {}
+            }
         }
         $.ajax(request);
     }
@@ -306,8 +305,7 @@
                         console.log(res['RET_INFO']);
                         alert("error ,please check the console command!");
                     }
-                },
-                beforeSend : function () {}
+                }
             },
             qAjax = {
                 data : {"SERV_ID" : that.options.SERV_ID},
@@ -353,8 +351,7 @@
                         console.log(res['RET_INFO']);
                         alert("error ,please check the console command!")
                     }
-                },
-                beforeSend : function () {}
+                }
             };
 
         $.ajax(vbAjax);

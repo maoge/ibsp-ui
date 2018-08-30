@@ -186,8 +186,7 @@
                     console.log(res['RET_INFO']);
                     alert("error ,please check the console command!");
                 }
-            },
-            beforeSend : function () {}
+            }
         }
         $.ajax(request);
     }
@@ -247,8 +246,7 @@
                         console.log(res['RET_INFO']);
                         alert("error ,please check the console command!");
                     }
-                },
-                beforeSend : function () {}
+                }
             },
             pdAjax = {
                 data : {"SERV_ID" : that.options.SERV_ID},
@@ -301,8 +299,7 @@
                         console.log(res['RET_INFO']);
                         alert("error ,please check the console command!")
                     }
-                },
-                beforeSend : function () {}
+                }
             },
             tikvAjax = {
                 data : {"SERV_ID" : that.options.SERV_ID},
@@ -340,8 +337,7 @@
                         console.log(res['RET_INFO']);
                         alert("error ,please check the console command!")
                     }
-                },
-                beforeSend : function () {}
+                }
             };
         $.ajax(tidbAjax);
         $.ajax(pdAjax);

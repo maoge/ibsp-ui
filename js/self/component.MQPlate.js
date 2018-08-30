@@ -494,10 +494,6 @@ var Component = window.Component || {};
             $.ajax({
                 url: url,
                 data: {"INST_ID": element._id, "SERV_ID": self.id},
-                beforeSend : function () {
-                },
-                complete : function () {
-                },
                 success: function (result) {
                     if (result.RET_CODE == 0) {
                         Component.Alert("success", "组件卸载成功！");

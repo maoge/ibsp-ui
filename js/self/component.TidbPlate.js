@@ -379,8 +379,6 @@ var Component = window.Component || {};
 				$.ajax({
                     "url" : url + 'tidbsvr/tikvStatusService',
                     "data" : {"SERV_ID":servId,"INST_ADD":instAdd},
-                    beforeSend : function () {
-                    },
                     complete : function () {
                     },
                     success: function (data) {

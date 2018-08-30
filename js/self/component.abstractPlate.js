@@ -410,8 +410,6 @@ var Component = window.Component || {};
 			url: url,
 			data: {"INST_ID": id, "SERV_ID": this.id, "SESSION_KEY": key},
 			timeout: this.longTimeout,
-            beforeSend : function () {
-            },
 			complete : function () {
             },
 			error: function (xhr) {
@@ -457,8 +455,6 @@ var Component = window.Component || {};
             url: url,
             data: {"SERV_ID": this.id, "SESSION_KEY": key},
             timeout: this.longTimeout,
-            beforeSend : function () {
-            },
             complete : function () {
             },
             error: function (xhr) {
@@ -495,10 +491,6 @@ var Component = window.Component || {};
 			url: url,
 			data: {"INST_ID": element._id, "SERV_ID": this.id, "SESSION_KEY": key},
 			timeout: this.longTimeout,
-            beforeSend : function () {
-            },
-            complete : function () {
-            },
 			success: function (result) {
 				clearInterval(myCurrInt);
 				if (self.isNotNull(myCurrInt)) {
@@ -569,10 +561,6 @@ var Component = window.Component || {};
 				type: "get",
 				data: {key: key},
 				async: false,
-                beforeSend : function () {
-                },
-                complete : function () {
-                },
 				success: function (result) {
 					if (self.isNotNull(result))
 						res = result.RET_INFO;

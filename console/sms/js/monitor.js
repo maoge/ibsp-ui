@@ -78,9 +78,9 @@
         for(let i = 0; i< saveRep.length; i++) {
             this.saveRepOutNodeArr[i].text = "saveRpt剩余:"+saveRep[i]["msgReady"]+"\nsaveMt 剩余:"+ saveMt[i]["msgReady"];
             this.saveRptInLineNodeArr[i].text = "in:"+saveRep[i]["produceRate"];
-            this.saveMtInLineNodeArr[i].text = "in:"+saveRep[i]["produceRate"];
+            this.saveMtInLineNodeArr[i].text = "in:"+saveMt[i]["produceRate"];
             this.saveRptOutLineNodeArr[i].text = "out:"+saveRep[i]["consumeRate"];
-            this.saveMtOutLineNodeArr[i].text = "out:"+saveRep[i]["consumeRate"];
+            this.saveMtOutLineNodeArr[i].text = "out:"+saveMt[i]["consumeRate"];
 
             if(saveRep[i]["msgReady"] >= this.mqReadyLimit || saveMt[i]["msgReady"] >= this.mqReadyLimit) {
                 this.saveRepOutNodeArr[i].fillColor = "255,0,0";
