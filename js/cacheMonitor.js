@@ -308,7 +308,7 @@
                             countTps += collectInfo.PROCESS_TPS;
 
                             var tr = Util.sprintf('<tr><th scope="row">%s</th><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>',
-                                cRedisName,
+                                cRedisName + "-" + collectInfo.IP + ":" + collectInfo.PORT,
                                 collectInfo.DB_SIZE,
                                 (collectInfo.MEMORY_USED /1024 /1024).toFixed(0) + "M",
                                 (collectInfo.MEMORY_TOTAL /1024 /1024).toFixed(0) + "M",
