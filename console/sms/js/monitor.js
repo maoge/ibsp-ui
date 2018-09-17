@@ -73,6 +73,7 @@
                 this.chanTaskOutNodeArr[i].fillColor = "0,111,255";
                 this.chanTaskOutNodeArr[i].fontColor = "0,0,255";
             }
+            this.chanTaskNodeArr[i].meta = chanTask[i];
         }
 
         for(let i = 0; i< saveRep.length; i++) {
