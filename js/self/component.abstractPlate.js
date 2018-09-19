@@ -531,7 +531,6 @@ var Component = window.Component || {};
 			content: $("#log"),
 			btn: ['停止刷新日志', '恢复刷新日志'],
 			yes: function (index, layero) {
-				console.log(myCurrInt);
 				clearInterval(myCurrInt);
 			},
 			btn2: function (index, layero) {
@@ -656,10 +655,8 @@ var Component = window.Component || {};
         var eleHigh = self.$componentMetadata[0].offsetHeight;
         var x = 0;
         if(e.offsetX + eleWidth + 48 > windowInnerWidth){
-            console.log(1);
             x = windowInnerWidth - eleWidth - 5;
 		}else{
-            console.log(2);
             x = e.offsetX + 48;
 		}
         console.log(x + "    " +e.offsetX + "   " + eleWidth);

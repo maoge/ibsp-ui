@@ -3,7 +3,6 @@ var servId = "",
     $queueList = $("#queue_list");
 
 function init(name,id){
-    console.log(name);
     var queueParam = {"SERV_ID" : id};
     servId = id;
     servName = name;
@@ -138,7 +137,6 @@ function editQueue(row) {
 
 function saveQueue(){
     var param = Util.getFormParam("newQueueForm");
-    console.log(param);
     $.ajax({
         url : Url.queueList.saveQueue,
         data : param,

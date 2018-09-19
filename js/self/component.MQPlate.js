@@ -23,7 +23,6 @@ var Component = window.Component || {};
 		var data = this.getTopoData(id),
 			self = this;
 
-		console.log(data);
 		if (data == null) {
 			Util.hideLoading();
 			return;

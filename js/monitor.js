@@ -140,7 +140,6 @@ Date.prototype.simpleFormat = function (fmt) {
                         that.setInterval();
                     }
                 }else{
-                    console.log(res['RET_INFO']);
                     alert("error ,please check the console command!")
                 }
                 that.hideLoading();
@@ -255,7 +254,6 @@ Date.prototype.simpleFormat = function (fmt) {
                                 that.options.endTS = endTS;
                             }
                         }else{
-                            console.log(res['RET_INFO']);
                             alert("error ,please check the console command!")
                         }
                     },

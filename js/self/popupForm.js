@@ -216,7 +216,6 @@
                 res = {};
             analysis(eleType, schema['properties']);
             getFields(eleTypeJson);
-            console.log(fields);
             options.data = fields;
             function analysis(eleType, schema) {
                 if (eleTypeJson) {
