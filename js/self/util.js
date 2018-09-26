@@ -68,6 +68,9 @@ var Util = window.Util = {
     confirm : function(){
         layer.confirm.apply(null,arguments)
     },
+    prompt : function () {
+        layer.prompt.apply(null, arguments);
+    },
     showBackuDrop : function(){
         this.initBackuDrop();
         this.$backuDrop.show();
@@ -266,7 +269,7 @@ $.ajaxSetup({
     error : function (jqxhr) {
         Util.hideLoading();
         if(jqxhr.status === 401 || jqxhr.status === 400){
-            alert("密码错误或者Token过期，请重新登录！");
+            /*alert("密码错误或者Token过期，请重新登录！");*/
             window.location.href="../login.html";
             return;
         }
