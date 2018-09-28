@@ -24,6 +24,12 @@ function init(id, name, type) {
 			$("#tidb-deploy").hide();
 			$("#cache-deploy").show();
 			break;
+        case "SequoiaDB" :
+            $('#service_type').text("SequoiaDB集群管理");
+            plate = new Component.SequoiaDBPlate(rootUrl, id, name, $("#canvas")[0]);
+            $("#tidb-deploy").hide();
+            $("#sdb-deploy").show();
+            break;
 	}
 	
 	drag();

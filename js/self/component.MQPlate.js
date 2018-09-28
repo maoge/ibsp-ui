@@ -446,7 +446,7 @@ var Component = window.Component || {};
             case this.BROKER_CONST :
                 element.status = "saved";
                 element.removeEventListener('contextmenu');
-                broker.addEventListener('contextmenu', function(e) {
+                element.addEventListener('contextmenu', function(e) {
                     self.nodeMenu.show(e);
                 });
                 break;

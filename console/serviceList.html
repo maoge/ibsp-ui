@@ -9,7 +9,7 @@
 </head>
 
 <body>
-	<div class="row bg-light	">
+	<div class="row bg-light">
 		<div class="col-lg-4 col-sm-12 breadcrumb bg-light">
 			<li class="breadcrumb-item">基础服务功能</li>
 			<li class="breadcrumb-item">服务集群管理</li>
@@ -20,9 +20,10 @@
 				<div class="input-group">
 					<select class="custom-select" id="S_SERVICE_TYPE">
 						<option selected value = "">服务类型（默认所有）</option>
-						<option value ="DB">DB（数据库服务）</option>
+						<option value ="DB">TiDB（数据库服务）</option>
 						<option value ="MQ">MQ（消息服务）</option>
 						<option value ="CACHE">CACHE（缓存服务）</option>
+                        <option value ="SequoiaDB">SequoiaDB（数据库服务）</option>
 					</select>
 					<div class="input-group-append">
 						<button class="btn btn-outline-success" onclick="searchService();">
@@ -71,9 +72,10 @@
 								<label for="SERVICE_TYPE" class="col-sm-3 control-label form-control-label">服务类型</label>
 								<div class="col-sm-9">
 									<select class="custom-select" name="SERVICE_TYPE" id="SERVICE_TYPE">
-										<option value ="DB">DB</option>
+										<option value ="DB">TiDB</option>
 										<option value ="MQ">MQ</option>
 										<option value ="CACHE">CACHE</option>
+										<option value ="SequoiaDB">SequoiaDB</option>
 									</select>
 								</div>
 							</div>

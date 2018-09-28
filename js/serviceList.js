@@ -94,7 +94,7 @@ function loadServiceList() {
                 text:"监控",
                 //配置隐藏属性
                 format:function(value,row){
-                    if(row.IS_DEPLOYED!=1){
+                    if(row.IS_DEPLOYED!=1 || row.SERV_TYPE == 'SequoiaDB'){
                         return { hided:true };
                     }
                 },

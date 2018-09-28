@@ -90,6 +90,7 @@ var Component = window.Component || {};
 			loadSchema("tidb.schema");
 			loadSchema("mq.schema");
 			loadSchema("cache.schema");
+            loadSchema("sequoiadb.schema");
 
             this.plateMenu = $.contextMenu({
                 items:[
