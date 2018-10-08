@@ -16,7 +16,7 @@ var Component = window.Component || {};
 
 		//图标(暂定)
 		this.imgRootUrl = "../images/console/";
-		this.pgIcon = this.imgRootUrl + "db_pg.png";
+		this.engineIcon = this.imgRootUrl + "db-engine.png";
 
 		var data = this.getTopoData(id),
 			self = this;
@@ -60,7 +60,7 @@ var Component = window.Component || {};
 				]
 		});
 
-		this.PG_CONST = "SDB_PG";
+		this.ENGINE_CONST = "SDB_ENGINE";
 
 		//初始化弹出表单
 		var cancelFunction = function(){
@@ -68,11 +68,11 @@ var Component = window.Component || {};
 			self.popElement = null;
 		};
 
-		this.PGForm = $.popupForm(this.PG_CONST, window["sequoiadb.schema"], function(json){
-			self.saveElementData(self.popElement, json, self.PGForm);
+		this.ENGINEForm = $.popupForm(this.ENGINE_CONST, window["sequoiadb.schema"], function(json){
+			self.saveElementData(self.popElement, json, self.ENGINEForm);
 		}, cancelFunction);
 
-		this.getIpUser("DB", [this.PGForm]);
+		this.getIpUser("DB", [this.ENGINEForm]);
 		this.initContainer(data);
 	}
     SequoiaDBPlate.prototype = new Component.Plate();
@@ -89,21 +89,21 @@ var Component = window.Component || {};
 			var deployFlag = data.DEPLOY_FLAG;
 			data = data.SDB_SERV_CONTAINER;
 			this.needInitTopo = false;
-			var	PG_CONTAINER = data.SDB_PG_CONTAINER;
+			var	ENGINE_CONTAINER = data.SDB_ENGINE_CONTAINER;
 
             //加载SwitchContaniner
-            if(PG_CONTAINER && !$.isEmptyObject(PG_CONTAINER)){
-                this.PGContainer = this.makeContainer(PG_CONTAINER.POS.x,PG_CONTAINER.POS.y,
-                    PG_CONTAINER.PG_CONTAINER_NAME,PG_CONTAINER.POS.row,PG_CONTAINER.POS.col,"node");
+            if(ENGINE_CONTAINER && !$.isEmptyObject(ENGINE_CONTAINER)){
+                this.ENGINEContainer = this.makeContainer(ENGINE_CONTAINER.POS.x,ENGINE_CONTAINER.POS.y,
+                    ENGINE_CONTAINER.ENGINE_CONTAINER_NAME,ENGINE_CONTAINER.POS.row,ENGINE_CONTAINER.POS.col,"node");
 
-                this.PGContainer._id = PG_CONTAINER.PG_CONTAINER_ID;
+                this.ENGINEContainer._id = ENGINE_CONTAINER.ENGINE_CONTAINER_ID;
 
-                for (var index in PG_CONTAINER.SDB_PG) {
-                    var pg = PG_CONTAINER.SDB_PG[index];
-                    var node = this.addNodeToContainer(this.PGContainer.x+1, this.PGContainer.y+1,
-                        this.pgIcon, pg.PG_NAME, this.PG_CONST, this.nodeMenu, this.PGContainer, true, false);
+                for (var index in ENGINE_CONTAINER.SDB_ENGINE) {
+                    var engine = ENGINE_CONTAINER.SDB_ENGINE[index];
+                    var node = this.addNodeToContainer(this.ENGINEContainer.x+1, this.ENGINEContainer.y+1,
+                        this.engineIcon, engine.ENGINE_NAME, this.ENGINE_CONST, this.nodeMenu, this.ENGINEContainer, true, false);
 
-                    this.setMetaData(node, pg);
+                    this.setMetaData(node, engine);
                 }
             }
 
@@ -112,8 +112,8 @@ var Component = window.Component || {};
 		} else {
 
 			this.needInitTopo = true;
-			this.PGContainer = this.makeContainer(
-					this.width*0.5-this.defaultContainerW*2-this.padding, this.height*0.5, "PG容器", 1, 3, "node");
+			this.ENGINEContainer = this.makeContainer(
+					this.width*0.5-this.defaultContainerW*2-this.padding, this.height*0.5, "ENGINE容器", 1, 3, "node");
 		}
 	}
 
@@ -121,9 +121,9 @@ var Component = window.Component || {};
     SequoiaDBPlate.prototype.getMetaData = function(element) {
 		var data = {};
 		switch(element.type) {
-			case this.PG_CONST :
-				data.PG_ID = element._id;
-				data.PG_NAME = element.text;
+			case this.ENGINE_CONST :
+				data.ENGINE_ID = element._id;
+				data.ENGINE_NAME = element.text;
 				break;
             default :
 				break;
@@ -142,11 +142,11 @@ var Component = window.Component || {};
             name = "";
 
 		switch(element.type) {
-			case this.PG_CONST:
-				id = data.PG_ID;
-				name = data.PG_NAME;
-				delete data.PG_ID;
-				delete data.PG_NAME;
+			case this.ENGINE_CONST:
+				id = data.ENGINE_ID;
+				name = data.ENGINE_NAME;
+				delete data.ENGINE_ID;
+				delete data.ENGINE_NAME;
 
                 element.addEventListener('mouseover', function(e) {
                     that.showMetadata(e.target, e);
@@ -168,8 +168,8 @@ var Component = window.Component || {};
     SequoiaDBPlate.prototype.popupForm = function(element) {
 		this.popElement = element; //存放目前正在填写信息的元素，表单窗口关闭时置为null
 		switch(element.type) {
-			case this.PG_CONST:
-				this.PGForm.show(this.getMetaData(element));
+			case this.ENGINE_CONST:
+				this.ENGINEForm.show(this.getMetaData(element));
 				break;
             default :
                 break;
@@ -182,11 +182,11 @@ var Component = window.Component || {};
     SequoiaDBPlate.prototype.newComponent = function(x, y, datatype) {
 		switch(datatype) {
 
-		case this.PG_CONST:
+		case this.ENGINE_CONST:
 			var success = false,
-				img = this.pgIcon;
+				img = this.engineIcon;
 
-			if (this.addNodeToContainer(x, y, img, datatype, this.PG_CONST, this.nodeMenu, this.PGContainer ,false, false) != null) {
+			if (this.addNodeToContainer(x, y, img, datatype, this.ENGINE_CONST, this.nodeMenu, this.ENGINEContainer ,false, false) != null) {
 				break;
 			}
 
@@ -205,10 +205,10 @@ var Component = window.Component || {};
 		return {"SDB_SERV_CONTAINER": {
                 SDB_SVC_CONTAINER_ID : this.id,
                 SDB_SVC_CONTAINER_NAME : this.name,
-                SDB_PG_CONTAINER : {
-                    PG_CONTAINER_ID : this.PGContainer._id,
-                    PG_CONTAINER_NAME : this.PGContainer.text,
-                    POS : this.PGContainer.getPosJson()
+                SDB_ENGINE_CONTAINER : {
+                    ENGINE_CONTAINER_ID : this.ENGINEContainer._id,
+                    ENGINE_CONTAINER_NAME : this.ENGINEContainer.text,
+                    POS : this.ENGINEContainer.getPosJson()
                 },
             }};
 	}
@@ -218,7 +218,7 @@ var Component = window.Component || {};
 		var type = element.type,
             self = this;
 		switch (type){
-			case this.PG_CONST :
+			case this.ENGINE_CONST :
 				element.status = "deployed";
 				element.removeEventListener('contextmenu');
                 element.addEventListener('contextmenu', function(e) {
@@ -236,7 +236,7 @@ var Component = window.Component || {};
             self = this;
         switch (type){
 
-            case this.PG_CONST :
+            case this.ENGINE_CONST :
                 element.status = "saved";
                 element.removeEventListener('contextmenu');
                 element.addEventListener('contextmenu', function(e) {

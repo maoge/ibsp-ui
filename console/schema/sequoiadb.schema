@@ -9,12 +9,12 @@
 				"SDB_SVC_CONTAINER_ID": {"type":"string","required":true,"minLength":36,"description":"DB服务容器ID"},
 				"SDB_SVC_CONTAINER_NAME": {"type":"string","required":true,"description":"DB服务容器名字"},
 				
-				"SDB_PG_CONTAINER": {
+				"SDB_ENGINE_CONTAINER": {
 					"type":"object",
 					"required":true,
 					"properties": {
-						"PG_CONTAINER_ID": {"type":"string","required":true,"minLength":36,"description":"PG容器ID"},
-						"PG_CONTAINER_NAME": {"type":"string","required":true,"description":"PG容器名字"},
+						"ENGINE_CONTAINER_ID": {"type":"string","required":true,"minLength":36,"description":"ENGINE容器ID"},
+						"ENGINE_CONTAINER_NAME": {"type":"string","required":true,"description":"ENGINE容器名字"},
 						"POS": {
 							"type":"object",
 							"required":true,
@@ -28,14 +28,14 @@
 							}
 						},
 						
-						"SDB_PG": {
+						"SDB_ENGINE": {
 							"type":"array",
 							"required":true,
 							"items": {
 								"type":"object",
 								"properties": {
-									"PG_ID": {"type":"string","required":true,"minLength":36,"description":"PG ID","inputDisabled":true},
-									"PG_NAME": {"type":"string","required":true,"description":"PG Name"},
+									"ENGINE_ID": {"type":"string","required":true,"minLength":36,"description":"ENGINE ID","inputDisabled":true},
+									"ENGINE_NAME": {"type":"string","required":true,"description":"ENGINE Name"},
 									"IP": {"type":"string","required":true,"description":"IP"},
 									"PORT": {"type":"string","required":true,"description":"服务端口"},
 									"OS_USER": {"type":"string","required":true,"description":"系统账户"},
