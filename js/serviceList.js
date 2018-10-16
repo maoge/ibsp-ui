@@ -65,6 +65,13 @@ function loadServiceList() {
         			});
                 }
             },{
+                text:"集合信息",
+                onClick:function(button,row,index){
+                    $mainContainer.load("sdbInfo.html",function(){
+                        init(row.INST_ID, row.SERV_NAME, row.SERV_TYPE);
+                    });
+                }
+            },{
                 text:"执行计划",
                 //配置隐藏属性
                 format:function(value,row,index){

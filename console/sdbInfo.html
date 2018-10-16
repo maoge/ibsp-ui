@@ -1,0 +1,387 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta charset="utf-8"/>
+	<link href="../css/self/mTable.css" type="text/css" rel="stylesheet"/>
+</head>
+
+<body>
+<div class="row bg-light">
+	<div class="col-lg-4 col-sm-12 breadcrumb bg-light">
+		<li class="breadcrumb-item">基础服务功能</li>
+		<li class="breadcrumb-item"><a data-load-page="serviceList" href="#">服务集群管理</a></li>
+		<li class="breadcrumb-item"><span id="servName"></span> </li>
+	</div>
+	<div class="col-lg-8 col-sm-12">
+		<div class="form-inline mt-md-0 mr-2 pt-1 float-right" >
+		</div>
+		<div class="btn-group float-left my-sm-1 mr-5">
+			<button class="btn btn-outline-primary" onclick="addCS();">新增集合空间</button>
+			<button class="btn btn-outline-danger" onclick="delCS();">删除集合空间</button>
+            <button class="btn btn-outline-primary" onclick="addCL();">新增集合</button>
+            <button class="btn btn-outline-danger" onclick="delCL();">删除集合</button>
+		</div>
+	</div>
+</div>
+
+<div class="row-fluid" style="margin-top:10px;margin-bottom: 80px;">
+
+    <ul id="myTab" class="nav nav-tabs">
+        <li class="nav-item">
+            <a id="firstTab" class="nav-link" href="#collecitonspace" data-toggle="tab">
+                集合空间
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#collection" data-toggle="tab">集合</a>
+        </li>
+
+    </ul>
+    <div id="myTabContent" class="tab-content">
+        <div class="tab-pane fade" id="collecitonspace" style="">
+            <table id="sdb_cs_list">
+            </table>
+        </div>
+        <div class="tab-pane fade" id="collection" style="">
+            <table id="sdb_cl_list">
+            </table>
+        </div>
+    </div>
+
+	<!--<table id="sdb_info_list">
+	</table>-->
+</div>
+
+<div class="modal fade" id="partitionInfo" tabindex="-1" role="dialog" aria-labelledby="newServiceHeader" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="partitionInfoHeader">分区信息</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <div class="tab-pane active in" id="partitionInfoBody">
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="modal fade" id="attrCSModal" tabindex="-1" role="dialog" aria-labelledby="newServiceHeader" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="attrCSModalHeader"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <div class="tab-pane active in" id="tab-panehome">
+                    <form id="attrModalForm" class="form-horizontal">
+
+                        <div class="form-group row ">
+                            <label for="CS_NAME" class="col-sm-4 control-label form-control-label">集合空间名称：</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" name="CS_NAME" id="CS_NAME" placeholder="请输入集合空间名称">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="DOMAIN_NAME" class="col-sm-4 control-label form-control-label">domain：</label>
+                            <div class="col-sm-8">
+                                <select class="custom-select" name="DOMAIN_NAME" id="DOMAIN_NAME">
+
+                                </select>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">关闭</button>
+                <button type="button" onclick="saveCS()" class="btn btn-primary ">提交</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="modal fade" id="attrCLModal" tabindex="-1" role="dialog" aria-labelledby="newServiceHeader" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="attrCLModalHeader"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <div class="tab-pane active in" id="tab-cl">
+                    <form id="attrclModalForm" class="form-horizontal">
+
+                        <div class="form-group row">
+                            <label for="COLLECTIONSPACE_NAME" class="col-sm-4 control-label form-control-label">集合空间：</label>
+                            <div class="col-sm-8">
+                                <select class="custom-select" name="COLLECTIONSPACE_NAME" id="COLLECTIONSPACE_NAME">
+
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group row ">
+                            <label for="CL_NAME" class="col-sm-4 control-label form-control-label">集合名称：</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" name="CL_NAME" id="CL_NAME" placeholder="请输入集合名称">
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="CL_TYPE" class="col-sm-4 control-label form-control-label">集合类型：</label>
+                            <div class="col-sm-8">
+                                <select class="custom-select" name="CL_TYPE" id="CL_TYPE">
+                                    <option value="hash">水平散列分区</option>
+                                    <option value="range">垂直分区</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="RP_NUM" class="col-sm-4 control-label form-control-label">副本数：</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" name="RP_NUM" id="RP_NUM" placeholder="请输入副本数量">
+                            </div>
+                        </div>
+
+                        <div class="form-group row ">
+                            <label for="SHAREDING_KEY" class="col-sm-4 control-label form-control-label">分区键：</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" name="SHAREDING_KEY" id="SHAREDING_KEY" placeholder="请输入分区键">
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">关闭</button>
+                <button type="button" onclick="saveCL()" class="btn btn-primary ">提交</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="modal fade" id="attrAttachCLModal" tabindex="-1" role="dialog" aria-labelledby="newServiceHeader" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="attrAttachCLHeader"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <div class="tab-pane active in" id="tab-attrAttachCL">
+                    <form id="attrAttachCLForm" class="form-horizontal">
+
+                        <div class="form-group row">
+                            <label for="CS_NAME_SELECT" class="col-sm-4 control-label form-control-label">集合空间：</label>
+                            <div class="col-sm-8">
+                                <select class="custom-select" name="CS_NAME_SELECT" id="CS_NAME_SELECT">
+
+                                </select>
+                            </div>
+                        </div>
+
+                        <input type="hidden" value="" name="CURR_CL_NAME" id="CURR_CL_NAME"/>
+
+                        <div class="form-group row ">
+                            <label for="FIELD" class="col-sm-4 control-label form-control-label">主表分区键：</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" name="FIELD" id="FIELD" placeholder="主表分区键">
+                            </div>
+                        </div>
+
+                        <div class="form-group row ">
+                            <label for="LOW_BOUND_DESC" class="col-sm-4 control-label form-control-label"></label>
+                            <div class="col-sm-8">
+                                <label id = "LOW_BOUND_DESC">如果是时间字段为 Timestamp("2018-09-18-00.00.00.000000")</label>
+                            </div>
+                        </div>
+                        <div class="form-group row ">
+                            <label for="LOW_BOUND" class="col-sm-4 control-label form-control-label">区间最小值：</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" name="LOW_BOUND" id="LOW_BOUND" placeholder="区间最小值">
+                            </div>
+                        </div>
+                        <div class="form-group row ">
+                            <label for="UP_BOUND" class="col-sm-4 control-label form-control-label">区间最大值：</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" name="UP_BOUND" id="UP_BOUND" placeholder="区间最大值">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">关闭</button>
+                <button type="button" onclick="attachCL()" class="btn btn-primary ">提交</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="modal fade" id="autoAttachCLModal" tabindex="-1" role="dialog" aria-labelledby="newServiceHeader" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="autoAttachCLHeader"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <div class="tab-pane active in" id="tab-autoAttachCL">
+                    <form id="autoAttachCLForm" class="form-horizontal">
+
+                        <input type="hidden" value="" name="CURR_MAIN_CL_NAME" id="CURR_MAIN_CL_NAME"/>
+                        <input type="hidden" value="" name="CURR_MAIN_CL_FIELD" id="CURR_MAIN_CL_FIELD"/>
+
+                        <div class="form-group row ">
+                            <label for="BEGIN_DATE" class="col-sm-4 control-label form-control-label">开始时间：</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" name="BEGIN_DATE" id="BEGIN_DATE" placeholder="起始时间">
+                            </div>
+                        </div>
+
+                        <div class="form-group row ">
+                            <label for="END_DATE" class="col-sm-4 control-label form-control-label">截止时间：</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" name="END_DATE" id="END_DATE" placeholder="截止时间">
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">关闭</button>
+                <button type="button" onclick="autoAttachCL()" class="btn btn-primary ">提交</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+</body>
+<script type="text/javascript" src="../js/sdbInfo.js"></script>
+<script type="text/javascript">
+    $(".breadcrumb>li>a").off("click").on("click",function(){
+        var $this = $(this), pageName = $this.data("load-page"),$main = $("#mainContent");
+        if(pageName != ""){
+            $(".contextMenu").remove();
+            $main.load(pageName+".html",function(){
+                initPage();
+            });
+        }
+    });
+    var sdvInfo;
+    $("#firstTab").click();
+
+    var date = new Date(),
+        currStringDate = date.simpleFormat("yyyy-MM-dd");
+    $("#BEGIN_DATE").val(currStringDate);
+    $("#END_DATE").val(currStringDate);
+    function init(servId, servName) {
+        sdvInfo = new SdbInfo({
+            tableCSEle : "sdb_cs_list",
+            tableCLEle : "sdb_cl_list",
+            partitionsEle : "partitionInfo",
+            partitionsBodyEle : "partitionInfoBody",
+            attrAttachCLModalEle : "attrAttachCLModal",
+            autoAttachCLModal : "autoAttachCLModal",
+            attrCSModal : "attrCSModal",
+            domainSelect : "DOMAIN_NAME",
+            attrCLModal : "attrCLModal",
+            csSlect : "COLLECTIONSPACE_NAME",
+            CURR_CL_NAME : "CURR_CL_NAME",
+            attachCLSelect : "CS_NAME_SELECT",
+            CURR_MAIN_CL_NAME : "CURR_MAIN_CL_NAME",
+            CURR_MAIN_CL_FIELD : "CURR_MAIN_CL_FIELD"
+        });
+        $("#servName").val(servName);
+    }
+
+    function addCS() {
+        sdvInfo.options.attrCSModal.modal("show");
+        $(".modal-backdrop").appendTo($("#mainContent"));
+        sdvInfo.options.domainSelect.html(sdvInfo.options.domainListHtml);
+    }
+
+    function delCS() {
+        var selected = sdvInfo.options.tableCSEle.mTable("getSelections");
+        if (selected.length<1) {
+            Util.alert("warn", "请选择一个集合空间");
+            return;
+        } else if (selected.length>1) {
+            Util.alert("warn", "一次只能删除一个集合空间");
+            return;
+        }
+        sdvInfo.delCS(selected[0]['name']);
+    }
+
+    function saveCS() {
+        var attr = Util.getFormParam("attrModalForm");
+        sdvInfo.addCS(attr.CS_NAME, attr.DOMAIN_NAME);
+    }
+
+    function addCL() {
+        sdvInfo.options.attrCLModal.modal("show");
+        $(".modal-backdrop").appendTo($("#mainContent"));
+        sdvInfo.options.csSlect.html(sdvInfo.options.csListHtml);
+    }
+
+    function saveCL() {
+        var attr = Util.getFormParam("attrclModalForm");
+        console.log(attr);
+        sdvInfo.addCL(attr.COLLECTIONSPACE_NAME, attr.CL_NAME, attr.CL_TYPE, attr.RP_NUM, attr.SHAREDING_KEY);
+    }
+
+    function delCL() {
+        var selected = sdvInfo.options.tableCLEle.mTable("getSelections");
+        if (selected.length<1) {
+            Util.alert("warn", "请选择一个集合");
+            return;
+        } else if (selected.length>1) {
+            Util.alert("warn", "一次只能删除一个集合");
+            return;
+        }
+        console.log(selected);
+        sdvInfo.delCL(selected[0]);
+    }
+
+    function attachCL() {
+        var attr = Util.getFormParam("attrAttachCLForm");
+        sdvInfo.attachCL(attr.CS_NAME_SELECT, attr.CURR_CL_NAME, attr.FIELD, attr.LOW_BOUND, attr.UP_BOUND);
+    }
+
+    function autoAttachCL() {
+        var attr = Util.getFormParam("autoAttachCLForm");
+        sdvInfo.autoAttachCL(attr.CURR_MAIN_CL_NAME, attr.CURR_MAIN_CL_FIELD, attr.BEGIN_DATE, attr.END_DATE);
+    }
+
+</script>
+</html>

@@ -305,7 +305,7 @@
 
         $.each(this.header.fields, function(j, field) {
             var text = '',
-                value = item[field] || that.options.undefinedText,
+                value = item[field] === 0 ? 0 : item[field] || that.options.undefinedText,
                 column = that.options.columns[0][j];
             var text = '',
                 align = '', // body align style
@@ -530,6 +530,8 @@
         var params = $.extend({},query,this.options.queryParams);
         this.$tableLoading.show();
         if (!(url || this.options.url)) {
+            this.load(this.options.data);
+            this.$tableLoading.hide();
             return;
         }
 
@@ -708,8 +710,13 @@
     MTable.prototype.proxyButtonClickEvent == function(button,row,index){
 
     };
-    MTable.prototype.refresh = function(){
+    MTable.prototype.refresh = function(data){
+        if(data) {
+            this.options.data = data;
+        }
+
         this.initServer();
+
     };
     MTable.prototype.reload = function(option){
         this.options = $.extend({},this.options,typeof option === 'object' && option);

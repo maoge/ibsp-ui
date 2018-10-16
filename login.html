@@ -88,7 +88,6 @@
                         success : function (res) {
 							if(res.RET_CODE == 0) {
 							    $.cookie("MAGIC_KEY", res.MAGIC_KEY, {path:"/"});
-							    debugger;
                                 window.location.href='console/index.html'
 							}else {
                                 layer.msg('帐号不存在或密码错误');

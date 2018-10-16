@@ -474,7 +474,7 @@ var Component = window.Component || {};
 
         var len = 0, eles = element.parentContainer.childs;
         for(var ele in eles) {
-        	debugger;
+
         	if(eles[ele].status == "deployed"){
         		len++;
 			}
